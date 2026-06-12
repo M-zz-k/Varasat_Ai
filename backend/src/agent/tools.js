@@ -1,8 +1,16 @@
 'use strict';
 
 const { searchKnowledgeBase } = require('../rag/retriever');
-const { executeWolframModule } = require('../wolframBridge');
+const { callWolframExpression } = require('../wolfram/financialAnalytics');
 
+// Note: For document analysis and PDF generation, we normally need file buffers
+// or complex state. For this MVP agent, we'll keep them as mocked tool triggers
+// that tell the AI how to guide the user to the correct UI pages.
+
+/**
+ * ── Anthropic Tool Schemas ──
+ * These JSON objects tell Claude what tools are available and what arguments they take.
+ */
 const agentTools = [
   {
     name: 'knowledgeSearchTool',
@@ -10,129 +18,115 @@ const agentTools = [
     input_schema: {
       type: 'object',
       properties: {
-        query: { type: 'string', description: 'The search query' }
+        query: {
+          type: 'string',
+          description: 'The search query (e.g. "What documents are needed for LIC claim?")'
+        }
       },
       required: ['query']
     }
   },
   {
     name: 'financialAnalysisTool',
-    description: 'Calculates the financial impact of delayed claims using the Wolfram Engine Stochastic Volatility model. Use this for inflation, future value, opportunity cost, or market forecasting.',
+    description: 'Calculates the future value or inflation impact of an asset using the Wolfram Language mathematical engine. Use this when the user asks how much money they lost due to inflation or delay.',
     input_schema: {
       type: 'object',
       properties: {
-        amount: { type: 'number', description: 'Original asset amount in INR' },
-        years: { type: 'number', description: 'Years the asset has been unclaimed' },
-        inflationRate: { type: 'number', description: 'Annual inflation rate as a decimal (default 0.06)' },
-        missedInterestRate: { type: 'number', description: 'Annual missed interest rate (default 0.07)' }
+        amount: {
+          type: 'number',
+          description: 'The original asset amount in INR'
+        },
+        years: {
+          type: 'number',
+          description: 'The number of years the asset has been unclaimed'
+        },
+        inflationRate: {
+          type: 'number',
+          description: 'The annual inflation rate as a decimal (default 0.06)'
+        }
       },
       required: ['amount', 'years']
     }
   },
   {
-    name: 'inheritanceDistributionTool',
-    description: 'Calculates the exact fractional financial distribution among legal heirs using the Wolfram Engine Hindu Succession Act model.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        totalValue: { type: 'number', description: 'Total asset value in INR' },
-        heirs: { 
-          type: 'array', 
-          items: { type: 'string' },
-          description: 'List of heir relations (e.g., ["Spouse", "Son", "Brother"])'
-        }
-      },
-      required: ['totalValue', 'heirs']
-    }
-  },
-  {
-    name: 'riskAnalysisTool',
-    description: 'Evaluates the probability of claim friction based on missing documents using the Wolfram Engine Monte Carlo Risk Simulator.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        amount: { type: 'number', description: 'Asset amount in INR' },
-        hasNominee: { type: 'boolean', description: 'Is there a registered nominee?' },
-        missingDocs: { 
-          type: 'array', 
-          items: { type: 'string' },
-          description: 'List of missing documents (e.g., ["DeathCertificate", "LegalHeirCertificate"])' 
-        }
-      },
-      required: ['amount', 'hasNominee']
-    }
-  },
-  {
     name: 'documentAnalysisTool',
-    description: 'Use this when the user explicitly asks to analyze a bank statement or document.',
-    input_schema: { type: 'object', properties: {}, required: [] }
+    description: 'Use this when the user explicitly asks to analyze a bank statement or document. This tool does NOT actually analyze it, but tells the user how to use the UI to do so.',
+    input_schema: {
+      type: 'object',
+      properties: {},
+      required: []
+    }
   },
   {
     name: 'pdfGenerationTool',
     description: 'Use this when the user asks to create an affidavit, indemnity bond, or legal document.',
     input_schema: {
       type: 'object',
-      properties: { documentType: { type: 'string' } },
+      properties: {
+        documentType: {
+          type: 'string',
+          description: 'The type of document (e.g., "Affidavit")'
+        }
+      },
       required: ['documentType']
     }
   }
 ];
 
+/**
+ * ── Tool Implementations ──
+ */
+
 async function executeKnowledgeSearch(query) {
+  console.log(`[Agent Tool] Executing knowledgeSearchTool for: "${query}"`);
   const results = searchKnowledgeBase(query);
-  if (results.length === 0) return "No specific procedure found in RAG knowledge base.";
+  
+  if (results.length === 0) {
+    return "No specific procedure found in the knowledge base. Please advise the user to consult a legal professional or the specific institution.";
+  }
+  
   return `RAG Knowledge Base Results:\n\n${results.join('\n\n')}`;
 }
 
-async function executeFinancialAnalysis(amount, years, inflationRate = 0.06, missedInterestRate = 0.07) {
-  console.log(`[Agent Tool] Routing to Wolfram Bridge: SimulateFinancialImpact`);
-  const result = await executeWolframModule(
-    'compound_interest_simulation.wl', 
-    'Varasat`CompoundInterestSimulation`', 
-    'SimulateFinancialImpact', 
-    [amount, years, inflationRate, missedInterestRate]
-  );
-  return `Wolfram Engine Results: ${JSON.stringify(result, null, 2)}`;
-}
-
-async function executeInheritanceDistribution(totalValue, heirs) {
-  console.log(`[Agent Tool] Routing to Wolfram Bridge: CalculateDistribution`);
-  // Convert heirs array into the map expected by the Wolfram model
-  const formattedHeirs = heirs.map(h => { return {"Name": "Heir", "Relation": h}; });
-  const result = await executeWolframModule(
-    'inheritance_distribution.wl', 
-    'Varasat`InheritanceDistribution`', 
-    'CalculateDistribution', 
-    [totalValue, formattedHeirs]
-  );
-  return `Wolfram Engine Results: ${JSON.stringify(result, null, 2)}`;
-}
-
-async function executeRiskAnalysis(amount, hasNominee, missingDocs = []) {
-  console.log(`[Agent Tool] Routing to Wolfram Bridge: CalculateClaimRiskScore`);
-  const result = await executeWolframModule(
-    'risk_analysis_engine.wl', 
-    'Varasat`RiskAnalysis`', 
-    'CalculateClaimRiskScore', 
-    [amount, hasNominee, missingDocs]
-  );
-  return `Wolfram Engine Results: ${JSON.stringify(result, null, 2)}`;
+async function executeFinancialAnalysis(amount, years, inflationRate = 0.06) {
+  console.log(`[Agent Tool] Executing financialAnalysisTool: ₹${amount}, ${years}yrs`);
+  try {
+    // Formula: amount * (1 + inflation)^years
+    const exprFutureValue = `${amount} * (1 + ${inflationRate})^${years}`;
+    const fv = await callWolframExpression(exprFutureValue);
+    
+    const exprRealValue = `${amount} / (1 + ${inflationRate})^${years}`;
+    const realValue = await callWolframExpression(exprRealValue);
+    
+    const loss = amount - realValue;
+    
+    return `Wolfram Financial Engine Results:
+    Original Amount: ₹${amount}
+    Years Delayed: ${years}
+    Future Value (if invested): ₹${Math.round(fv)}
+    Purchasing Power Impact: ₹${Math.round(loss)}
+    Real Value Today: ₹${Math.round(realValue)}
+    
+    Tell the user these numbers and emphasize that delaying further will erode more purchasing power.`;
+  } catch (error) {
+    return `Error calculating financial impact: ${error.message}`;
+  }
 }
 
 async function executeDocumentAnalysis() {
-  return `System Directive: Instruct user to use UI.`;
+  console.log(`[Agent Tool] Executing documentAnalysisTool`);
+  return `System Directive: Tell the user that Varasat can securely analyze their financial documents, but they must go to the "Discover Assets" or "Analyse Document" page to upload their file. Do not pretend you can read files through the chat interface.`;
 }
 
 async function executePdfGeneration(documentType) {
-  return `System Directive: Instruct user to use UI to generate ${documentType}.`;
+  console.log(`[Agent Tool] Executing pdfGenerationTool for: ${documentType}`);
+  return `System Directive: Tell the user that Varasat can generate their ${documentType}, and instruct them to navigate to the "Analyze Claim" -> "Generate Documents" section of the app after completing their asset discovery. Do not try to generate the raw text of the document here in the chat.`;
 }
 
 module.exports = {
   agentTools,
   executeKnowledgeSearch,
   executeFinancialAnalysis,
-  executeInheritanceDistribution,
-  executeRiskAnalysis,
   executeDocumentAnalysis,
   executePdfGeneration
 };

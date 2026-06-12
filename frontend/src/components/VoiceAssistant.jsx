@@ -49,11 +49,10 @@ export default function VoiceAssistant() {
     };
 
     recognitionRef.current = recognition;
-  }, [language]); // Re-init if language changes (though we set lang on start)
+  }, [language]); 
 
   const handleProcessText = async (text) => {
     try {
-      // Reuse the existing AI Chat endpoint
       const res = await axios.post('/api/chat', {
         message: text,
         language: language,
@@ -78,12 +77,10 @@ export default function VoiceAssistant() {
     setState('speaking');
     const utterance = new SpeechSynthesisUtterance(text);
     
-    // Attempt to set correct language for synthesis
     if (language === 'Hindi') utterance.lang = 'hi-IN';
     else if (language === 'Kannada') utterance.lang = 'kn-IN';
     else utterance.lang = 'en-IN';
 
-    // Rate and pitch adjustments for elderly-friendly clear voice
     utterance.rate = 0.9;
     utterance.pitch = 1;
 
@@ -108,7 +105,6 @@ export default function VoiceAssistant() {
       window.speechSynthesis.cancel();
       setState('idle');
     } else {
-      // Start listening
       if (recognitionRef.current) {
         if (language === 'Hindi') recognitionRef.current.lang = 'hi-IN';
         else if (language === 'Kannada') recognitionRef.current.lang = 'kn-IN';
@@ -123,31 +119,32 @@ export default function VoiceAssistant() {
     }
   };
 
-  // UI mapping for states
   const getStateUI = () => {
     switch (state) {
       case 'listening':
-        return { text: 'Listening...', color: '#ef4444', anim: 'pulse-ring' };
+        return { text: 'Listening...', color: '#ef4444', class: 'bg-red-500', anim: 'pulse-ring' };
       case 'processing':
-        return { text: 'Thinking...', color: '#f59e0b', anim: 'spin-slow' };
+        return { text: 'Thinking...', color: '#d97706', class: 'bg-amber-600', anim: 'spin-slow' };
       case 'speaking':
-        return { text: 'Responding...', color: '#3b82f6', anim: 'bounce-subtle' };
+        return { text: 'Responding...', color: '#4f46e5', class: 'bg-indigo-600', anim: 'bounce-subtle' };
       default:
-        return { text: 'Tap to speak', color: '#d4a017', anim: '' };
+        return { text: 'Tap to speak', color: '#0f172a', class: 'bg-slate-900', anim: '' };
     }
   };
 
   const ui = getStateUI();
 
   return (
-    <div style={{ background: 'rgba(10,22,40,0.8)', border: '1px solid rgba(212,160,23,0.3)', borderRadius: '24px', padding: '2rem', textAlign: 'center', maxWidth: '500px', margin: '0 auto', backdropFilter: 'blur(10px)' }}>
-      
-      <div style={{ marginBottom: '1.5rem' }}>
+    <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 md:p-8 text-center max-w-md mx-auto shadow-xs font-sans">
+      <div className="mb-6">
+        <label className="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">
+          Language / भाषा
+        </label>
         <select 
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
           disabled={state !== 'idle'}
-          style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', color: '#f0f4ff', border: '1px solid #4a5e80', fontSize: '1rem', cursor: 'pointer' }}
+          className="bg-white border border-slate-200 text-slate-800 text-sm font-semibold rounded-lg px-3 py-2 cursor-pointer focus:outline-none focus:ring-1 focus:ring-slate-900 disabled:opacity-50 transition-all"
         >
           <option value="English">English</option>
           <option value="Hindi">हिन्दी (Hindi)</option>
@@ -155,39 +152,38 @@ export default function VoiceAssistant() {
         </select>
       </div>
 
-      <div style={{ position: 'relative', width: '120px', height: '120px', margin: '0 auto 1.5rem' }}>
+      <div className="relative w-28 h-28 mx-auto mb-6 flex items-center justify-center">
         {/* Animated ring background */}
-        <div className={ui.anim} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: '50%', background: ui.color, opacity: 0.2 }}></div>
+        <div className={`absolute inset-0 rounded-full opacity-15 ${ui.class} ${ui.anim}`}></div>
         
         <button
           onClick={toggleListen}
-          style={{
-            position: 'absolute', top: '10px', left: '10px', right: '10px', bottom: '10px',
-            background: `linear-gradient(135deg, ${ui.color}, #1e3a8a)`,
-            border: 'none', borderRadius: '50%', cursor: 'pointer',
-            fontSize: '3rem', color: '#fff', boxShadow: `0 0 20px ${ui.color}40`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transition: 'all 0.3s ease'
-          }}
+          className={`relative z-10 w-20 h-20 rounded-full cursor-pointer flex items-center justify-center text-white text-3xl shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 ${ui.class}`}
         >
           {state === 'speaking' ? '🔊' : '🎤'}
         </button>
       </div>
 
-      <h3 style={{ margin: '0 0 0.5rem 0', color: ui.color, fontSize: '1.4rem' }}>{ui.text}</h3>
+      <h3 className="text-lg font-bold mb-2 transition-all duration-300" style={{ color: ui.color }}>{ui.text}</h3>
 
-      {error && <div style={{ color: '#ef4444', fontSize: '0.9rem', marginTop: '1rem' }}>{error}</div>}
+      {error && <div className="text-red-500 text-xs mt-2 font-medium">{error}</div>}
 
-      <div style={{ marginTop: '1.5rem', minHeight: '80px', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', padding: '1rem', textAlign: 'left' }}>
+      <div className="mt-6 bg-white border border-slate-200/80 rounded-xl p-4 text-left min-h-[96px] shadow-2xs flex flex-col justify-center">
         {transcript && (
-          <div style={{ marginBottom: '0.5rem', color: '#a0b8d0', fontSize: '1rem', fontStyle: 'italic' }}>
+          <div className="text-slate-400 text-xs italic mb-2">
             "{transcript}"
           </div>
         )}
-        {aiResponse && (
-          <div style={{ color: '#f0f4ff', fontSize: '1.1rem', lineHeight: 1.5 }}>
+        {aiResponse ? (
+          <div className="text-slate-700 text-sm font-medium leading-relaxed">
             {aiResponse}
           </div>
+        ) : (
+          !transcript && (
+            <div className="text-slate-400 text-xs text-center">
+              Your conversation will appear here
+            </div>
+          )
         )}
       </div>
 
@@ -203,7 +199,7 @@ export default function VoiceAssistant() {
         }
         @keyframes pulse {
           0% { transform: scale(0.9); opacity: 0.5; }
-          50% { transform: scale(1.1); opacity: 0.2; }
+          50% { transform: scale(1.15); opacity: 0.1; }
           100% { transform: scale(0.9); opacity: 0.5; }
         }
         @keyframes spin {
@@ -211,7 +207,7 @@ export default function VoiceAssistant() {
         }
         @keyframes bounce {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
+          50% { transform: translateY(-6px); }
         }
       `}</style>
     </div>

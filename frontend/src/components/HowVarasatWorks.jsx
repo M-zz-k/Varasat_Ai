@@ -2,77 +2,78 @@ import React from 'react';
 
 export default function HowVarasatWorks() {
   return (
-    <div style={{
-      background: 'rgba(15,28,55,0.8)',
-      border: '1px solid rgba(212,160,23,0.15)',
-      borderRadius: '20px',
-      padding: '2rem',
-      color: '#f0f4ff',
-      fontFamily: "'Inter', sans-serif"
-    }}>
-      <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '1.5rem', textAlign: 'center', color: '#d4a017' }}>
+    <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 md:p-8 font-sans">
+      <h2 className="text-2xl font-extrabold text-slate-900 mb-3 text-center tracking-tight">
         How Varasat AI Works
       </h2>
 
-      <p style={{ color: '#8fa4c8', textAlign: 'center', marginBottom: '2.5rem', fontSize: '0.95rem', lineHeight: 1.6 }}>
+      <p className="text-slate-600 text-center mb-8 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
         Varasat assists families in organizing documents, identifying possible assets, and preparing claim steps. It does not directly access bank databases or predict recovery guarantees.
       </p>
 
       {/* AI Pipeline Flow */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '1rem',
-        marginBottom: '3rem'
-      }}>
+      <div className="flex flex-col items-center gap-2 mb-8">
         <FlowStep icon="🤖" title="Varasat AI Agent" desc="Understands intent and reasons securely" color="#10b981" />
         <FlowArrow />
         <FlowStep icon="📚" title="Knowledge Retrieval (RAG)" desc="Fetches verified legal procedures" color="#f59e0b" />
         <FlowArrow />
         <FlowStep icon="⚡" title="Financial Analysis" desc="Calculates inflation impact with Wolfram" color="#8b5cf6" />
         <FlowArrow />
-        <FlowStep icon="📄" title="Document Assistance" desc="Analyzes statements & drafts legal forms" />
+        <FlowStep icon="📄" title="Document Assistance" desc="Analyzes statements & drafts legal forms" color="#3b82f6" />
       </div>
 
       {/* Engine Breakdown */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Claude Column */}
-        <div style={{
-          background: 'rgba(16,185,129,0.05)',
-          border: '1px solid rgba(16,185,129,0.2)',
-          borderRadius: '16px',
-          padding: '1.5rem'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🤖</span>
-            <span style={{ fontWeight: 700, fontSize: '1.1rem', color: '#10b981' }}>Agent & Reasoning</span>
+        <div className="bg-emerald-50/40 border border-emerald-100 rounded-xl p-5 md:p-6 transition-all duration-200 hover:shadow-xs">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-xl">🤖</span>
+            <span className="fontWeight-700 text-base font-bold text-emerald-800">Agent & Reasoning</span>
           </div>
-          <div style={{ color: '#a7f3d0', fontSize: '0.9rem', lineHeight: 1.8 }}>
-            <div>✓ Orchestrates tool usage</div>
-            <div>✓ Answers using verified RAG data</div>
-            <div>✓ Empathetic user interaction</div>
-            <div>✓ Explains financial calculations</div>
+          <div className="text-slate-700 text-sm space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-emerald-600 font-semibold">✓</span>
+              <span>Orchestrates secure local tool usage</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-emerald-600 font-semibold">✓</span>
+              <span>Answers using verified RAG legal workflows</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-emerald-600 font-semibold">✓</span>
+              <span>Empathetic, clear interaction in regional languages</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-emerald-600 font-semibold">✓</span>
+              <span>Explains financial computations logically</span>
+            </div>
           </div>
         </div>
 
         {/* Wolfram Column */}
-        <div style={{
-          background: 'rgba(139,92,246,0.05)',
-          border: '1px solid rgba(139,92,246,0.2)',
-          borderRadius: '16px',
-          padding: '1.5rem'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>⚡</span>
-            <span style={{ fontWeight: 700, fontSize: '1.1rem', color: '#a78bfa' }}>Wolfram Language</span>
+        <div className="bg-indigo-50/40 border border-indigo-100 rounded-xl p-5 md:p-6 transition-all duration-200 hover:shadow-xs">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-xl">⚡</span>
+            <span className="fontWeight-700 text-base font-bold text-indigo-800">Wolfram Language</span>
           </div>
-          <div style={{ color: '#ddd6fe', fontSize: '0.9rem', lineHeight: 1.8 }}>
-            <div>✓ Mathematical modelling</div>
-            <div>✓ Financial calculations</div>
-            <div>✓ Inflation & purchasing power</div>
-            <div>✓ Confidence scoring</div>
+          <div className="text-slate-700 text-sm space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-indigo-600 font-semibold">✓</span>
+              <span>Advanced compound interest computations</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-indigo-600 font-semibold">✓</span>
+              <span>Inflation & purchasing power modeling</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-indigo-600 font-semibold">✓</span>
+              <span>Precise historical valuation analytics</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-indigo-600 font-semibold">✓</span>
+              <span>Wolfram API confidence scoring models</span>
+            </div>
           </div>
         </div>
 
@@ -81,18 +82,18 @@ export default function HowVarasatWorks() {
   );
 }
 
-function FlowStep({ icon, title, desc, color = '#3b82f6' }) {
+function FlowStep({ icon, title, desc, color }) {
   return (
-    <div style={{
-      display: 'flex', alignItems: 'center', gap: '1rem',
-      background: 'rgba(0,0,0,0.2)', border: `1px solid ${color}40`,
-      padding: '0.8rem 1.5rem', borderRadius: '999px',
-      minWidth: '320px', justifyContent: 'center'
-    }}>
-      <span style={{ fontSize: '1.25rem' }}>{icon}</span>
-      <div>
-        <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#f0f4ff' }}>{title}</div>
-        <div style={{ fontSize: '0.75rem', color: '#8fa4c8' }}>{desc}</div>
+    <div className="flex items-center gap-4 bg-white border border-slate-200/80 p-4 rounded-xl shadow-xs w-full max-w-md transition-all duration-200 hover:border-slate-300 hover:shadow-sm">
+      <div 
+        className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-50 text-xl font-bold flex-shrink-0"
+        style={{ borderLeft: `4px solid ${color}` }}
+      >
+        {icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="font-bold text-slate-800 text-sm leading-tight">{title}</h4>
+        <p className="text-slate-500 text-xs mt-0.5">{desc}</p>
       </div>
     </div>
   );
@@ -100,6 +101,10 @@ function FlowStep({ icon, title, desc, color = '#3b82f6' }) {
 
 function FlowArrow() {
   return (
-    <div style={{ color: '#4b5563', fontSize: '1.25rem' }}>↓</div>
+    <div className="text-slate-300 flex items-center justify-center my-0.5">
+      <svg className="w-4 h-4 animate-bounce-subtle" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </div>
   );
 }
