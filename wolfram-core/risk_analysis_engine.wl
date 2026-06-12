@@ -1,65 +1,80 @@
 (* ::Package:: *)
 
 (* 
-  Varasat AI - Risk Analysis Engine
+  Varasat AI - Risk Analysis Engine (Monte Carlo Version)
   Language: Wolfram Language
-  Description: Evaluates the probability of claim friction based on missing 
-  documents, lack of nomination, and high monetary thresholds.
+  Description: Generates a probabilistic Risk Score using Monte Carlo simulations.
+  It models the uncertainty of real-world claim friction by running 1,000 iterations 
+  of randomized claim paths with stochastic variances applied to missing documents.
 *)
 
 BeginPackage["Varasat`RiskAnalysis`"]
 
-CalculateClaimRiskScore::usage = "CalculateClaimRiskScore[assetAmount, hasNominee, missingDocsList] calculates a probability-based risk score for experiencing friction or delays in asset recovery."
+CalculateClaimRiskScore::usage = "CalculateClaimRiskScore[assetAmount, hasNominee, missingDocsList] executes a Monte Carlo simulation to calculate the probability of claim friction."
 
 Begin["`Private`"]
 
-(* Base friction constants based on Indian banking heuristics *)
 baseFrictionProbability = 0.05;
-highValueThreshold = 500000; (* 5 Lakhs INR triggers strict KYC/Legal Heir requirements *)
+highValueThreshold = 500000;
 
-(* Document impact weightings *)
-docFrictionWeights = <|
-    "DeathCertificate" -> 0.90, (* Critical *)
+(* Mean doc impact weightings - Monte Carlo will apply variance around these *)
+docFrictionMeans = <|
+    "DeathCertificate" -> 0.85,
     "OriginalPassbook" -> 0.15,
     "LegalHeirCertificate" -> 0.40,
     "NomineeID" -> 0.20,
     "SuccessionCertificate" -> 0.50
 |>;
 
-(* Core Risk Evaluation Module *)
+(* Monte Carlo Core Module *)
 CalculateClaimRiskScore[assetAmount_?NumericQ, hasNominee_?(BooleanQ[#] || IntegerQ[#] &), missingDocsList_List] := Module[
     {
-        nomineePenalty, amountPenalty, docPenalty, 
-        rawRiskScore, normalizedRiskScore, riskTier,
+        numSimulations = 1000, 
+        nomineePenalty, amountPenalty,
+        simulatedDocPenalties, simulationResults,
+        meanRiskScore, confidenceInterval, riskTier,
         frictionFactors
     },
     
-    (* Coerce boolean flag *)
+    (* Static deterministic penalties *)
     nomineePenalty = If[TrueQ[hasNominee] || hasNominee === 1, 0.0, 0.35];
-    
-    (* High value penalty: strict branch manager scrutiny *)
     amountPenalty = If[assetAmount > highValueThreshold, 0.20, 0.0];
     
-    (* Document penalties *)
-    docPenalty = Total[
-        Map[If[KeyExistsQ[docFrictionWeights, #], docFrictionWeights[#], 0.05] &, missingDocsList]
+    (* Run Monte Carlo Simulation: 1000 iterations *)
+    simulationResults = Table[
+        Module[{docPenalty, rawScore, variance},
+            docPenalty = Total[
+                Map[
+                    With[{meanImpact = If[KeyExistsQ[docFrictionMeans, #], docFrictionMeans[#], 0.05]},
+                        (* Apply normally distributed stochastic variance to the impact of missing this document *)
+                        variance = RandomVariate[NormalDistribution[0, 0.05]];
+                        Max[0, meanImpact + variance]
+                    ] &, 
+                    missingDocsList
+                ]
+            ];
+            
+            rawScore = baseFrictionProbability + nomineePenalty + amountPenalty + docPenalty;
+            
+            (* Sigmoid normalization *)
+            1.0 - Exp[-rawScore]
+        ],
+        {numSimulations}
     ];
     
-    (* Accumulate raw probabilities *)
-    rawRiskScore = baseFrictionProbability + nomineePenalty + amountPenalty + docPenalty;
+    (* Statistical Analysis of Simulation *)
+    meanRiskScore = Mean[simulationResults];
+    confidenceInterval = Quantile[simulationResults, {0.05, 0.95}];
     
-    (* Normalize risk score between 0.0 and 1.0 using Sigmoid-like dampening for extreme cases *)
-    normalizedRiskScore = 1.0 - Exp[-rawRiskScore];
-    
-    (* Classify risk tier *)
+    (* Risk classification *)
     riskTier = Which[
-        normalizedRiskScore < 0.25, "Low",
-        normalizedRiskScore < 0.60, "Medium",
-        normalizedRiskScore < 0.85, "High",
+        meanRiskScore < 0.25, "Low",
+        meanRiskScore < 0.60, "Medium",
+        meanRiskScore < 0.85, "High",
         True, "Critical"
     ];
     
-    (* Generate explanation factors *)
+    (* Explainability metrics *)
     frictionFactors = Select[{
         If[nomineePenalty > 0, "No registered nominee (+35% base friction)", Null],
         If[amountPenalty > 0, "High asset value triggers strict legal scrutiny (+20% base friction)", Null],
@@ -69,10 +84,13 @@ CalculateClaimRiskScore[assetAmount_?NumericQ, hasNominee_?(BooleanQ[#] || Integ
     (* Return structured JSON-compatible association *)
     <|
         "Status" -> "Success",
+        "Engine" -> "Monte Carlo Risk Simulator",
+        "Iterations" -> numSimulations,
         "AssetAmount" -> assetAmount,
-        "RiskScore" -> Round[normalizedRiskScore, 0.01],
+        "MeanRiskScore" -> Round[meanRiskScore, 0.01],
+        "ConfidenceInterval" -> Round[confidenceInterval, 0.01],
         "RiskTier" -> riskTier,
-        "EstimatedDelayMonths" -> Round[normalizedRiskScore * 12, 1], (* Basic heuristic mapping *)
+        "EstimatedDelayMonths" -> Round[meanRiskScore * 12, 1],
         "FrictionFactors" -> frictionFactors
     |>
 ]

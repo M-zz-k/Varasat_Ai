@@ -1,43 +1,60 @@
 (* ::Package:: *)
 
 (* 
-  Varasat AI - Financial Forecasting Engine
+  Varasat AI - Financial Forecasting Engine (Stochastic Volatility Version)
   Language: Wolfram Language
-  Description: Generates multi-year exponential time-series projections 
-  to forecast future asset value vs inflation erosion.
+  Description: Generates multi-year time-series projections. Instead of flat 
+  exponential growth, this engine applies a Stochastic Random Walk (Geometric Brownian Motion) 
+  to simulate realistic market volatility and inflation fluctuations over the horizon.
 *)
 
 BeginPackage["Varasat`FinancialForecasting`"]
 
-GenerateForecastTimeSeries::usage = "GenerateForecastTimeSeries[principal, inflationRate, growthRate, years] returns a time-series projection of an asset's nominal and real value."
+GenerateForecastTimeSeries::usage = "GenerateForecastTimeSeries[principal, expectedInflation, expectedGrowth, years] generates a stochastic time-series projection."
 
 Begin["`Private`"]
 
-(* Core Time-Series Forecasting Module *)
-GenerateForecastTimeSeries[principal_?NumericQ, inflationRate_?NumericQ, growthRate_?NumericQ, maxYears_Integer] := Module[
+(* Stochastic Time-Series Forecasting Module *)
+GenerateForecastTimeSeries[principal_?NumericQ, expectedInflation_?NumericQ, expectedGrowth_?NumericQ, maxYears_Integer] := Module[
     {
-        yearsArray, nominalSeries, realSeries, 
-        cumulativeLossSeries, forecastData
+        yearsArray, 
+        marketVolatility = 0.04, (* 4% assumed baseline market volatility *)
+        inflationVolatility = 0.015, (* 1.5% assumed inflation volatility *)
+        stochasticGrowthPath, stochasticInflationPath,
+        nominalSeries, realSeries, cumulativeLossSeries, 
+        forecastData
     },
     
-    (* Validate inputs to prevent infinite series *)
     If[maxYears < 1 || maxYears > 50,
         Return[<|"Status" -> "Error", "Message" -> "Years must be between 1 and 50"|>]
     ];
 
-    (* Generate arrays for mapping *)
     yearsArray = Range[0, maxYears];
     
-    (* Nominal Value: purely based on assumed growth (e.g., FD interest rate) *)
-    nominalSeries = Map[(principal * (1 + growthRate)^#) &, yearsArray];
+    (* Generate Stochastic Paths using RandomVariate for each year step *)
+    (* Represents random walk around the expected mean *)
+    stochasticGrowthPath = FoldList[
+        #1 * (1 + RandomVariate[NormalDistribution[expectedGrowth, marketVolatility]]) &, 
+        principal, 
+        Table[1, {maxYears}]
+    ];
     
-    (* Real Value: discounted by inflation rate representing purchasing power *)
-    realSeries = Map[(principal * ((1 + growthRate) / (1 + inflationRate))^#) &, yearsArray];
+    stochasticInflationPath = FoldList[
+        #1 * (1 + RandomVariate[NormalDistribution[expectedInflation, inflationVolatility]]) &, 
+        1.0, (* Base index *)
+        Table[1, {maxYears}]
+    ];
     
-    (* Cumulative Loss of Purchasing Power against nominal expectation *)
+    (* Nominal Value: Follows the stochastic growth path *)
+    nominalSeries = stochasticGrowthPath;
+    
+    (* Real Value: Discounted by the stochastic inflation index *)
+    realSeries = nominalSeries / stochasticInflationPath;
+    
+    (* Cumulative Loss of Purchasing Power *)
     cumulativeLossSeries = nominalSeries - realSeries;
 
-    (* Zip arrays into a structured dataset *)
+    (* Zip arrays into structured dataset *)
     forecastData = Table[
         <|
             "Year" -> yearsArray[[i]],
@@ -51,9 +68,10 @@ GenerateForecastTimeSeries[principal_?NumericQ, inflationRate_?NumericQ, growthR
     (* Return structured JSON-compatible association *)
     <|
         "Status" -> "Success",
+        "Engine" -> "Stochastic Volatility Forecaster",
         "InitialPrincipal" -> principal,
-        "AssumedInflation" -> inflationRate,
-        "AssumedGrowth" -> growthRate,
+        "ExpectedInflationMean" -> expectedInflation,
+        "ExpectedGrowthMean" -> expectedGrowth,
         "ForecastHorizon" -> maxYears,
         "FinalNominalValue" -> Last[forecastData]["NominalValue"],
         "FinalRealValue" -> Last[forecastData]["RealValue"],

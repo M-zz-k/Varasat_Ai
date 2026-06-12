@@ -17,7 +17,7 @@ const agentTools = [
   },
   {
     name: 'financialAnalysisTool',
-    description: 'Calculates the financial impact of delayed claims (inflation, future value, opportunity cost) using the Wolfram Language compound interest simulation engine.',
+    description: 'Calculates the financial impact of delayed claims using the Wolfram Engine Stochastic Volatility model. Use this for inflation, future value, opportunity cost, or market forecasting.',
     input_schema: {
       type: 'object',
       properties: {
@@ -31,7 +31,7 @@ const agentTools = [
   },
   {
     name: 'inheritanceDistributionTool',
-    description: 'Calculates the exact fractional financial distribution among legal heirs using the Wolfram Language Hindu Succession Act engine.',
+    description: 'Calculates the exact fractional financial distribution among legal heirs using the Wolfram Engine Hindu Succession Act model.',
     input_schema: {
       type: 'object',
       properties: {
@@ -47,7 +47,7 @@ const agentTools = [
   },
   {
     name: 'riskAnalysisTool',
-    description: 'Evaluates the probability of claim friction based on missing documents using the Wolfram Language Risk Analysis Engine.',
+    description: 'Evaluates the probability of claim friction based on missing documents using the Wolfram Engine Monte Carlo Risk Simulator.',
     input_schema: {
       type: 'object',
       properties: {

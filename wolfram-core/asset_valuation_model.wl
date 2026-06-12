@@ -1,59 +1,65 @@
 (* ::Package:: *)
 
 (* 
-  Varasat AI - Asset Valuation Model
+  Varasat AI - Asset Valuation Model (Dynamic Curve Version)
   Language: Wolfram Language
-  Description: Evaluates Net Present Value (NPV) and comparative valuation 
-  between liquid assets (cash/deposits) and illiquid assets (real estate, physical gold) 
-  adjusting for depreciation and market growth rates.
+  Description: Evaluates Net Present Value (NPV) using dynamic mathematical 
+  curves rather than static flat multipliers. Uses Double Declining Balance for 
+  depreciating assets, and continuous compounding for appreciating assets.
 *)
 
 BeginPackage["Varasat`AssetValuationModel`"]
 
-EvaluateAssetNPV::usage = "EvaluateAssetNPV[currentValue, assetClass, yearsDelayed] evaluates the adjusted Net Present Value of an asset considering specific class depreciation or growth vectors."
+EvaluateAssetNPV::usage = "EvaluateAssetNPV[currentValue, assetClass, yearsDelayed] evaluates adjusted NPV using dynamic curves."
 
 Begin["`Private`"]
 
-(* Asset Class Market Growth/Depreciation Vectors (Annualized) *)
 assetClassVectors = <|
-    "Cash" -> -0.06, (* Subject to flat inflation erosion *)
-    "Gold" -> 0.08,  (* Historical appreciation *)
-    "Equity" -> 0.12, (* Historical market return *)
-    "RealEstate" -> 0.07, (* Standard property appreciation *)
-    "Vehicle" -> -0.15 (* Standard mechanical depreciation *)
+    "Cash" -> -0.06,
+    "Gold" -> 0.08,  
+    "Equity" -> 0.12, 
+    "RealEstate" -> 0.07, 
+    "Vehicle" -> -0.15 
 |>;
 
 (* Core NPV Evaluation Module *)
 EvaluateAssetNPV[currentValue_?NumericQ, assetClass_String, yearsDelayed_?NumericQ] := Module[
     {
         vectorRate, adjustedNPV, valuationDelta, 
-        isAppreciating, assessmentMessage
+        isAppreciating, assessmentMessage,
+        depreciationFactor, curveModel
     },
     
-    (* Fetch the asset class vector or default to Cash (pure inflation erosion) *)
     vectorRate = If[KeyExistsQ[assetClassVectors, assetClass], 
         assetClassVectors[assetClass], 
         assetClassVectors["Cash"]
     ];
     
-    (* Calculate Adjusted Net Present Value *)
-    adjustedNPV = currentValue * (1 + vectorRate)^yearsDelayed;
+    isAppreciating = vectorRate > 0;
+
+    (* Apply Dynamic Curve based on asset type *)
+    If[assetClass === "Vehicle",
+        (* Double Declining Balance Model for rapid early depreciation *)
+        depreciationFactor = Abs[vectorRate] * 2;
+        adjustedNPV = currentValue * Max[0, (1 - depreciationFactor)^yearsDelayed];
+        curveModel = "Double Declining Balance Curve",
+        
+        (* Continuous Compounding Model for market/equity/real estate *)
+        adjustedNPV = currentValue * Exp[vectorRate * yearsDelayed];
+        curveModel = "Continuous Compounding Curve"
+    ];
     
-    (* Calculate the delta from original value *)
     valuationDelta = adjustedNPV - currentValue;
     
-    (* Boolean flag for appreciation *)
-    isAppreciating = vectorRate > 0;
-    
-    (* Generate assessment message *)
     assessmentMessage = If[isAppreciating,
-        "The asset has appreciated due to market forces (" <> ToString[assetClass] <> " at " <> ToString[vectorRate * 100] <> "% annualized).",
-        "The asset has depreciated or lost purchasing power (" <> ToString[assetClass] <> " at " <> ToString[vectorRate * 100] <> "% annualized)."
+        "The asset has appreciated using continuous market models (" <> ToString[assetClass] <> ").",
+        "The asset has depreciated or lost purchasing power due to physical decay or inflation."
     ];
 
     (* Return structured JSON-compatible association *)
     <|
         "Status" -> "Success",
+        "Engine" -> "Dynamic Asset Curve Valuator",
         "InputParameters" -> <|
             "OriginalValue" -> currentValue,
             "AssetClass" -> assetClass,
@@ -61,6 +67,7 @@ EvaluateAssetNPV[currentValue_?NumericQ, assetClass_String, yearsDelayed_?Numeri
         |>,
         "ValuationResults" -> <|
             "AppliedVectorRate" -> vectorRate,
+            "CurveModelApplied" -> curveModel,
             "AdjustedNPV" -> Round[adjustedNPV, 2],
             "ValuationDelta" -> Round[valuationDelta, 2],
             "IsAppreciating" -> isAppreciating,
