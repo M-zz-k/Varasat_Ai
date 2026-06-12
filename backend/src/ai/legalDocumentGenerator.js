@@ -43,7 +43,7 @@ Instructions:
 
   try {
     const response = await client.messages.create({
-      model:      'claude-opus-4-5',
+      model:      'claude-3-5-sonnet-latest',
       max_tokens: 800,
       system:     'You are a legal document generator. Return pure JSON only. Do not add markdown blocks.',
       messages:   [{ role: 'user', content: prompt }],

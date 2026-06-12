@@ -39,7 +39,7 @@ async function runAgent(messages) {
   
   // Step 1: Send user message and tools to Claude
   const response = await client.messages.create({
-    model: 'claude-opus-4-5',
+    model: 'claude-3-5-sonnet-latest',
     max_tokens: 1024,
     system: AGENT_SYSTEM_PROMPT,
     messages: messages,
@@ -95,7 +95,7 @@ async function runAgent(messages) {
     // Step 2: Send the tool results back to Claude so it can formulate the final answer
     console.log(`[Agent] Returning tool results to Claude for synthesis.`);
     const finalResponse = await client.messages.create({
-      model: 'claude-opus-4-5',
+      model: 'claude-3-5-sonnet-latest',
       max_tokens: 1024,
       system: AGENT_SYSTEM_PROMPT,
       messages: messages,

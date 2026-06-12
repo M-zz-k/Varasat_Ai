@@ -52,7 +52,7 @@ Wolfram Computation Results:
 Please explain these Wolfram-computed results to a grieving Indian family in simple, warm, encouraging language.`;
 
   const response = await client.messages.create({
-    model:      'claude-opus-4-5',
+    model:      'claude-3-5-sonnet-latest',
     max_tokens: 512,
     system:     EXPLAINER_SYSTEM,
     messages:   [{ role: 'user', content: prompt }],

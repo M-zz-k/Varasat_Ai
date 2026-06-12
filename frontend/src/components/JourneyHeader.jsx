@@ -9,53 +9,39 @@ export default function JourneyHeader({ currentStep }) {
   ];
 
   return (
-    <div style={{ padding: '1rem 0 2rem 0', display: 'flex', justifyContent: 'center' }}>
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        background: 'rgba(10,22,40,0.6)', 
-        border: '1px solid rgba(240,192,64,0.2)', 
-        borderRadius: '999px', 
-        padding: '0.5rem 1.5rem',
-        gap: '0.5rem',
-        maxWidth: '100%',
-        overflowX: 'auto',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-      }}>
+    <div className="py-4 flex justify-center font-sans select-none">
+      <div className="flex items-center bg-slate-50 border border-slate-200/80 rounded-full p-1.5 gap-2 max-w-full overflow-x-auto shadow-2xs">
         {steps.map((step, index) => {
           const isActive = step.id === currentStep;
           const isPassed = step.id < currentStep;
 
           return (
-            <div key={step.id} style={{ display: 'flex', alignItems: 'center' }}>
-              <Link to={step.path} style={{ textDecoration: 'none' }}>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: '0.4rem',
-                  padding: '0.4rem 0.8rem', borderRadius: '999px',
-                  background: isActive ? 'linear-gradient(135deg, #f0c040, #b8860b)' : (isPassed ? 'rgba(240,192,64,0.1)' : 'transparent'),
-                  color: isActive ? '#051020' : (isPassed ? '#f0c040' : '#4a5e80'),
-                  fontWeight: isActive ? 800 : 600,
-                  fontSize: '0.85rem',
-                  transition: 'all 0.3s'
-                }}>
-                  <span style={{ 
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    width: '18px', height: '18px', borderRadius: '50%',
-                    background: isActive ? 'rgba(5,16,32,0.2)' : (isPassed ? 'rgba(240,192,64,0.2)' : 'rgba(74,94,128,0.2)'),
-                    fontSize: '0.65rem'
-                  }}>
+            <div key={step.id} className="flex items-center">
+              <Link to={step.path} className="no-underline">
+                <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 ${
+                  isActive 
+                    ? 'bg-slate-900 text-white font-extrabold text-xs shadow-xs' 
+                    : isPassed 
+                      ? 'bg-emerald-50 text-emerald-800 border border-emerald-100 text-xs font-bold' 
+                      : 'text-slate-400 hover:text-slate-600 text-xs font-semibold'
+                }`}>
+                  <span className={`flex items-center justify-center w-4 h-4 rounded-full text-[10px] ${
+                    isActive 
+                      ? 'bg-white/20 text-white' 
+                      : isPassed 
+                        ? 'bg-emerald-200 text-emerald-850' 
+                        : 'bg-slate-200 text-slate-500'
+                  }`}>
                     {isPassed ? '✓' : step.id}
                   </span>
-                  {step.name}
+                  <span>{step.name}</span>
                 </div>
               </Link>
 
               {index < steps.length - 1 && (
-                <div style={{ 
-                  width: '20px', height: '2px', 
-                  background: isPassed ? '#f0c040' : 'rgba(74,94,128,0.3)',
-                  margin: '0 0.2rem'
-                }}></div>
+                <div className={`w-8 h-[2px] mx-1 ${
+                  isPassed ? 'bg-emerald-400' : 'bg-slate-200'
+                }`} />
               )}
             </div>
           );

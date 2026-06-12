@@ -75,7 +75,7 @@ async function extractFromText(text) {
   const truncated = text.slice(0, 8000); // Claude token limit safety
 
   const response = await client.messages.create({
-    model:      'claude-opus-4-5',
+    model:      'claude-3-5-sonnet-latest',
     max_tokens: 512,
     system:     EXTRACTION_SYSTEM_PROMPT,
     messages: [
@@ -99,7 +99,7 @@ async function extractFromImage(buffer, mimetype) {
   const { base64, mediaType } = toBase64Vision(buffer, mimetype);
 
   const response = await client.messages.create({
-    model:      'claude-opus-4-5',
+    model:      'claude-3-5-sonnet-latest',
     max_tokens: 512,
     system:     EXTRACTION_SYSTEM_PROMPT,
     messages: [
@@ -214,7 +214,7 @@ Do not use technical jargon.`;
 
   try {
     const response = await client.messages.create({
-      model:      'claude-opus-4-5',
+      model:      'claude-3-5-sonnet-latest',
       max_tokens: 200,
       system:     'You are Varasat Mitra, an empathetic inheritance assistant. Explain document findings simply.',
       messages:   [{ role: 'user', content: prompt }],

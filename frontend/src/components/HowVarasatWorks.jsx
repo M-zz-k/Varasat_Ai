@@ -1,5 +1,40 @@
 import React from 'react';
 
+function getWorksSvgIcon(name, classes = "w-5 h-5 text-slate-700") {
+  switch (name) {
+    case 'robot':
+    case 'ai':
+      return (
+        <svg className={classes} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 3h6m-3 0v3m-5 3h10a2 2 0 012 2v6a2 2 0 01-2 2H7a2 2 0 01-2-2v-6a2 2 0 012-2z" />
+        </svg>
+      );
+    case 'book':
+    case 'rag':
+      return (
+        <svg className={classes} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+        </svg>
+      );
+    case 'lightning':
+    case 'wolfram':
+      return (
+        <svg className={classes} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+        </svg>
+      );
+    case 'document':
+    case 'pdf':
+      return (
+        <svg className={classes} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 export default function HowVarasatWorks() {
   return (
     <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 md:p-8 font-sans">
@@ -13,13 +48,13 @@ export default function HowVarasatWorks() {
 
       {/* AI Pipeline Flow */}
       <div className="flex flex-col items-center gap-2 mb-8">
-        <FlowStep icon="🤖" title="Varasat AI Agent" desc="Understands intent and reasons securely" color="#10b981" />
+        <FlowStep iconKey="robot" title="Varasat AI Agent" desc="Understands intent and reasons securely" color="#10b981" />
         <FlowArrow />
-        <FlowStep icon="📚" title="Knowledge Retrieval (RAG)" desc="Fetches verified legal procedures" color="#f59e0b" />
+        <FlowStep iconKey="book" title="Knowledge Retrieval (RAG)" desc="Fetches verified legal procedures" color="#f59e0b" />
         <FlowArrow />
-        <FlowStep icon="⚡" title="Financial Analysis" desc="Calculates inflation impact with Wolfram" color="#8b5cf6" />
+        <FlowStep iconKey="lightning" title="Financial Analysis" desc="Calculates inflation impact with Wolfram" color="#8b5cf6" />
         <FlowArrow />
-        <FlowStep icon="📄" title="Document Assistance" desc="Analyzes statements & drafts legal forms" color="#3b82f6" />
+        <FlowStep iconKey="document" title="Document Assistance" desc="Analyzes statements & drafts legal forms" color="#3b82f6" />
       </div>
 
       {/* Engine Breakdown */}
@@ -27,9 +62,9 @@ export default function HowVarasatWorks() {
         
         {/* Claude Column */}
         <div className="bg-emerald-50/40 border border-emerald-100 rounded-xl p-5 md:p-6 transition-all duration-200 hover:shadow-xs">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-xl">🤖</span>
-            <span className="fontWeight-700 text-base font-bold text-emerald-800">Agent & Reasoning</span>
+          <div className="flex items-center gap-2.5 mb-4">
+            {getWorksSvgIcon('robot', "w-5 h-5 text-emerald-750")}
+            <span className="text-base font-bold text-emerald-800">Agent & Reasoning</span>
           </div>
           <div className="text-slate-700 text-sm space-y-2">
             <div className="flex items-center gap-2">
@@ -53,9 +88,9 @@ export default function HowVarasatWorks() {
 
         {/* Wolfram Column */}
         <div className="bg-indigo-50/40 border border-indigo-100 rounded-xl p-5 md:p-6 transition-all duration-200 hover:shadow-xs">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-xl">⚡</span>
-            <span className="fontWeight-700 text-base font-bold text-indigo-800">Wolfram Language</span>
+          <div className="flex items-center gap-2.5 mb-4">
+            {getWorksSvgIcon('lightning', "w-5 h-5 text-indigo-755")}
+            <span className="text-base font-bold text-indigo-800">Wolfram Language</span>
           </div>
           <div className="text-slate-700 text-sm space-y-2">
             <div className="flex items-center gap-2">
@@ -82,14 +117,14 @@ export default function HowVarasatWorks() {
   );
 }
 
-function FlowStep({ icon, title, desc, color }) {
+function FlowStep({ iconKey, title, desc, color }) {
   return (
     <div className="flex items-center gap-4 bg-white border border-slate-200/80 p-4 rounded-xl shadow-xs w-full max-w-md transition-all duration-200 hover:border-slate-300 hover:shadow-sm">
       <div 
-        className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-50 text-xl font-bold flex-shrink-0"
+        className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-50 flex-shrink-0"
         style={{ borderLeft: `4px solid ${color}` }}
       >
-        {icon}
+        {getWorksSvgIcon(iconKey, `w-5 h-5`)}
       </div>
       <div className="flex-1 min-w-0">
         <h4 className="font-bold text-slate-800 text-sm leading-tight">{title}</h4>

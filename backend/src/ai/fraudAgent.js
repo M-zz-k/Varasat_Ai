@@ -189,7 +189,7 @@ Analyse these findings and return the JSON response.`;
 
   try {
     const response = await client.messages.create({
-      model:    'claude-opus-4-5',
+      model:    'claude-3-5-sonnet-latest',
       max_tokens: 800,
       system:   FRAUD_SYSTEM,
       messages: [{ role: 'user', content: claudePrompt }],

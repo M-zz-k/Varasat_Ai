@@ -102,8 +102,10 @@ export default function Tracker() {
             ← Home
           </Link>
           
-          <div className="w-10 h-10 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-lg">
-            📌
+          <div className="w-10 h-10 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-amber-400">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+            </svg>
           </div>
 
           <div>
@@ -197,13 +199,13 @@ export default function Tracker() {
                 to="/chat" 
                 className="flex-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-xs h-11 tracking-wider transition-all duration-200 hover:scale-[1.02] hover:shadow-sm"
               >
-                💬 Ask Varasat Mitra
+                Ask Varasat Mitra
               </Link>
               <Link 
                 to="/upload" 
                 className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-800 bg-transparent hover:bg-slate-900/50 text-slate-300 font-semibold text-xs h-11 transition-all duration-200"
               >
-                📂 Ingest New Documents
+                Ingest New Documents
               </Link>
             </div>
 

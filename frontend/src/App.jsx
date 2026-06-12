@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { LanguageProvider } from './context/LanguageContext';
+import ErrorBoundary from './components/ErrorBoundary';
+
 import Home           from './pages/Home';
 import Chat           from './pages/Chat';
-import Upload         from './pages/Upload';
 import DocumentUpload from './pages/DocumentUpload';
 import Tracker        from './pages/Tracker';
 import Analytics      from './pages/Analytics';
@@ -13,22 +16,28 @@ import DemoMode       from './pages/DemoMode';
 
 import './index.css';
 
+const queryClient = new QueryClient();
+
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/"          element={<Home           />} />
-        <Route path="/chat"      element={<Chat           />} />
-        <Route path="/login"     element={<Login          />} />
-        <Route path="/upload"    element={<Upload         />} />
-        <Route path="/analyze"   element={<DocumentUpload />} />
-        <Route path="/tracker"   element={<Tracker        />} />
-        <Route path="/analytics" element={<Analytics      />} />
-        <Route path="/claim-analysis" element={<ClaimAnalysis />} />
-        <Route path="/asset-discovery" element={<AssetDiscovery />} />
-        <Route path="/generate-document" element={<DocumentGenerator />} />
-        <Route path="/demo"      element={<DemoMode       />} />
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/"          element={<ErrorBoundary><Home           /></ErrorBoundary>} />
+            <Route path="/chat"      element={<ErrorBoundary><Chat           /></ErrorBoundary>} />
+            <Route path="/login"     element={<ErrorBoundary><Login          /></ErrorBoundary>} />
+            <Route path="/upload"    element={<ErrorBoundary><DocumentUpload /></ErrorBoundary>} />
+            <Route path="/analyze"   element={<ErrorBoundary><DocumentUpload /></ErrorBoundary>} />
+            <Route path="/tracker"   element={<ErrorBoundary><Tracker        /></ErrorBoundary>} />
+            <Route path="/analytics" element={<ErrorBoundary><Analytics      /></ErrorBoundary>} />
+            <Route path="/claim-analysis" element={<ErrorBoundary><ClaimAnalysis /></ErrorBoundary>} />
+            <Route path="/asset-discovery" element={<ErrorBoundary><AssetDiscovery /></ErrorBoundary>} />
+            <Route path="/generate-document" element={<ErrorBoundary><DocumentGenerator /></ErrorBoundary>} />
+            <Route path="/demo"      element={<ErrorBoundary><DemoMode       /></ErrorBoundary>} />
+          </Routes>
+        </BrowserRouter>
+      </LanguageProvider>
+    </QueryClientProvider>
   );
 }

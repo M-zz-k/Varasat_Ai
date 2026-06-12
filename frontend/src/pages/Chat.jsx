@@ -1,102 +1,175 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { sendMessage, clearChatSession } from '../services/api';
+import { useTranslation } from '../hooks/useTranslation';
+import { useDocumentStore } from '../stores/useDocumentStore';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const LANGUAGES = [
-  { code: 'English',  label: '🇬🇧 English'  },
-  { code: 'Hindi',    label: '🇮🇳 Hindi'    },
-  { code: 'Kannada',  label: '🇮🇳 Kannada'  },
-  { code: 'Tamil',    label: '🇮🇳 Tamil'    },
-  { code: 'Telugu',   label: '🇮🇳 Telugu'   },
-  { code: 'Marathi',  label: '🇮🇳 Marathi'  },
-  { code: 'Bengali',  label: '🇮🇳 Bengali'  },
-  { code: 'Gujarati', label: '🇮🇳 Gujarati' },
+  { code: 'English',  label: 'English'  },
+  { code: 'Hindi',    label: 'Hindi'    },
+  { code: 'Kannada',  label: 'Kannada'  },
+  { code: 'Tamil',    label: 'Tamil'    },
+  { code: 'Telugu',   label: 'Telugu'   },
+  { code: 'Marathi',  label: 'Marathi'  },
+  { code: 'Bengali',  label: 'Bengali'  },
+  { code: 'Gujarati', label: 'Gujarati' },
 ];
 
 const SUGGESTION_PROMPTS = [
-  { icon: '🏦', text: 'My father passed away. How do I find his bank accounts?' },
-  { icon: '📋', text: 'My mother had an LIC policy. How do I claim it?'         },
-  { icon: '📜', text: 'How do I get a Legal Heir Certificate?'                   },
-  { icon: '💼', text: 'What documents do I need to recover my husband\'s PF?'   },
+  { icon: 'bank',      text: 'My father passed away. How do I find his bank accounts?' },
+  { icon: 'document',  text: 'My mother had an LIC policy. How do I claim it?'         },
+  { icon: 'scroll',    text: 'How do I get a Legal Heir Certificate?'                   },
+  { icon: 'briefcase', text: "What documents do I need to recover my husband's PF?"     },
 ];
 
-const INITIAL_MESSAGE = {
-  role:      'assistant',
-  content:   '🙏 Namaste! I am **Varasat Mitra**, your inheritance recovery guide.\n\nI help Indian families find and claim assets belonging to deceased family members — bank accounts, insurance policies, provident funds, shares, and more.\n\nI am sorry for your loss. Please tell me:\n\n1. Who passed away (your relation to them)?\n2. What kind of assets are you trying to recover?',
-  timestamp: new Date().toISOString(),
-  id:        'welcome',
-};
+// ─── Inline SVG Icons ──────────────────────────────────────────────────────────
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+function SuggestionIcon({ name }) {
+  switch (name) {
+    case 'bank':
+      return <svg className="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M3 10l9-7 9 7M3 10v11a1 1 0 001 1h5v-4h4v4h5a1 1 0 001-1V10" /></svg>;
+    case 'document':
+      return <svg className="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>;
+    case 'scroll':
+      return <svg className="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h10" /></svg>;
+    case 'briefcase':
+      return <svg className="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" /></svg>;
+    default:
+      return null;
+  }
+}
+
+const MitraIcon = () => (
+  <svg className="w-5 h-5 text-slate-950" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="3"/><path strokeLinecap="round" strokeLinejoin="round" d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+  </svg>
+);
+
+const UserIcon = () => (
+  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/>
+  </svg>
+);
+
+const SendIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+  </svg>
+);
+
+const CopyIcon = () => (
+  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+);
+
+// ─── Text Renderer ─────────────────────────────────────────────────────────────
+// Renders markdown-style **bold** and bullet points cleanly
 
 function FormattedText({ text }) {
   if (!text) return null;
-  const lines = text.split('\n');
 
   return (
-    <div className="space-y-1">
-      {lines.map((line, i) => {
-        if (line.trim() === '') return <div key={i} className="h-2" />;
+    <div className="space-y-1.5">
+      {text.split('\n').map((line, i) => {
+        if (line.trim() === '') return <div key={i} className="h-1.5" />;
 
-        // Bold text parser
-        const parts = line.split(/\*\*(.*?)\*\//g);
+        // Render **bold** correctly (close with **)
+        const parts = line.split(/\*\*(.*?)\*\*/g);
         const rendered = parts.map((part, j) =>
           j % 2 === 1
-            ? <strong key={j} className="text-amber-500 font-extrabold">{part}</strong>
+            ? <strong key={j} className="text-amber-400 font-extrabold">{part}</strong>
             : part
         );
 
-        const isListItem = /^\d+\.\s/.test(line.trim());
+        const isBullet  = line.trim().startsWith('- ') || line.trim().startsWith('• ');
+        const isNumList = /^\d+\.\s/.test(line.trim());
 
-        return (
-          <div 
-            key={i} 
-            className={`flex items-start ${isListItem ? 'gap-1.5 mb-1 pl-2' : ''}`}
-          >
-            {rendered}
-          </div>
-        );
+        if (isBullet) {
+          return (
+            <div key={i} className="flex items-start gap-2 pl-1">
+              <span className="text-amber-500 mt-0.5 flex-shrink-0">•</span>
+              <span>{rendered}</span>
+            </div>
+          );
+        }
+        if (isNumList) {
+          return (
+            <div key={i} className="flex items-start gap-2 pl-1">
+              <span className="text-slate-400 font-bold flex-shrink-0 min-w-[18px]">
+                {line.trim().match(/^\d+/)?.[0]}.
+              </span>
+              <span>{rendered}</span>
+            </div>
+          );
+        }
+
+        return <div key={i}>{rendered}</div>;
       })}
     </div>
   );
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+// ─── Sub-components ────────────────────────────────────────────────────────────
 
 function MessageBubble({ msg }) {
   const isUser = msg.role === 'user';
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(msg.content).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const time = new Date(msg.timestamp).toLocaleTimeString([], {
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  });
 
   return (
-    <div className={`flex items-end gap-3 mb-4 max-w-[80%] ${isUser ? 'self-end flex-row-reverse' : 'self-start'}`}>
-      
+    <div className={`flex items-end gap-3 mb-4 max-w-[88%] ${isUser ? 'self-end flex-row-reverse' : 'self-start'}`}>
+
       {/* Avatar */}
-      <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-lg ${
-        isUser 
-          ? 'bg-slate-800 text-white border border-slate-700' 
-          : 'bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-500/10'
+      <div className={`w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center ${
+        isUser
+          ? 'bg-slate-800 border border-slate-700'
+          : 'bg-gradient-to-b from-amber-400 to-amber-600 shadow-md shadow-amber-500/10'
       }`}>
-        {isUser ? '👤' : '⚖️'}
+        {isUser ? <UserIcon /> : <MitraIcon />}
       </div>
 
-      {/* Bubble Container */}
-      <div className={`p-4 rounded-2xl shadow-sm text-sm md:text-[14px] leading-relaxed break-words relative transition-all ${
-        isUser 
-          ? 'bg-slate-900 border border-slate-800 text-white rounded-tr-none' 
-          : 'bg-slate-900/60 border border-slate-850/80 text-slate-200 rounded-tl-none'
+      {/* Bubble */}
+      <div className={`group relative p-4 rounded-2xl text-sm leading-relaxed break-words shadow-sm transition-all ${
+        isUser
+          ? 'bg-slate-900 border border-slate-800 text-white rounded-tr-none'
+          : 'bg-slate-900/60 border border-slate-800/80 text-slate-200 rounded-tl-none'
       }`}>
-        <FormattedText text={msg.content} />
+
+        {/* Copy button (AI messages only) */}
+        {!isUser && (
+          <button
+            onClick={handleCopy}
+            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
+            title="Copy"
+          >
+            {copied ? <CheckIcon /> : <CopyIcon />}
+          </button>
+        )}
+
+        <div className="pr-5">
+          <FormattedText text={msg.content} />
+        </div>
 
         {/* Timestamp */}
-        <div className="text-[10px] text-slate-500 mt-2 text-right">
-          {new Date(msg.timestamp).toLocaleTimeString('en-IN', {
-            hour:   '2-digit',
-            minute: '2-digit',
-          })}
-        </div>
+        <div className="text-[10px] text-slate-500 mt-2 text-right font-mono">{time}</div>
       </div>
-
     </div>
   );
 }
@@ -104,15 +177,14 @@ function MessageBubble({ msg }) {
 function TypingIndicator() {
   return (
     <div className="flex items-end gap-3 mb-4 self-start">
-      <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-lg bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-500/10">
-        ⚖️
+      <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center bg-gradient-to-b from-amber-400 to-amber-600 shadow-md shadow-amber-500/10">
+        <MitraIcon />
       </div>
-
-      <div className="bg-slate-900/60 border border-slate-850 p-4 rounded-2xl rounded-tl-none flex items-center gap-1">
+      <div className="bg-slate-900/60 border border-slate-800 px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-1.5">
         {[0, 1, 2].map(i => (
-          <span 
-            key={i} 
-            className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-bounce-subtle"
+          <span
+            key={i}
+            className="w-2 h-2 rounded-full bg-amber-500 animate-bounce"
             style={{ animationDelay: `${i * 0.18}s` }}
           />
         ))}
@@ -121,252 +193,289 @@ function TypingIndicator() {
   );
 }
 
-function ErrorBanner({ message, onDismiss }) {
-  return (
-    <div className="flex items-center justify-between p-3.5 bg-red-950/40 border border-red-900/60 rounded-xl text-red-400 text-xs font-semibold mb-3">
-      <span>⚠️ {message}</span>
-      <button onClick={onDismiss} className="text-red-400 hover:text-red-300 font-bold text-sm">✕</button>
-    </div>
-  );
-}
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
+// ─── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function Chat() {
-  const [messages,  setMessages]  = useState([INITIAL_MESSAGE]);
-  const [input,     setInput]     = useState('');
-  const [loading,   setLoading]   = useState(false);
-  const [language,  setLanguage]  = useState('English');
-  const [error,     setError]     = useState('');
-  const [charCount, setCharCount] = useState(0);
+  const { t } = useTranslation();
+  const ocrResults = useDocumentStore(state => state.ocrResults);
 
-  const [sessionId] = useState(() => `vs-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`);
+  const getInitialMessage = () => {
+    if (ocrResults) {
+      const pName = ocrResults.person_name?.value || ocrResults.person_name || 'Ramesh Kumar';
+      const assetType = ocrResults.asset_type?.value || ocrResults.asset_type || 'Bank Account';
+      const inst = ocrResults.institution?.value || ocrResults.institution || 'State Bank of India';
+      const amt = ocrResults.amount?.value || ocrResults.amount || '8,80,000';
+      const nom = ocrResults.nominee?.value || ocrResults.nominee || 'None Registered';
 
-  const bottomRef = useRef(null);
-  const inputRef  = useRef(null);
+      return `Namaste! I see you just analyzed a document for **${pName}**.\n\nHere are the details we discovered:\n- **Asset Type**: **${assetType}**\n- **Institution**: **${inst}**\n- **Amount**: **₹${amt}**\n- **Nominee Status**: **${nom}**\n\nI can help you prepare the claim forms, write a formal claim letter, or explain the exact legal steps to claim this asset. What would you like to do first?`;
+    }
+    return t('chat.welcome');
+  };
+
+  const [messages, setMessages] = useState(() => [
+    {
+      role:      'assistant',
+      content:   getInitialMessage(),
+      timestamp: new Date().toISOString(),
+      id:        'welcome',
+    }
+  ]);
+  const [input,    setInput]    = useState('');
+  const [loading,  setLoading]  = useState(false);
+  const [language, setLanguage] = useState('English');
+  const [error,    setError]    = useState('');
+
+  const chatEndRef = useRef(null);
+  const inputRef   = useRef(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  const handleSend = useCallback(async (overrideText) => {
-    const userText = (overrideText ?? input).trim();
-    if (!userText || loading) return;
+  // ── Core send handler — calls backend JSON endpoint ────────────────────────
+  async function handleSend(textToSend) {
+    const text = (textToSend || input).trim();
+    if (!text || loading) return;
 
     setError('');
-    setInput('');
-    setCharCount(0);
 
     const userMsg = {
       role:      'user',
-      content:   userText,
+      content:   text,
       timestamp: new Date().toISOString(),
-      id:        `u-${Date.now()}`,
+      id:        `user-${Date.now()}`,
     };
+
     setMessages(prev => [...prev, userMsg]);
+    if (!textToSend) setInput('');
     setLoading(true);
 
-    try {
-      const data = await sendMessage(userText, language, sessionId);
-      if (!data.success) throw new Error(data.error || 'Unexpected error.');
+    // Placeholder for the streaming assistant reply
+    const assistantId = `msg-${Date.now()}`;
+    setMessages(prev => [...prev, {
+      role:      'assistant',
+      content:   '',
+      timestamp: new Date().toISOString(),
+      id:        assistantId,
+    }]);
 
-      setMessages(prev => [...prev, {
-        role:      'assistant',
-        content:   data.reply,
-        timestamp: new Date().toISOString(),
-        id:        `a-${Date.now()}`,
-      }]);
+    try {
+      const res = await fetch('/api/chat', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ message: text, language, sessionId: 'default' }),
+      });
+
+      if (!res.ok) {
+        let errMsg = 'Failed to communicate with Varasat Mitra.';
+        try {
+          const errJson = await res.json();
+          errMsg = errJson?.error?.message || errJson?.error || errMsg;
+        } catch (_) {}
+        throw new Error(errMsg);
+      }
+
+      const contentType = res.headers.get('content-type') || '';
+
+      // ── Handle JSON response (current backend) ──────────────────────────────
+      if (contentType.includes('application/json')) {
+        const data = await res.json();
+        const reply = data.reply || data.message || 'Varasat Mitra responded.';
+        setMessages(prev =>
+          prev.map(m => m.id === assistantId ? { ...m, content: reply } : m)
+        );
+      }
+      // ── Handle SSE / text stream (future backend upgrade) ──────────────────
+      else if (contentType.includes('text/event-stream') || contentType.includes('text/plain')) {
+        const reader  = res.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let accumulated = '';
+        let done = false;
+
+        while (!done) {
+          const { value, done: readerDone } = await reader.read();
+          done = readerDone;
+          if (value) {
+            const chunk = decoder.decode(value, { stream: !done });
+            for (const line of chunk.split('\n')) {
+              if (line.startsWith('data: ')) {
+                const raw = line.slice(6).trim();
+                if (raw === '[DONE]') { done = true; break; }
+                try {
+                  const parsed = JSON.parse(raw);
+                  if (parsed.text) {
+                    accumulated += parsed.text;
+                    setMessages(prev =>
+                      prev.map(m => m.id === assistantId ? { ...m, content: accumulated } : m)
+                    );
+                  }
+                } catch (_) {}
+              }
+            }
+          }
+        }
+      }
+      // ── Unknown content type — try reading as text ─────────────────────────
+      else {
+        const raw = await res.text();
+        setMessages(prev =>
+          prev.map(m => m.id === assistantId ? { ...m, content: raw || 'No response received.' } : m)
+        );
+      }
     } catch (err) {
-      setError(err.message || 'Could not reach Varasat Mitra. Please try again.');
+      console.error('[Chat] Error:', err);
+      // Replace the empty placeholder with error message
+      setMessages(prev =>
+        prev.map(m =>
+          m.id === assistantId
+            ? { ...m, content: '⚠️ ' + (err.message || 'Something went wrong. Please try again.') }
+            : m
+        )
+      );
+      setError(err.message || 'Failed to query Varasat Mitra.');
     } finally {
       setLoading(false);
-      setTimeout(() => inputRef.current?.focus(), 50);
+      inputRef.current?.focus();
     }
-  }, [input, language, loading, sessionId]);
+  }
 
-  async function handleNewChat() {
-    if (!window.confirm('Start a new conversation? Your current chat will be cleared.')) return;
-    await clearChatSession(sessionId).catch(() => {});
-    setMessages([{ ...INITIAL_MESSAGE, timestamp: new Date().toISOString() }]);
+  async function handleClear() {
+    if (loading) return;
+    try {
+      await fetch('/api/chat/clear', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ sessionId: 'default' }),
+      });
+    } catch (_) {}
+    setMessages([INITIAL_MESSAGE]);
     setError('');
-    setInput('');
-    setCharCount(0);
   }
-
-  function handleKeyDown(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  }
-
-  function handleInputChange(e) {
-    const val = e.target.value;
-    if (val.length <= 2000) {
-      setInput(val);
-      setCharCount(val.length);
-    }
-  }
-
-  const canSend = input.trim().length > 0 && !loading;
 
   return (
-    <div className="h-screen bg-slate-950 flex flex-col font-sans antialiased text-slate-300 relative overflow-hidden">
-      
-      {/* Glowing backdrop vectors */}
-      <div className="absolute w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[120px] -top-20 -left-20 pointer-events-none"></div>
-      <div className="absolute w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[120px] -bottom-20 -right-20 pointer-events-none"></div>
+    <div className="min-h-screen bg-slate-950 font-sans antialiased text-slate-300 flex flex-col relative overflow-hidden">
 
-      <style>{`
-        .animate-bounce-subtle {
-          animation: bounce 1.4s ease infinite;
-        }
-        @keyframes bounce {
-          0%, 60%, 100% { transform: translateY(0); }
-          30% { transform: translateY(-6px); }
-        }
-      `}</style>
+      {/* Ambient orbs */}
+      <div className="absolute w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[140px] -top-40 -left-40 pointer-events-none" />
+      <div className="absolute w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[140px] -bottom-40 -right-40 pointer-events-none" />
 
-      {/* ── Header ────────────────────────────────────────────────────────── */}
-      <header className="flex items-center justify-between px-6 py-3.5 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 flex-shrink-0 z-10">
-        
-        {/* Header Left */}
+      {/* ── Header ── */}
+      <header className="flex items-center justify-between px-6 py-3.5 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
         <div className="flex items-center gap-3">
-          <Link 
-            to="/" 
-            className="text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-850/50 transition-all mr-2"
+          <Link
+            to="/"
+            className="text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-800/50 transition-all mr-1"
           >
             ← Home
           </Link>
-          
-          <div className="w-10 h-10 rounded-full bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black flex items-center justify-center text-lg shadow-md shadow-amber-500/10">
-            ⚖️
+
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 flex items-center justify-center shadow-sm shadow-amber-500/20">
+            <MitraIcon />
           </div>
 
           <div>
-            <h1 className="font-extrabold text-white text-sm leading-none">Varasat Mitra</h1>
-            <div className="text-[10px] text-emerald-400 flex items-center gap-1.5 mt-1 font-bold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              AI Inheritance Guide
-            </div>
+            <h1 className="font-extrabold text-white text-sm leading-none">{t('chat.title')}</h1>
+            <p className="text-[10px] text-slate-500 mt-0.5 font-semibold">{t('chat.subtitle')}</p>
           </div>
         </div>
 
-        {/* Header Right */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <select
             value={language}
             onChange={e => setLanguage(e.target.value)}
-            className="bg-slate-950 border border-slate-850/80 text-slate-200 text-xs font-semibold rounded-lg px-2.5 py-1.5 cursor-pointer outline-none focus:border-amber-500"
+            className="bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold text-slate-300 px-2.5 py-1.5 outline-none cursor-pointer focus:border-amber-500 transition-all"
           >
             {LANGUAGES.map(l => (
-              <option key={l.code} value={l.code}>{l.label}</option>
+              <option key={l.code} value={l.code} className="bg-slate-950">{l.label}</option>
             ))}
           </select>
 
           <button
-            onClick={handleNewChat}
-            className="px-3 py-1.5 bg-amber-500/10 border border-amber-500/25 text-amber-500 hover:bg-amber-500/20 text-xs font-bold rounded-lg cursor-pointer transition-all flex items-center gap-1"
+            onClick={handleClear}
+            disabled={loading}
+            className="text-xs font-bold text-slate-400 hover:text-white px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-800/50 cursor-pointer disabled:opacity-40 transition-all"
           >
-            🔄 New Chat
+            {t('chat.clear')}
           </button>
         </div>
       </header>
 
-      {/* ── Messages Stream ──────────────────────────────────────────────── */}
-      <main className="flex-1 overflow-y-auto px-6 py-6 flex flex-col z-10 scrollbar-thin scrollbar-thumb-amber-500/20">
-        
-        {/* Suggestion Chips */}
-        {messages.length === 1 && (
-          <div className="max-w-3xl mx-auto w-full mb-8">
-            <p className="text-center text-slate-500 text-xs font-semibold uppercase tracking-wider mb-4">
-              — Quick start prompts —
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-              {SUGGESTION_PROMPTS.map(s => (
-                <button
-                  key={s.text}
-                  onClick={() => handleSend(s.text)}
-                  className="flex items-center gap-3.5 bg-slate-900/40 border border-slate-850 p-4 rounded-xl text-left cursor-pointer transition-all hover:bg-slate-900 hover:border-amber-500/30 group"
-                >
-                  <span className="text-2xl transition-transform group-hover:scale-110 duration-200">{s.icon}</span>
-                  <span className="text-slate-300 group-hover:text-white text-xs font-semibold leading-relaxed">{s.text}</span>
-                </button>
-              ))}
-            </div>
+      {/* ── Chat area ── */}
+      <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-6 flex flex-col overflow-y-auto pb-36">
+
+        {/* Error banner */}
+        {error && (
+          <div className="flex items-center justify-between mb-4 p-3 bg-red-950/40 border border-red-900/50 rounded-xl text-red-400 text-xs font-semibold">
+            <span>{error}</span>
+            <button onClick={() => setError('')} className="ml-3 text-red-400 hover:text-red-200 cursor-pointer font-bold">✕</button>
           </div>
         )}
 
-        {/* Message Feed */}
-        <div className="flex-1 max-w-3xl mx-auto w-full flex flex-col">
+        {/* Messages */}
+        <div className="flex flex-col flex-1">
           {messages.map(msg => (
-            <MessageBubble key={msg.id || msg.timestamp} msg={msg} />
+            <MessageBubble key={msg.id} msg={msg} />
           ))}
           {loading && <TypingIndicator />}
-          <div ref={bottomRef} className="h-4" />
+          <div ref={chatEndRef} />
         </div>
       </main>
 
-      {/* ── Footer / Text Input Area ─────────────────────────────────────── */}
-      <footer className="px-6 py-4 bg-slate-900/60 backdrop-blur-md border-t border-slate-850/80 flex-shrink-0 z-10">
-        <div className="max-w-3xl mx-auto w-full">
-          
-          {error && <ErrorBanner message={error} onDismiss={() => setError('')} />}
+      {/* ── Suggestion prompts (only when fresh) ── */}
+      {messages.length === 1 && !loading && (
+        <div className="fixed bottom-24 inset-x-0 max-w-2xl mx-auto px-4 sm:px-6 z-30">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {SUGGESTION_PROMPTS.map((p, i) => (
+              <button
+                key={i}
+                onClick={() => handleSend(p.text)}
+                className="flex items-start gap-2.5 p-3.5 bg-slate-900/80 border border-slate-800 hover:border-amber-500/40 rounded-xl text-left text-xs font-semibold text-slate-400 hover:text-white transition-all cursor-pointer backdrop-blur-sm"
+              >
+                <SuggestionIcon name={p.icon} />
+                <span className="mt-0.5">{p.text}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-          {/* Typing Area Container */}
-          <div className="flex items-end gap-3 bg-slate-950 border border-slate-850 focus-within:border-amber-500/30 rounded-xl p-3.5 transition-colors">
-            
-            <textarea
+      {/* ── Input footer ── */}
+      <footer className="fixed bottom-0 inset-x-0 bg-slate-950/90 backdrop-blur-md border-t border-slate-900 py-3 px-4 sm:px-6 z-40">
+        <div className="max-w-3xl mx-auto w-full">
+          <form
+            onSubmit={e => { e.preventDefault(); handleSend(); }}
+            className="flex gap-2 bg-slate-900 border border-slate-800 rounded-xl p-2 items-center"
+          >
+            <input
               ref={inputRef}
               value={input}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask Varasat Mitra a question... (Enter to send, Shift+Enter for newline)"
-              rows={1}
+              onChange={e => setInput(e.target.value)}
+              placeholder={t('chat.placeholder')}
               disabled={loading}
-              className="flex-1 bg-transparent border-none text-white text-sm placeholder-slate-600 outline-none resize-none max-h-24 overflow-y-auto leading-relaxed"
+              className="flex-1 bg-transparent text-white placeholder-slate-600 text-sm font-semibold outline-none border-none px-3 py-1"
             />
 
-            {/* Inactive Voice Indicator */}
             <button
-              title="Voice input"
-              disabled
-              className="w-10 h-10 rounded-lg bg-slate-900/40 border border-slate-850 text-slate-600 text-lg flex items-center justify-center flex-shrink-0 cursor-not-allowed"
+              type="submit"
+              disabled={!input.trim() || loading}
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-extrabold text-xs h-9 px-4 tracking-wider transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              🎙️
+              {loading ? (
+                <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  <SendIcon />
+                  {t('chat.send')}
+                </>
+              )}
             </button>
+          </form>
 
-            {/* Submit Action */}
-            <button
-              onClick={() => handleSend()}
-              disabled={!canSend}
-              className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all ${
-                canSend 
-                  ? 'bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-bold hover:scale-[1.02] shadow-sm shadow-amber-500/20 cursor-pointer' 
-                  : 'bg-slate-900 text-slate-600 cursor-not-allowed'
-              }`}
-            >
-              ➤
-            </button>
-          </div>
-
-          {/* Footer Metadata */}
-          <div className="flex justify-between items-center mt-2 px-1">
-            <span className="text-[10px] text-slate-500 font-bold">
-              {charCount > 0 ? `${charCount} / 2000` : ''}
-            </span>
-            <span className="text-[10px] text-slate-500 leading-none">
-              Varasat Mitra details are AI-generated. Verify all official documentation before final processing.
-            </span>
-          </div>
-
+          <p className="text-center text-[10px] text-slate-600 mt-1.5 font-medium">
+            Varasat Mitra is an AI assistant. Always verify legal advice with a qualified professional.
+          </p>
         </div>
       </footer>
-
     </div>
   );
 }

@@ -42,7 +42,7 @@ Do not include any other text or markdown outside the JSON.`;
 
   try {
     const response = await client.messages.create({
-      model:      'claude-opus-4-5',
+      model:      'claude-3-5-sonnet-latest',
       max_tokens: 400,
       system:     'You are Varasat Mitra. Explain legal processes simply. Do not use complex jargon. Return pure JSON.',
       messages:   [{ role: 'user', content: prompt }],

@@ -2,30 +2,76 @@ import { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const DOC_TYPES = [
+  { value: 'Affidavit',       label: 'Affidavit' },
+  { value: 'Indemnity Bond',  label: 'Indemnity Bond' },
+  { value: 'Claim Letter',    label: 'Claim Request Letter' },
+];
+
+// Inline SVG icons
+const IconDoc = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+    <polyline points="14 2 14 8 20 8" />
+    <line x1="16" y1="13" x2="8" y2="13" />
+    <line x1="16" y1="17" x2="8" y2="17" />
+    <polyline points="10 9 9 9 8 9" />
+  </svg>
+);
+
+const IconDownload = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" y1="15" x2="12" y2="3" />
+  </svg>
+);
+
+const IconCheck = () => (
+  <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
+
+const IconAlert = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+    <line x1="12" y1="9" x2="12" y2="13" />
+    <line x1="12" y1="17" x2="12.01" y2="17" />
+  </svg>
+);
+
+function FormField({ label, children }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{label}</label>
+      {children}
+    </div>
+  );
+}
+
 export default function DocumentGenerator() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Initialize with asset context if navigated from Claim Analysis
   const initialAssetData = location.state?.assetData || {};
 
   const [documentType, setDocumentType] = useState('Affidavit');
   const [formData, setFormData] = useState({
-    claimantName: '',
-    deceasedName: initialAssetData.personName || '',
-    relation: '',
-    institution: initialAssetData.institution || '',
-    assetType: initialAssetData.assetType || '',
-    amount: initialAssetData.amount || '',
+    claimantName:  '',
+    deceasedName:  initialAssetData.person_name || initialAssetData.personName || '',
+    relation:      '',
+    institution:   initialAssetData.institution || '',
+    assetType:     initialAssetData.asset_type  || initialAssetData.assetType  || '',
+    amount:        initialAssetData.amount       || '',
   });
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error,   setError]   = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleGenerate = async (e) => {
     e.preventDefault();
@@ -34,30 +80,22 @@ export default function DocumentGenerator() {
     setSuccess(false);
 
     try {
-      // Use arraybuffer to handle the incoming PDF binary stream
-      const response = await axios.post('/api/document/generate-pdf', {
-        documentType,
-        claimData: formData,
-      }, {
-        responseType: 'arraybuffer' 
-      });
+      const response = await axios.post(
+        '/api/document/generate-pdf',
+        { documentType, claimData: formData },
+        { responseType: 'arraybuffer' }
+      );
 
-      // Create a Blob from the PDF Stream
       const blob = new Blob([response.data], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      
-      // Create a temporary link to trigger the browser download
+      const url  = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = url;
-      const safeType = documentType.replace(/[^a-zA-Z0-9]/g, '_');
-      link.setAttribute('download', `Varasat_${safeType}.pdf`);
+      link.href  = url;
+      link.setAttribute('download', `Varasat_${documentType.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
       document.body.appendChild(link);
       link.click();
-      
-      // Cleanup
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       setSuccess(true);
     } catch (err) {
       console.error(err);
@@ -67,108 +105,166 @@ export default function DocumentGenerator() {
     }
   };
 
+  const inputClass =
+    'w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-700 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-slate-600 transition-all';
+
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(160deg, #0a1628 0%, #0f1f3d 100%)', fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-slate-950 font-sans antialiased text-slate-300">
       {/* Header */}
-      <header style={{ padding: '1rem 2rem', background: 'rgba(10,22,40,0.8)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(212,160,23,0.15)', display: 'flex', alignItems: 'center', gap: '1rem', position: 'sticky', top: 0, zIndex: 10 }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', color: '#8fa4c8', cursor: 'pointer', fontSize: '0.95rem' }}>← Back</button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <span style={{ fontSize: '1.5rem' }}>📄</span>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#f0f4ff' }}>Legal Document Generator</div>
-            <div style={{ fontSize: '0.72rem', color: '#8fa4c8' }}>Powered by Varasat AI</div>
-          </div>
+      <header className="flex items-center gap-3 px-6 py-3.5 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1.5 text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-800/50 transition-all cursor-pointer"
+        >
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+          Back
+        </button>
+
+        <div className="w-9 h-9 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-emerald-400">
+          <IconDoc />
+        </div>
+        <div>
+          <div className="font-extrabold text-white text-sm leading-none">Legal Document Generator</div>
+          <div className="text-[10px] text-slate-500 mt-0.5 font-semibold">Powered by Varasat AI</div>
         </div>
       </header>
 
-      <main style={{ maxWidth: '600px', margin: '0 auto', padding: '2rem 1.25rem' }}>
-        
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f0f4ff', margin: '0 0 0.5rem 0' }}>
-            Generate Required Documents
-          </h1>
-          <p style={{ color: '#8fa4c8', margin: 0 }}>
+      <main className="max-w-lg mx-auto px-6 py-10">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-black text-white tracking-tight">Generate Required Documents</h1>
+          <p className="text-slate-400 text-sm mt-1.5 leading-relaxed">
             Our AI will draft formal legal text based on your claim details.
           </p>
         </div>
 
+        {/* Error */}
         {error && (
-          <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid #ef4444', color: '#fca5a5', padding: '1rem', borderRadius: '12px', marginBottom: '1.5rem', textAlign: 'center' }}>
-            ⚠️ {error}
+          <div className="flex items-center gap-2.5 p-3.5 bg-red-950/30 border border-red-800/50 rounded-xl mb-5 text-red-400 text-xs font-semibold">
+            <IconAlert />
+            {error}
           </div>
         )}
 
+        {/* Success */}
         {success && (
-          <div style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid #10b981', color: '#a7f3d0', padding: '1.5rem', borderRadius: '12px', marginBottom: '1.5rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
-            <h3 style={{ margin: '0 0 0.5rem 0', color: '#10b981' }}>Your document is ready!</h3>
-            <p style={{ margin: 0, fontSize: '0.9rem' }}>The PDF has been downloaded to your device automatically.</p>
+          <div className="flex flex-col items-center gap-2 p-5 bg-emerald-950/20 border border-emerald-700/30 rounded-2xl mb-5 text-center">
+            <IconCheck />
+            <h3 className="text-emerald-400 font-bold text-base">Your document is ready!</h3>
+            <p className="text-slate-400 text-xs">The PDF has been downloaded to your device automatically.</p>
           </div>
         )}
 
-        <form onSubmit={handleGenerate} className="glass" style={{ padding: '2rem', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#c8d8f0', fontSize: '0.9rem', fontWeight: 600 }}>Document Type</label>
-            <select 
+        {/* Form */}
+        <form
+          onSubmit={handleGenerate}
+          className="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md p-6 rounded-2xl shadow-xl space-y-4"
+        >
+          {/* Document Type */}
+          <FormField label="Document Type">
+            <select
               value={documentType}
               onChange={(e) => setDocumentType(e.target.value)}
-              style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }}
+              className={inputClass + ' cursor-pointer'}
             >
-              <option value="Affidavit">Affidavit</option>
-              <option value="Indemnity Bond">Indemnity Bond</option>
-              <option value="Claim Letter">Claim Request Letter</option>
+              {DOC_TYPES.map(dt => (
+                <option key={dt.value} value={dt.value} className="bg-slate-950">{dt.label}</option>
+              ))}
             </select>
+          </FormField>
+
+          {/* Name grid */}
+          <div className="grid grid-cols-2 gap-3">
+            <FormField label="Claimant Name">
+              <input
+                type="text"
+                name="claimantName"
+                value={formData.claimantName}
+                onChange={handleChange}
+                required
+                placeholder="Your Full Name"
+                className={inputClass}
+              />
+            </FormField>
+            <FormField label="Relationship">
+              <input
+                type="text"
+                name="relation"
+                value={formData.relation}
+                onChange={handleChange}
+                required
+                placeholder="e.g. Son, Wife"
+                className={inputClass}
+              />
+            </FormField>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#c8d8f0', fontSize: '0.9rem', fontWeight: 600 }}>Claimant Name</label>
-              <input type="text" name="claimantName" value={formData.claimantName} onChange={handleChange} required placeholder="Your Full Name"
-                style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }} />
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#c8d8f0', fontSize: '0.9rem', fontWeight: 600 }}>Relationship</label>
-              <input type="text" name="relation" value={formData.relation} onChange={handleChange} required placeholder="e.g. Son, Wife"
-                style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }} />
-            </div>
+          <FormField label="Deceased Person Name">
+            <input
+              type="text"
+              name="deceasedName"
+              value={formData.deceasedName}
+              onChange={handleChange}
+              required
+              placeholder="Full legal name"
+              className={inputClass}
+            />
+          </FormField>
+
+          <div className="grid grid-cols-2 gap-3">
+            <FormField label="Institution">
+              <input
+                type="text"
+                name="institution"
+                value={formData.institution}
+                onChange={handleChange}
+                required
+                placeholder="e.g. SBI, LIC"
+                className={inputClass}
+              />
+            </FormField>
+            <FormField label="Asset Type">
+              <input
+                type="text"
+                name="assetType"
+                value={formData.assetType}
+                onChange={handleChange}
+                required
+                placeholder="e.g. Bank Account"
+                className={inputClass}
+              />
+            </FormField>
           </div>
 
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#c8d8f0', fontSize: '0.9rem', fontWeight: 600 }}>Deceased Person Name</label>
-            <input type="text" name="deceasedName" value={formData.deceasedName} onChange={handleChange} required
-              style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }} />
-          </div>
+          <FormField label="Amount (₹)">
+            <input
+              type="text"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              required
+              placeholder="e.g. 5,00,000"
+              className={inputClass}
+            />
+          </FormField>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#c8d8f0', fontSize: '0.9rem', fontWeight: 600 }}>Institution</label>
-              <input type="text" name="institution" value={formData.institution} onChange={handleChange} required
-                style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }} />
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#c8d8f0', fontSize: '0.9rem', fontWeight: 600 }}>Asset Type</label>
-              <input type="text" name="assetType" value={formData.assetType} onChange={handleChange} required
-                style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }} />
-            </div>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#c8d8f0', fontSize: '0.9rem', fontWeight: 600 }}>Amount (₹)</label>
-            <input type="text" name="amount" value={formData.amount} onChange={handleChange} required
-              style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }} />
-          </div>
-
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
-            className="btn-primary" 
-            style={{ marginTop: '1rem', padding: '1rem', fontSize: '1.1rem', opacity: loading ? 0.7 : 1 }}
+            className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white font-bold text-sm h-11 tracking-wide transition-all duration-200 hover:scale-[1.01] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? '⏳ Generating AI Document...' : '📄 Generate & Download PDF'}
+            {loading ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Generating AI Document…
+              </>
+            ) : (
+              <>
+                <IconDownload />
+                Generate &amp; Download PDF
+              </>
+            )}
           </button>
         </form>
-
       </main>
     </div>
   );

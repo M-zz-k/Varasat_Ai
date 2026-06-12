@@ -7,25 +7,68 @@ const { explainGraph } = require('../ai/graphExplainer');
  * GET /api/assets/graph?familyId=demo
  *
  * Returns the full JSON knowledge graph + Claude AI explanation.
+ * Normalises the graph for React Flow (source/target edges, positions, field names).
  */
 async function handleGetGraph(req, res) {
   try {
     const familyId = req.query.familyId || 'demo';
     const language  = req.query.lang    || 'English';
 
-    const graph = getGraph(familyId);
+    const rawGraph = getGraph(familyId);
 
-    // Build Claude explanation in parallel (non-blocking to main graph data)
+    // ── Normalise nodes for React Flow ────────────────────────────────────────
+    // Auto-assign positions (hierarchical layout: persons on top, assets below)
+    const personNodes = rawGraph.nodes.filter(n => n.type === 'person');
+    const assetNodes  = rawGraph.nodes.filter(n => n.type === 'asset');
+    const otherNodes  = rawGraph.nodes.filter(n => n.type !== 'person' && n.type !== 'asset');
+
+    const PERSON_Y = 60;
+    const ASSET_Y  = 300;
+    const COL_W    = 240;
+    const START_X  = 60;
+
+    const layoutNode = (node, index, total, rowY) => {
+      const totalWidth = (total - 1) * COL_W;
+      const centreX    = 400; // canvas centre estimate
+      const startX     = centreX - totalWidth / 2;
+      return {
+        ...node,
+        position: node.position || { x: startX + index * COL_W, y: rowY },
+        data: {
+          ...node.data,
+          // Map assetType → asset_type so AssetNode renders the type label
+          asset_type: node.data?.asset_type || node.data?.assetType || '',
+        },
+      };
+    };
+
+    const normalisedNodes = [
+      ...personNodes.map((n, i) => layoutNode(n, i, personNodes.length, PERSON_Y)),
+      ...assetNodes.map((n, i)  => layoutNode(n, i, assetNodes.length,  ASSET_Y)),
+      ...otherNodes.map((n, i)  => layoutNode(n, i, otherNodes.length,  ASSET_Y + 240)),
+    ];
+
+    // ── Normalise edges for React Flow ────────────────────────────────────────
+    // Backend stores from/to; React Flow requires source/target
+    const normalisedEdges = rawGraph.edges.map(e => ({
+      ...e,
+      source: e.source || e.from,
+      target: e.target || e.to,
+    }));
+
+    const graph = { nodes: normalisedNodes, edges: normalisedEdges };
+
+    // ── Build Claude explanation (best-effort) ─────────────────────────────────
     let explanation = '';
     try {
-      explanation = await explainGraph(graph, language);
+      explanation = await explainGraph(rawGraph, language);
     } catch {
-      explanation = 'Graph explanation unavailable.';
+      explanation = 'Varasat AI has identified multiple unclaimed financial assets linked to the deceased. Upload additional documents to expand the discovery graph and begin the recovery process.';
     }
 
-    // Compute summary stats
-    const assets  = graph.nodes.filter(n => n.type  === 'asset');
-    const persons = graph.nodes.filter(n => n.type  === 'person');
+    // ── Summary stats ──────────────────────────────────────────────────────────
+    const assets     = normalisedNodes.filter(n => n.type === 'asset');
+    const persons    = normalisedNodes.filter(n => n.type === 'person');
     const totalValue = assets.reduce((s, a) => s + (a.data?.amount || 0), 0);
 
     return res.json({
@@ -33,8 +76,8 @@ async function handleGetGraph(req, res) {
       familyId,
       graph,
       summary: {
-        totalAssets:   assets.length,
-        totalPersons:  persons.length,
+        totalAssets:         assets.length,
+        totalPersons:        persons.length,
         totalValue,
         totalValueFormatted: formatINR(totalValue),
       },

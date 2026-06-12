@@ -192,30 +192,35 @@ function buildGraphFromExtraction(familyId, deceasedName, extractedData) {
   let graph = graphs[familyId];
 
   if (!graph) {
-    // Bootstrap a new graph for this family
-    const personId = `person-${familyId}`;
-    graph = {
-      nodes: [
-        {
-          id:    personId,
-          type:  'person',
-          label: deceasedName || 'Deceased Person',
-          data: {
-            name:   deceasedName,
-            status: 'deceased',
+    if (familyId === 'demo') {
+      // Deep clone the default demo graph so we build on top of it
+      graph = JSON.parse(JSON.stringify(DEMO_GRAPH));
+    } else {
+      // Bootstrap a new graph for this family
+      const personId = `person-${familyId}`;
+      graph = {
+        nodes: [
+          {
+            id:    personId,
+            type:  'person',
+            label: deceasedName || 'Deceased Person',
+            data: {
+              name:   deceasedName,
+              status: 'deceased',
+            },
           },
+        ],
+        edges: [],
+        meta: {
+          familyId,
+          deceasedName,
+          totalAssets: 0,
+          totalValue:  0,
+          createdAt:   new Date().toISOString(),
+          lastUpdated: new Date().toISOString(),
         },
-      ],
-      edges: [],
-      meta: {
-        familyId,
-        deceasedName,
-        totalAssets: 0,
-        totalValue:  0,
-        createdAt:   new Date().toISOString(),
-        lastUpdated: new Date().toISOString(),
-      },
-    };
+      };
+    }
     graphs[familyId] = graph;
   }
 
