@@ -18,36 +18,22 @@ const INFLATION_OPTIONS = [
   { label: '8% (Very High)',    value: 0.08 },
 ];
 
-// ─── Input field ──────────────────────────────────────────────────────────────
+// ─── Input field helper ───────────────────────────────────────────────────────
 
 function Field({ label, icon, children, hint }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-      <label style={{
-        fontSize: '0.85rem', fontWeight: 700, color: '#a0b8d0',
-        display: 'flex', alignItems: 'center', gap: '0.4rem',
-      }}>
-        {icon} {label}
+    <div className="flex flex-col gap-1.5">
+      <label className="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+        <span>{icon}</span>
+        <span>{label}</span>
       </label>
       {children}
-      {hint && <span style={{ fontSize: '0.72rem', color: '#5a7a9a' }}>{hint}</span>}
+      {hint && <span className="text-[10px] text-slate-500 leading-tight">{hint}</span>}
     </div>
   );
 }
 
-const inputStyle = {
-  padding:      '0.85rem 1rem',
-  background:   'rgba(22,42,78,0.6)',
-  border:       '1px solid rgba(212,160,23,0.2)',
-  borderRadius: '10px',
-  color:        '#e8f0ff',
-  fontSize:     '1rem',
-  outline:      'none',
-  width:        '100%',
-  fontFamily:   "'Inter', sans-serif",
-};
-
-// ─── Main page ────────────────────────────────────────────────────────────────
+// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function Analytics() {
   const [amount,       setAmount]       = useState('');
@@ -57,7 +43,6 @@ export default function Analytics() {
   const [result,       setResult]       = useState(null);
   const [error,        setError]        = useState('');
 
-  // ── Apply preset ──────────────────────────────────────────────────────────
   function applyPreset(p) {
     setAmount(String(p.amount));
     setYears(String(p.years));
@@ -66,7 +51,6 @@ export default function Analytics() {
     setError('');
   }
 
-  // ── Run analysis ──────────────────────────────────────────────────────────
   async function handleAnalyze() {
     const amt = parseFloat(amount);
     const yrs = parseFloat(years);
@@ -88,116 +72,86 @@ export default function Analytics() {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   return (
-    <div style={{
-      minHeight:  '100vh',
-      background: 'linear-gradient(160deg, #080f1e 0%, #0d1a30 50%, #0f1f3d 100%)',
-      fontFamily: "'Inter', 'Noto Sans Devanagari', sans-serif",
-    }}>
+    <div className="min-h-screen bg-slate-950 font-sans antialiased text-slate-300 pb-16 relative overflow-hidden">
+      
+      {/* Background Lighting Orbs */}
+      <div className="absolute w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[120px] -top-20 -left-20 pointer-events-none"></div>
+      <div className="absolute w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[120px] -bottom-20 -right-20 pointer-events-none"></div>
 
-      <style>{`
-        @keyframes spin    { to { transform: rotate(360deg); } }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        input:focus, select:focus { border-color: rgba(212,160,23,0.6) !important; }
-      `}</style>
+      {/* Header */}
+      <header className="flex items-center justify-between px-6 py-4 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+        <div className="flex items-center gap-3">
+          <Link 
+            to="/" 
+            className="text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-850/50 transition-all mr-2"
+          >
+            ← Home
+          </Link>
+          
+          <div className="w-10 h-10 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-lg">
+            ⚡
+          </div>
 
-      {/* ── Header ── */}
-      <header style={{
-        display:        'flex',
-        alignItems:     'center',
-        gap:            '1rem',
-        padding:        '1rem 2rem',
-        background:     'rgba(8,15,30,0.95)',
-        backdropFilter: 'blur(16px)',
-        borderBottom:   '1px solid rgba(212,160,23,0.15)',
-        position:       'sticky', top: 0, zIndex: 50,
-      }}>
-        <Link to="/" style={{ color: '#8fa4c8', textDecoration: 'none',
-          fontSize: '0.95rem', fontWeight: 600 }}>← Home</Link>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <span style={{ fontSize: '1.5rem' }}>⚡</span>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#f0f4ff' }}>Financial Impact Analysis</div>
-            <div style={{ fontSize: '0.72rem', color: '#8fa4c8' }}>Powered by Wolfram Language</div>
+            <h1 className="font-extrabold text-white text-sm leading-none">Valuation & Financial Analysis</h1>
+            <p className="text-[10px] text-slate-500 mt-1 font-bold">Powered by Wolfram Language Engine</p>
           </div>
         </div>
       </header>
 
-      <main style={{ maxWidth: '740px', margin: '0 auto', padding: '2rem 1.25rem 3rem' }}>
-
-        {/* ── Page intro ── */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem', animation: 'fadeInUp 0.4s ease' }}>
-          <h3 style={{
-            fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', fontWeight: 800,
-            color: '#f0f4ff', lineHeight: 1.2, marginBottom: '0.6rem',
-          }}>
-            Wolfram Financial Valuation
-          </h3>
-          <p style={{ color: '#8fa4c8', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-            Varasat uses mathematical analysis via Wolfram Language to estimate the financial impact of delayed claims.
+      {/* Main Main Container */}
+      <main className="max-w-2xl mx-auto px-6 py-12 relative z-10">
+        
+        {/* Intro */}
+        <div className="text-center mb-10">
+          <h2 className="text-2xl font-black text-white tracking-tight">
+            Valuation Audit
+          </h2>
+          <p className="text-slate-400 text-sm mt-1.5 max-w-md mx-auto leading-relaxed">
+            Estimate compounding loss on dormant family assets and evaluate the return on claims recovery.
           </p>
         </div>
 
-        {/* ── Calculator card ── */}
-        <div style={{
-          background:   'rgba(15,28,55,0.8)',
-          border:       '1px solid rgba(212,160,23,0.18)',
-          borderRadius: '20px',
-          padding:      '1.75rem',
-          marginBottom: '1.5rem',
-          animation:    'fadeInUp 0.4s ease 0.1s both',
-        }}>
-          <div style={{ fontWeight: 700, fontSize: '1rem', color: '#d4a017',
-            marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            📊 Enter Asset Details
-          </div>
+        {/* Form Input Card */}
+        <div className="bg-slate-900/60 border border-slate-850/80 backdrop-blur-md p-6 rounded-2xl shadow-xl mb-6">
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6 flex items-center gap-1.5">
+            <span>📊</span> Ingestion Details
+          </h3>
 
-          {/* Quick presets */}
-          <div style={{ marginBottom: '1.25rem' }}>
-            <div style={{ fontSize: '0.78rem', color: '#6a8aaa', fontWeight: 600,
-              letterSpacing: '0.5px', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-              Quick Examples
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {/* Quick Presets */}
+          <div className="mb-6">
+            <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-2.5">
+              Quick Presets
+            </span>
+            <div className="flex flex-wrap gap-2">
               {PRESETS.map(p => (
-                <button key={p.label} onClick={() => applyPreset(p)} style={{
-                  padding:      '0.4rem 0.85rem',
-                  background:   'rgba(22,42,78,0.6)',
-                  border:       '1px solid rgba(212,160,23,0.2)',
-                  borderRadius: '8px',
-                  color:        '#d4a017',
-                  fontSize:     '0.82rem',
-                  cursor:       'pointer',
-                  fontWeight:   600,
-                  transition:   'all 0.15s',
-                }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(212,160,23,0.12)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(22,42,78,0.6)'}
-                >{p.label}</button>
+                <button 
+                  key={p.label} 
+                  onClick={() => applyPreset(p)} 
+                  className="px-3 py-1.5 bg-slate-950 border border-slate-850 hover:border-amber-500/30 text-amber-500 text-xs font-bold rounded-lg transition-all cursor-pointer"
+                >
+                  {p.label}
+                </button>
               ))}
             </div>
           </div>
 
-          {/* Input fields */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
-
-            <Field label="Asset Amount (₹)" icon="💰" hint="e.g. 500000 for ₹5,00,000">
+          {/* Inputs Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <Field label="Asset Amount (₹)" icon="💰" hint="e.g. 500000 for ₹5 Lakhs">
               <input
                 type="number"
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
                 placeholder="e.g. 500000"
                 min="1"
-                style={inputStyle}
+                className="w-full bg-slate-950 border border-slate-850 text-white placeholder-slate-700 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-amber-500 transition-all"
               />
             </Field>
 
-            <Field label="Years Unclaimed" icon="⏳" hint="How long since the family member passed">
+            <Field label="Years Unclaimed" icon="⏳" hint="Period since asset became dormant">
               <input
                 type="number"
                 value={years}
@@ -205,204 +159,144 @@ export default function Analytics() {
                 placeholder="e.g. 10"
                 min="1"
                 max="100"
-                style={inputStyle}
+                className="w-full bg-slate-950 border border-slate-850 text-white placeholder-slate-700 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-amber-500 transition-all"
               />
             </Field>
 
-            <Field label="Inflation Rate" icon="📈" hint="RBI average is ~6% per year">
+            <Field label="Inflation Rate" icon="📈" hint="RBI long-term average is ~6%">
               <select
                 value={inflationRate}
                 onChange={e => setInflationRate(parseFloat(e.target.value))}
-                style={{ ...inputStyle, cursor: 'pointer' }}
+                className="w-full bg-slate-950 border border-slate-850 text-white text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-amber-500 transition-all cursor-pointer"
               >
                 {INFLATION_OPTIONS.map(o => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
+                  <option key={o.value} value={o.value} className="bg-slate-950">{o.label}</option>
                 ))}
               </select>
             </Field>
+
           </div>
 
-          {/* Error */}
           {error && (
-            <div style={{
-              marginTop: '1rem',
-              padding: '0.75rem 1rem', borderRadius: '10px',
-              background: 'rgba(220,50,50,0.12)', border: '1px solid rgba(220,50,50,0.3)',
-              color: '#fca5a5', fontSize: '0.88rem',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem',
-            }}>
+            <div className="mt-4 p-3 bg-red-950/40 border border-red-900/60 rounded-xl text-red-400 text-xs font-semibold flex items-center justify-between">
               <span>⚠️ {error}</span>
-              <button onClick={() => setError('')} style={{
-                background: 'none', border: 'none', color: '#fca5a5', cursor: 'pointer',
-              }}>✕</button>
+              <button onClick={() => setError('')} className="text-red-400 hover:text-red-300 font-bold text-sm">✕</button>
             </div>
           )}
 
-          {/* Analyze button */}
           <button
             onClick={handleAnalyze}
             disabled={loading}
-            style={{
-              width:        '100%',
-              marginTop:    '1.25rem',
-              padding:      '1rem',
-              background:   loading
-                ? 'rgba(212,160,23,0.3)'
-                : 'linear-gradient(135deg, #d4a017, #b8860b)',
-              border:       'none',
-              borderRadius: '12px',
-              color:        loading ? '#7a6030' : '#0f1f3d',
-              fontWeight:   800,
-              fontSize:     '1rem',
-              cursor:       loading ? 'not-allowed' : 'pointer',
-              display:      'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem',
-              boxShadow:    loading ? 'none' : '0 4px 16px rgba(212,160,23,0.35)',
-              transition:   'all 0.15s',
-            }}
+            className="w-full mt-6 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-sm h-11 tracking-wider transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_16px_rgba(245,158,11,0.25)] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
-              <>
-                <span style={{
-                  width: '16px', height: '16px',
-                  border: '2px solid #7a6030', borderTopColor: 'transparent',
-                  borderRadius: '50%', animation: 'spin 0.7s linear infinite',
-                  display: 'inline-block',
-                }} />
-                Wolfram is computing…
-              </>
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                Wolfram engine calculating...
+              </span>
             ) : (
-              '⚡ Calculate with Wolfram'
+              '⚡ Compute with Wolfram Language'
             )}
           </button>
-
-          {loading && (
-            <div style={{ textAlign: 'center', marginTop: '0.6rem',
-              fontSize: '0.8rem', color: '#6a8aaa', animation: 'fadeInUp 0.3s ease' }}>
-              Wolfram Alpha API → Claude AI explanation → Results ready
-            </div>
-          )}
         </div>
 
-        {/* ── Judge Explicit Calculation Journey ── */}
+        {/* Interactive Math Valuation Graph Node */}
         {result && result.success && (
-          <div style={{
-            background: 'rgba(0,0,0,0.3)',
-            border: '1px solid rgba(139,92,246,0.3)',
-            borderRadius: '16px',
-            padding: '1.5rem',
-            marginBottom: '2rem',
-            animation: 'fadeInUp 0.4s ease'
-          }}>
-            <div style={{ fontSize: '0.85rem', color: '#a78bfa', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>
-              Calculation Journey
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div className="bg-slate-900/60 border border-slate-850/80 backdrop-blur-md p-6 rounded-2xl shadow-xl mb-6">
+            <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-6">
+              Compounding Audit Ledger
+            </h3>
+
+            <div className="grid grid-cols-3 gap-4 mb-6">
               <div>
-                <div style={{ fontSize: '0.8rem', color: '#8fa4c8' }}>Input: Asset Amount</div>
-                <div style={{ fontWeight: 700, color: '#f0f4ff' }}>{result.original_amount}</div>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Initial value</span>
+                <span className="text-xs font-extrabold text-white mt-1 block">{result.original_amount}</span>
               </div>
               <div>
-                <div style={{ fontSize: '0.8rem', color: '#8fa4c8' }}>Delay Period</div>
-                <div style={{ fontWeight: 700, color: '#f0f4ff' }}>{result.years_delayed} years</div>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Dormancy Period</span>
+                <span className="text-xs font-extrabold text-white mt-1 block">{result.years_delayed} years</span>
               </div>
               <div>
-                <div style={{ fontSize: '0.8rem', color: '#8fa4c8' }}>Inflation Rate</div>
-                <div style={{ fontWeight: 700, color: '#f0f4ff' }}>{result.inflation_rate}</div>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Inflation Coefficient</span>
+                <span className="text-xs font-extrabold text-white mt-1 block">{result.inflation_rate}</span>
               </div>
             </div>
 
-            <div style={{ background: 'rgba(139,92,246,0.1)', borderLeft: '4px solid #8b5cf6', padding: '1rem', marginBottom: '1.5rem', borderRadius: '4px' }}>
-              <div style={{ fontSize: '0.8rem', color: '#c4b5fd', marginBottom: '0.2rem' }}>Powered by: Wolfram Language Mathematical Engine</div>
-              <div style={{ fontFamily: 'monospace', fontSize: '1.1rem', color: '#f0f4ff' }}>Calculation: FV = P(1+r)^t</div>
+            <div className="bg-slate-950 border border-slate-850 p-4 rounded-xl mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+              <div>
+                <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider leading-none">Wolfram Valuation Method</span>
+                <span className="font-mono text-white text-base font-bold block mt-1.5">FV = P * (1 + r)^t</span>
+              </div>
+              <span className="bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                Compounded Engine Verified
+              </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '12px' }}>
-                <div style={{ fontSize: '0.8rem', color: '#8fa4c8' }}>Output: Estimated Future Value</div>
-                <div style={{ fontWeight: 800, color: '#10b981', fontSize: '1.2rem' }}>{result.analysis.futureValue}</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-slate-950 border border-slate-850 p-4 rounded-xl">
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Compounded Value (FV)</span>
+                <span className="text-base font-black text-emerald-400 mt-1 block">{result.analysis.futureValue}</span>
               </div>
-              <div style={{ background: 'rgba(239,68,68,0.1)', padding: '1rem', borderRadius: '12px' }}>
-                <div style={{ fontSize: '0.8rem', color: '#fca5a5' }}>Purchasing Power Impact</div>
-                <div style={{ fontWeight: 800, color: '#ef4444', fontSize: '1.2rem' }}>-{result.analysis.purchasingPowerLoss}</div>
+              <div className="bg-red-500/5 border border-red-500/20 p-4 rounded-xl">
+                <span className="text-[10px] text-red-400/70 font-bold uppercase tracking-wider block">Purchasing Power Loss</span>
+                <span className="text-base font-black text-red-400 mt-1 block">-{result.analysis.purchasingPowerLoss}</span>
               </div>
-            </div>
-
-            <div style={{ fontSize: '0.85rem', color: '#a0b8d0', fontStyle: 'italic' }}>
-              Explanation: "This estimates the financial impact of delayed recovery using historical inflation rates. It does not represent actual money loss from the original balance."
             </div>
           </div>
         )}
 
-        {/* ── Results ── */}
+        {/* Detailed Impact Graphics Card */}
         {result && result.success && (
-          <div style={{ animation: 'fadeInUp 0.4s ease' }}>
+          <div className="space-y-6">
             <FinancialImpactCard data={result} />
 
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
-              <Link to="/chat" style={{
-                flex: 1, minWidth: '160px',
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                gap: '0.5rem', padding: '0.9rem 1rem',
-                background: 'linear-gradient(135deg, #d4a017, #b8860b)',
-                border: 'none', borderRadius: '12px',
-                color: '#0f1f3d', fontWeight: 800, fontSize: '0.95rem',
-                textDecoration: 'none', boxShadow: '0 4px 14px rgba(212,160,23,0.3)',
-              }}>
+            {/* Navigation CTAs */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <Link 
+                to="/chat" 
+                className="flex-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-xs h-11 tracking-wider transition-all duration-200 hover:scale-[1.02] hover:shadow-sm"
+              >
                 💬 Ask Varasat Mitra
               </Link>
-              <Link to="/analyze" style={{
-                flex: 1, minWidth: '160px',
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                gap: '0.5rem', padding: '0.9rem 1rem',
-                background: 'transparent',
-                border: '2px solid rgba(212,160,23,0.4)', borderRadius: '12px',
-                color: '#d4a017', fontWeight: 700, fontSize: '0.95rem',
-                textDecoration: 'none',
-              }}>
-                🔍 Analyse Document
+              <Link 
+                to="/analyze" 
+                className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-800 bg-transparent hover:bg-slate-900/50 text-slate-300 font-semibold text-xs h-11 transition-all duration-200"
+              >
+                🔍 Ingest New Documents
               </Link>
             </div>
           </div>
         )}
 
-        {/* ── How it works ── */}
+        {/* Setup Information */}
         {!result && (
-          <div style={{
-            background:   'rgba(15,28,55,0.5)',
-            border:       '1px solid rgba(212,160,23,0.1)',
-            borderRadius: '16px',
-            padding:      '1.25rem 1.5rem',
-            animation:    'fadeInUp 0.4s ease 0.2s both',
-          }}>
-            <div style={{ fontWeight: 700, color: '#d4a017', marginBottom: '1rem', fontSize: '0.9rem' }}>
-              ⚡ How This Works
-            </div>
-            {[
-              { step: '1', icon: '📝', text: 'You enter the asset amount and how many years it has been unclaimed.' },
-              { step: '2', icon: '🔢', text: 'Wolfram Language (same engine as Wolfram|Alpha) computes precise inflation-adjusted values using compound interest formulas.' },
-              { step: '3', icon: '⚖️', text: 'Claude AI reads the Wolfram numbers and explains them in simple, warm language your family can understand.' },
-              { step: '4', icon: '📊', text: 'You see exactly how much value has been lost to inflation — and how much you gain by recovering the asset now.' },
-            ].map(item => (
-              <div key={item.step} style={{
-                display: 'flex', alignItems: 'flex-start', gap: '0.85rem',
-                marginBottom: '0.75rem',
-              }}>
-                <span style={{
-                  width: '26px', height: '26px', borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #d4a017, #b8860b)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '0.75rem', fontWeight: 800, color: '#0f1f3d', flexShrink: 0,
-                }}>{item.step}</span>
-                <div>
-                  <span style={{ fontSize: '1rem', marginRight: '0.4rem' }}>{item.icon}</span>
-                  <span style={{ fontSize: '0.9rem', color: '#a0b8d0', lineHeight: 1.5 }}>{item.text}</span>
+          <div className="bg-slate-900/40 border border-slate-850 p-6 rounded-2xl">
+            <h3 className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-4">
+              Calculation Procedure
+            </h3>
+            <div className="space-y-4">
+              {[
+                { step: '1', icon: '📝', title: 'Asset Parameters', text: 'Define the total asset valuation sum and dormancy delay period.' },
+                { step: '2', icon: '🔢', title: 'Wolfram Execution', text: 'Compound interest and inflation curves are computed via native Wolfram Language queries.' },
+                { step: '3', icon: '⚖️', title: 'AI Synthesis', text: 'Claude evaluates the resulting calculations and explains the legal context to heirs.' },
+                { step: '4', icon: '📊', title: 'Loss Mapping', text: 'Review visual metrics showing inflation degradation and recovery returns.' },
+              ].map(item => (
+                <div key={item.step} className="flex gap-3 items-start">
+                  <span className="w-6 h-6 rounded-full bg-slate-950 text-amber-500 border border-amber-500/20 flex-shrink-0 flex items-center justify-center text-[10px] font-bold mt-0.5">
+                    {item.step}
+                  </span>
+                  <div>
+                    <span className="text-white text-xs font-bold block">{item.icon} {item.title}</span>
+                    <span className="text-slate-400 text-xs mt-0.5 block leading-relaxed">{item.text}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
+
       </main>
+
     </div>
   );
 }

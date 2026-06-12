@@ -31,36 +31,30 @@ const INITIAL_MESSAGE = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Renders plain text with basic **bold** markdown and numbered lists nicely */
 function FormattedText({ text }) {
   if (!text) return null;
-
-  // Split on newlines, render each line
   const lines = text.split('\n');
 
   return (
-    <div>
+    <div className="space-y-1">
       {lines.map((line, i) => {
-        if (line.trim() === '') return <div key={i} style={{ height: '0.5rem' }} />;
+        if (line.trim() === '') return <div key={i} className="h-2" />;
 
-        // Bold: replace **text** with <strong>
-        const parts = line.split(/\*\*(.*?)\*\*/g);
+        // Bold text parser
+        const parts = line.split(/\*\*(.*?)\*\//g);
         const rendered = parts.map((part, j) =>
           j % 2 === 1
-            ? <strong key={j} style={{ color: '#f0c040', fontWeight: 700 }}>{part}</strong>
+            ? <strong key={j} className="text-amber-500 font-extrabold">{part}</strong>
             : part
         );
 
-        // Detect numbered list items (e.g. "1. Step")
         const isListItem = /^\d+\.\s/.test(line.trim());
 
         return (
-          <div key={i} style={{
-            display: 'flex',
-            gap: isListItem ? '0.4rem' : 0,
-            marginBottom: isListItem ? '0.3rem' : 0,
-            alignItems: 'flex-start',
-          }}>
+          <div 
+            key={i} 
+            className={`flex items-start ${isListItem ? 'gap-1.5 mb-1 pl-2' : ''}`}
+          >
             {rendered}
           </div>
         );
@@ -75,55 +69,27 @@ function MessageBubble({ msg }) {
   const isUser = msg.role === 'user';
 
   return (
-    <div style={{
-      display:        'flex',
-      justifyContent: isUser ? 'flex-end' : 'flex-start',
-      alignItems:     'flex-end',
-      gap:            '0.6rem',
-      marginBottom:   '1rem',
-      animation:      'fadeInUp 0.2s ease both',
-    }}>
+    <div className={`flex items-end gap-3 mb-4 max-w-[80%] ${isUser ? 'self-end flex-row-reverse' : 'self-start'}`}>
+      
+      {/* Avatar */}
+      <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-lg ${
+        isUser 
+          ? 'bg-slate-800 text-white border border-slate-700' 
+          : 'bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-500/10'
+      }`}>
+        {isUser ? '👤' : '⚖️'}
+      </div>
 
-      {/* AI avatar */}
-      {!isUser && (
-        <div style={{
-          width: '42px', height: '42px', flexShrink: 0,
-          borderRadius: '50%',
-          background: 'linear-gradient(135deg, #d4a017, #8b6010)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.25rem',
-          boxShadow: '0 2px 10px rgba(212,160,23,0.3)',
-        }}>⚖️</div>
-      )}
-
-      {/* Bubble */}
-      <div style={{
-        maxWidth:     '75%',
-        padding:      '1rem 1.2rem',
-        borderRadius: isUser ? '20px 20px 6px 20px' : '20px 20px 20px 6px',
-        background:   isUser
-          ? 'linear-gradient(135deg, #1a4fa0 0%, #1e3a7a 100%)'
-          : 'rgba(22, 42, 78, 0.9)',
-        border:       isUser
-          ? '1px solid rgba(100,150,255,0.25)'
-          : '1px solid rgba(212,160,23,0.2)',
-        color:        '#e8f0ff',
-        fontSize:     '1rem',       // larger for elderly readability
-        lineHeight:   1.7,
-        wordBreak:    'break-word',
-        boxShadow:    isUser
-          ? '0 4px 16px rgba(26,79,160,0.3)'
-          : '0 4px 16px rgba(0,0,0,0.3)',
-      }}>
+      {/* Bubble Container */}
+      <div className={`p-4 rounded-2xl shadow-sm text-sm md:text-[14px] leading-relaxed break-words relative transition-all ${
+        isUser 
+          ? 'bg-slate-900 border border-slate-800 text-white rounded-tr-none' 
+          : 'bg-slate-900/60 border border-slate-850/80 text-slate-200 rounded-tl-none'
+      }`}>
         <FormattedText text={msg.content} />
 
         {/* Timestamp */}
-        <div style={{
-          fontSize:   '0.72rem',
-          color:      isUser ? 'rgba(180,200,255,0.6)' : 'rgba(140,165,200,0.6)',
-          marginTop:  '0.5rem',
-          textAlign:  'right',
-        }}>
+        <div className="text-[10px] text-slate-500 mt-2 text-right">
           {new Date(msg.timestamp).toLocaleTimeString('en-IN', {
             hour:   '2-digit',
             minute: '2-digit',
@@ -131,51 +97,24 @@ function MessageBubble({ msg }) {
         </div>
       </div>
 
-      {/* User avatar */}
-      {isUser && (
-        <div style={{
-          width: '42px', height: '42px', flexShrink: 0,
-          borderRadius: '50%',
-          background: 'linear-gradient(135deg, #2563eb, #1a3a8f)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.1rem',
-        }}>👤</div>
-      )}
     </div>
   );
 }
 
 function TypingIndicator() {
   return (
-    <div style={{
-      display: 'flex', alignItems: 'flex-end', gap: '0.6rem',
-      marginBottom: '1rem',
-    }}>
-      <div style={{
-        width: '42px', height: '42px', flexShrink: 0,
-        borderRadius: '50%',
-        background: 'linear-gradient(135deg, #d4a017, #8b6010)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: '1.25rem',
-      }}>⚖️</div>
+    <div className="flex items-end gap-3 mb-4 self-start">
+      <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-lg bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-500/10">
+        ⚖️
+      </div>
 
-      <div style={{
-        padding: '1rem 1.25rem',
-        background: 'rgba(22,42,78,0.9)',
-        border: '1px solid rgba(212,160,23,0.2)',
-        borderRadius: '20px 20px 20px 6px',
-        display: 'flex', gap: '5px', alignItems: 'center',
-      }}>
+      <div className="bg-slate-900/60 border border-slate-850 p-4 rounded-2xl rounded-tl-none flex items-center gap-1">
         {[0, 1, 2].map(i => (
-          <span key={i} style={{
-            display:         'inline-block',
-            width:           '9px',
-            height:          '9px',
-            borderRadius:    '50%',
-            background:      '#d4a017',
-            animation:       'bounce 1.3s ease infinite',
-            animationDelay:  `${i * 0.2}s`,
-          }} />
+          <span 
+            key={i} 
+            className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-bounce-subtle"
+            style={{ animationDelay: `${i * 0.18}s` }}
+          />
         ))}
       </div>
     </div>
@@ -184,27 +123,14 @@ function TypingIndicator() {
 
 function ErrorBanner({ message, onDismiss }) {
   return (
-    <div style={{
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '0.75rem 1.25rem',
-      background: 'rgba(200,50,50,0.15)',
-      border: '1px solid rgba(220,80,80,0.4)',
-      borderRadius: '10px',
-      color: '#fca5a5',
-      fontSize: '0.9rem',
-      marginBottom: '0.75rem',
-      gap: '0.75rem',
-    }}>
+    <div className="flex items-center justify-between p-3.5 bg-red-950/40 border border-red-900/60 rounded-xl text-red-400 text-xs font-semibold mb-3">
       <span>⚠️ {message}</span>
-      <button onClick={onDismiss} style={{
-        background: 'none', border: 'none',
-        color: '#fca5a5', cursor: 'pointer', fontSize: '1rem', flexShrink: 0,
-      }}>✕</button>
+      <button onClick={onDismiss} className="text-red-400 hover:text-red-300 font-bold text-sm">✕</button>
     </div>
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function Chat() {
   const [messages,  setMessages]  = useState([INITIAL_MESSAGE]);
@@ -214,23 +140,19 @@ export default function Chat() {
   const [error,     setError]     = useState('');
   const [charCount, setCharCount] = useState(0);
 
-  // Stable session ID for the whole page lifetime
   const [sessionId] = useState(() => `vs-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`);
 
   const bottomRef = useRef(null);
   const inputRef  = useRef(null);
 
-  // Auto-scroll to bottom whenever messages change
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  // Focus input on mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  // ── Send a message ─────────────────────────────────────────────────────────
   const handleSend = useCallback(async (overrideText) => {
     const userText = (overrideText ?? input).trim();
     if (!userText || loading) return;
@@ -239,7 +161,6 @@ export default function Chat() {
     setInput('');
     setCharCount(0);
 
-    // Optimistically add user message to UI
     const userMsg = {
       role:      'user',
       content:   userText,
@@ -251,7 +172,6 @@ export default function Chat() {
 
     try {
       const data = await sendMessage(userText, language, sessionId);
-
       if (!data.success) throw new Error(data.error || 'Unexpected error.');
 
       setMessages(prev => [...prev, {
@@ -268,7 +188,6 @@ export default function Chat() {
     }
   }, [input, language, loading, sessionId]);
 
-  // ── Clear / start new session ──────────────────────────────────────────────
   async function handleNewChat() {
     if (!window.confirm('Start a new conversation? Your current chat will be cleared.')) return;
     await clearChatSession(sessionId).catch(() => {});
@@ -278,7 +197,6 @@ export default function Chat() {
     setCharCount(0);
   }
 
-  // ── Keyboard: Enter to send, Shift+Enter for newline ──────────────────────
   function handleKeyDown(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -286,7 +204,6 @@ export default function Chat() {
     }
   }
 
-  // ── Character counter ─────────────────────────────────────────────────────
   function handleInputChange(e) {
     const val = e.target.value;
     if (val.length <= 2000) {
@@ -297,99 +214,54 @@ export default function Chat() {
 
   const canSend = input.trim().length > 0 && !loading;
 
-  // ─────────────────────────────────────────────────────────────────────────
   return (
-    <div style={{
-      display:       'flex',
-      flexDirection: 'column',
-      height:        '100vh',
-      background:    'linear-gradient(160deg, #080f1e 0%, #0d1a30 50%, #111f38 100%)',
-      fontFamily:    "'Inter', 'Noto Sans Devanagari', sans-serif",
-    }}>
+    <div className="h-screen bg-slate-950 flex flex-col font-sans antialiased text-slate-300 relative overflow-hidden">
+      
+      {/* Glowing backdrop vectors */}
+      <div className="absolute w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[120px] -top-20 -left-20 pointer-events-none"></div>
+      <div className="absolute w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[120px] -bottom-20 -right-20 pointer-events-none"></div>
 
-      {/* ── Keyframe styles (injected once) ── */}
       <style>{`
+        .animate-bounce-subtle {
+          animation: bounce 1.4s ease infinite;
+        }
         @keyframes bounce {
-          0%, 60%, 100% { transform: translateY(0);    }
-          30%            { transform: translateY(-8px); }
+          0%, 60%, 100% { transform: translateY(0); }
+          30% { transform: translateY(-6px); }
         }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(14px); }
-          to   { opacity: 1; transform: translateY(0);    }
-        }
-        textarea:focus { outline: none; }
-        select option  { background: #0f1f3d; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(212,160,23,0.25); border-radius: 3px; }
       `}</style>
 
-      {/* ══════════════════════════════════════════════════════════════════════
-          HEADER
-      ══════════════════════════════════════════════════════════════════════ */}
-      <header style={{
-        display:        'flex',
-        alignItems:     'center',
-        justifyContent: 'space-between',
-        padding:        '0.9rem 1.5rem',
-        background:     'rgba(8,15,30,0.95)',
-        backdropFilter: 'blur(16px)',
-        borderBottom:   '1px solid rgba(212,160,23,0.18)',
-        flexShrink:     0,
-        gap:            '0.75rem',
-      }}>
-
-        {/* Left: back + avatar + name */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-          <Link to="/" style={{
-            color: '#8fa4c8', textDecoration: 'none',
-            fontSize: '0.95rem', fontWeight: 600,
-            padding: '0.3rem 0.6rem',
-            borderRadius: '8px',
-            transition: 'background 0.15s',
-          }}>← Home</Link>
-
-          <div style={{
-            width: '46px', height: '46px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #d4a017, #8b6010)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.3rem',
-            boxShadow: '0 0 0 3px rgba(212,160,23,0.2)',
-          }}>⚖️</div>
+      {/* ── Header ────────────────────────────────────────────────────────── */}
+      <header className="flex items-center justify-between px-6 py-3.5 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 flex-shrink-0 z-10">
+        
+        {/* Header Left */}
+        <div className="flex items-center gap-3">
+          <Link 
+            to="/" 
+            className="text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-850/50 transition-all mr-2"
+          >
+            ← Home
+          </Link>
+          
+          <div className="w-10 h-10 rounded-full bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black flex items-center justify-center text-lg shadow-md shadow-amber-500/10">
+            ⚖️
+          </div>
 
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#f0f4ff' }}>
-              Varasat Mitra
-            </div>
-            <div style={{
-              fontSize: '0.75rem', color: '#10b981',
-              display: 'flex', alignItems: 'center', gap: '5px', marginTop: '1px',
-            }}>
-              <span style={{
-                width: '7px', height: '7px',
-                borderRadius: '50%', background: '#10b981', display: 'inline-block',
-                boxShadow: '0 0 6px #10b981',
-              }} />
+            <h1 className="font-extrabold text-white text-sm leading-none">Varasat Mitra</h1>
+            <div className="text-[10px] text-emerald-400 flex items-center gap-1.5 mt-1 font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               AI Inheritance Guide
             </div>
           </div>
         </div>
 
-        {/* Right: language selector + new chat button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        {/* Header Right */}
+        <div className="flex items-center gap-3">
           <select
             value={language}
             onChange={e => setLanguage(e.target.value)}
-            style={{
-              background:   'rgba(26,53,96,0.7)',
-              border:       '1px solid rgba(212,160,23,0.25)',
-              borderRadius: '9px',
-              color:        '#d0dcf0',
-              padding:      '0.45rem 0.75rem',
-              fontSize:     '0.88rem',
-              cursor:       'pointer',
-            }}
+            className="bg-slate-950 border border-slate-850/80 text-slate-200 text-xs font-semibold rounded-lg px-2.5 py-1.5 cursor-pointer outline-none focus:border-amber-500"
           >
             {LANGUAGES.map(l => (
               <option key={l.code} value={l.code}>{l.label}</option>
@@ -398,215 +270,103 @@ export default function Chat() {
 
           <button
             onClick={handleNewChat}
-            title="Start a new conversation"
-            style={{
-              padding:      '0.45rem 0.85rem',
-              background:   'rgba(212,160,23,0.1)',
-              border:       '1px solid rgba(212,160,23,0.25)',
-              borderRadius: '9px',
-              color:        '#d4a017',
-              fontSize:     '0.85rem',
-              cursor:       'pointer',
-              fontWeight:   600,
-              transition:   'background 0.15s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(212,160,23,0.2)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(212,160,23,0.1)'}
-          >🔄 New Chat</button>
+            className="px-3 py-1.5 bg-amber-500/10 border border-amber-500/25 text-amber-500 hover:bg-amber-500/20 text-xs font-bold rounded-lg cursor-pointer transition-all flex items-center gap-1"
+          >
+            🔄 New Chat
+          </button>
         </div>
       </header>
 
-      {/* ══════════════════════════════════════════════════════════════════════
-          MESSAGES AREA
-      ══════════════════════════════════════════════════════════════════════ */}
-      <main style={{
-        flex:      1,
-        overflowY: 'auto',
-        padding:   '1.5rem 1.25rem 0.5rem',
-        display:   'flex',
-        flexDirection: 'column',
-      }}>
-
-        {/* Suggestion chips — shown only before any user message */}
+      {/* ── Messages Stream ──────────────────────────────────────────────── */}
+      <main className="flex-1 overflow-y-auto px-6 py-6 flex flex-col z-10 scrollbar-thin scrollbar-thumb-amber-500/20">
+        
+        {/* Suggestion Chips */}
         {messages.length === 1 && (
-          <div style={{ marginBottom: '1.5rem' }}>
-            <p style={{
-              fontSize: '0.82rem', color: '#5a7a9a',
-              textAlign: 'center', marginBottom: '0.75rem',
-            }}>
-              — Quick start — tap a question below —
+          <div className="max-w-3xl mx-auto w-full mb-8">
+            <p className="text-center text-slate-500 text-xs font-semibold uppercase tracking-wider mb-4">
+              — Quick start prompts —
             </p>
-            <div style={{
-              display:   'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-              gap:       '0.6rem',
-            }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
               {SUGGESTION_PROMPTS.map(s => (
                 <button
                   key={s.text}
                   onClick={() => handleSend(s.text)}
-                  style={{
-                    display:      'flex',
-                    alignItems:   'center',
-                    gap:          '0.6rem',
-                    padding:      '0.85rem 1rem',
-                    background:   'rgba(22,42,78,0.6)',
-                    border:       '1px solid rgba(212,160,23,0.18)',
-                    borderRadius: '14px',
-                    color:        '#c8d8f0',
-                    fontSize:     '0.92rem',
-                    textAlign:    'left',
-                    cursor:       'pointer',
-                    transition:   'all 0.15s',
-                    lineHeight:   1.4,
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.background    = 'rgba(212,160,23,0.12)';
-                    e.currentTarget.style.borderColor   = 'rgba(212,160,23,0.4)';
-                    e.currentTarget.style.color         = '#f0f4ff';
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.background    = 'rgba(22,42,78,0.6)';
-                    e.currentTarget.style.borderColor   = 'rgba(212,160,23,0.18)';
-                    e.currentTarget.style.color         = '#c8d8f0';
-                  }}
+                  className="flex items-center gap-3.5 bg-slate-900/40 border border-slate-850 p-4 rounded-xl text-left cursor-pointer transition-all hover:bg-slate-900 hover:border-amber-500/30 group"
                 >
-                  <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>{s.icon}</span>
-                  {s.text}
+                  <span className="text-2xl transition-transform group-hover:scale-110 duration-200">{s.icon}</span>
+                  <span className="text-slate-300 group-hover:text-white text-xs font-semibold leading-relaxed">{s.text}</span>
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Message bubbles */}
-        {messages.map(msg => (
-          <MessageBubble key={msg.id || msg.timestamp} msg={msg} />
-        ))}
-
-        {/* Typing indicator */}
-        {loading && <TypingIndicator />}
-
-        {/* Scroll anchor */}
-        <div ref={bottomRef} style={{ height: '8px' }} />
+        {/* Message Feed */}
+        <div className="flex-1 max-w-3xl mx-auto w-full flex flex-col">
+          {messages.map(msg => (
+            <MessageBubble key={msg.id || msg.timestamp} msg={msg} />
+          ))}
+          {loading && <TypingIndicator />}
+          <div ref={bottomRef} className="h-4" />
+        </div>
       </main>
 
-      {/* ══════════════════════════════════════════════════════════════════════
-          INPUT AREA
-      ══════════════════════════════════════════════════════════════════════ */}
-      <footer style={{
-        padding:        '0.85rem 1.25rem 1.1rem',
-        background:     'rgba(8,15,30,0.97)',
-        borderTop:      '1px solid rgba(212,160,23,0.14)',
-        flexShrink:     0,
-      }}>
+      {/* ── Footer / Text Input Area ─────────────────────────────────────── */}
+      <footer className="px-6 py-4 bg-slate-900/60 backdrop-blur-md border-t border-slate-850/80 flex-shrink-0 z-10">
+        <div className="max-w-3xl mx-auto w-full">
+          
+          {error && <ErrorBanner message={error} onDismiss={() => setError('')} />}
 
-        {/* Error banner */}
-        {error && (
-          <ErrorBanner message={error} onDismiss={() => setError('')} />
-        )}
+          {/* Typing Area Container */}
+          <div className="flex items-end gap-3 bg-slate-950 border border-slate-850 focus-within:border-amber-500/30 rounded-xl p-3.5 transition-colors">
+            
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask Varasat Mitra a question... (Enter to send, Shift+Enter for newline)"
+              rows={1}
+              disabled={loading}
+              className="flex-1 bg-transparent border-none text-white text-sm placeholder-slate-600 outline-none resize-none max-h-24 overflow-y-auto leading-relaxed"
+            />
 
-        {/* Input row */}
-        <div style={{
-          display:      'flex',
-          gap:          '0.6rem',
-          alignItems:   'flex-end',
-          background:   'rgba(18,35,65,0.8)',
-          border:       `1px solid ${canSend ? 'rgba(212,160,23,0.45)' : 'rgba(212,160,23,0.18)'}`,
-          borderRadius: '16px',
-          padding:      '0.65rem 0.65rem 0.65rem 1.1rem',
-          transition:   'border-color 0.2s',
-        }}>
+            {/* Inactive Voice Indicator */}
+            <button
+              title="Voice input"
+              disabled
+              className="w-10 h-10 rounded-lg bg-slate-900/40 border border-slate-850 text-slate-600 text-lg flex items-center justify-center flex-shrink-0 cursor-not-allowed"
+            >
+              🎙️
+            </button>
 
-          {/* Text area */}
-          <textarea
-            ref={inputRef}
-            value={input}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your question here… (Press Enter to send, Shift+Enter for new line)"
-            rows={1}
-            disabled={loading}
-            style={{
-              flex:        1,
-              background:  'transparent',
-              border:      'none',
-              outline:     'none',
-              color:       '#e8f0ff',
-              fontSize:    '1rem',       // larger for readability
-              lineHeight:  1.6,
-              resize:      'none',
-              maxHeight:   '140px',
-              overflowY:   'auto',
-              fontFamily:  "'Inter', 'Noto Sans Devanagari', sans-serif",
-              opacity:     loading ? 0.6 : 1,
-            }}
-          />
+            {/* Submit Action */}
+            <button
+              onClick={() => handleSend()}
+              disabled={!canSend}
+              className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all ${
+                canSend 
+                  ? 'bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-bold hover:scale-[1.02] shadow-sm shadow-amber-500/20 cursor-pointer' 
+                  : 'bg-slate-900 text-slate-600 cursor-not-allowed'
+              }`}
+            >
+              ➤
+            </button>
+          </div>
 
-          {/* Voice button (placeholder) */}
-          <button
-            title="Voice input — coming soon"
-            disabled
-            style={{
-              width:        '44px',
-              height:       '44px',
-              borderRadius: '12px',
-              background:   'rgba(212,160,23,0.08)',
-              border:       '1px solid rgba(212,160,23,0.15)',
-              color:        '#6a7a90',
-              fontSize:     '1.15rem',
-              cursor:       'not-allowed',
-              display:      'flex',
-              alignItems:   'center',
-              justifyContent: 'center',
-              flexShrink:   0,
-            }}
-          >🎙️</button>
+          {/* Footer Metadata */}
+          <div className="flex justify-between items-center mt-2 px-1">
+            <span className="text-[10px] text-slate-500 font-bold">
+              {charCount > 0 ? `${charCount} / 2000` : ''}
+            </span>
+            <span className="text-[10px] text-slate-500 leading-none">
+              Varasat Mitra details are AI-generated. Verify all official documentation before final processing.
+            </span>
+          </div>
 
-          {/* Send button */}
-          <button
-            onClick={() => handleSend()}
-            disabled={!canSend}
-            title="Send message"
-            style={{
-              width:        '44px',
-              height:       '44px',
-              borderRadius: '12px',
-              background:   canSend
-                ? 'linear-gradient(135deg, #d4a017, #b8860b)'
-                : 'rgba(212,160,23,0.1)',
-              border:       'none',
-              cursor:       canSend ? 'pointer' : 'not-allowed',
-              color:        canSend ? '#0f1f3d' : '#3a5070',
-              fontSize:     '1.2rem',
-              fontWeight:   700,
-              display:      'flex',
-              alignItems:   'center',
-              justifyContent: 'center',
-              flexShrink:   0,
-              transition:   'all 0.15s',
-              transform:    canSend ? 'scale(1)' : 'scale(0.95)',
-              boxShadow:    canSend ? '0 4px 14px rgba(212,160,23,0.35)' : 'none',
-            }}
-          >➤</button>
-        </div>
-
-        {/* Footer row: char count + disclaimer */}
-        <div style={{
-          display:        'flex',
-          justifyContent: 'space-between',
-          alignItems:     'center',
-          marginTop:      '0.45rem',
-          padding:        '0 0.2rem',
-        }}>
-          <span style={{ fontSize: '0.7rem', color: '#3a5070' }}>
-            {charCount > 0 ? `${charCount} / 2000` : ''}
-          </span>
-          <span style={{ fontSize: '0.7rem', color: '#3a5070' }}>
-            Varasat Mitra may make mistakes. Consult a qualified lawyer for legal decisions.
-          </span>
         </div>
       </footer>
+
     </div>
   );
 }

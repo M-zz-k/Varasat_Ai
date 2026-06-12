@@ -3,24 +3,24 @@ import VoiceAssistant from '../components/VoiceAssistant';
 import HowVarasatWorks from '../components/HowVarasatWorks';
 
 const features = [
-  { icon: '🏦', title: 'Bank Accounts',    desc: 'Find unclaimed savings, FDs, and PPF accounts.' },
+  { icon: '🏦', title: 'Bank Accounts', desc: 'Find unclaimed savings, FDs, and PPF accounts.' },
   { icon: '📋', title: 'Insurance Policies', desc: 'Trace LIC and private insurance maturity claims.' },
-  { icon: '📈', title: 'Shares & Bonds',   desc: 'Locate equity holdings and dividend payments.' },
-  { icon: '🏛️', title: 'Provident Fund',   desc: 'Recover EPF and gratuity of the deceased.' },
+  { icon: '📈', title: 'Shares & Bonds', desc: 'Locate equity holdings and dividend payments.' },
+  { icon: '🏛️', title: 'Provident Fund', desc: 'Recover EPF and gratuity of the deceased.' },
 ];
 
 const steps = [
   { num: '01', text: 'Tell us about your family member' },
-  { num: '02', text: 'Upload documents if available'    },
-  { num: '03', text: 'AI discovers possible assets'      },
-  { num: '04', text: 'We guide you through legal steps'  },
-  { num: '05', text: 'Claim is tracked till completion'  },
+  { num: '02', text: 'Upload documents if available' },
+  { num: '03', text: 'AI discovers possible assets' },
+  { num: '04', text: 'We guide you through legal steps' },
+  { num: '05', text: 'Claim is tracked till completion' },
 ];
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-tr from-slate-50 via-white to-slate-100/60 text-slate-600 font-sans antialiased flex flex-col relative overflow-hidden">
-      
+
       {/* ── CSS Animations & Styles ────────────────────────────────────────── */}
       <style>{`
         @keyframes float {
@@ -78,7 +78,7 @@ export default function Home() {
 
       {/* ── Floating Document & Asset Nodes (Depth-of-Field Blur) ─────────── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-10">
-        
+
         {/* Node 1: Bond Certificate (Left) */}
         <div className="absolute left-8 top-1/4 hidden lg:flex items-center gap-2.5 bg-white/75 backdrop-blur-md border border-amber-500/20 px-3.5 py-2.5 rounded-lg shadow-md animate-float blur-[0.4px]">
           <span className="text-2xl">📄</span>
@@ -111,7 +111,7 @@ export default function Home() {
       {/* ── Header / Navbar ────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 w-full bg-white/85 backdrop-blur-md border-b border-slate-200/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          
+
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center gap-2 group relative z-10">
             <span className="text-2xl">⚖️</span>
@@ -131,14 +131,14 @@ export default function Home() {
 
           {/* Authentication Actions */}
           <div className="flex items-center gap-3 relative z-10">
-            <Link 
-              to="/login" 
+            <Link
+              to="/login"
               className="text-sm font-bold text-slate-600 hover:text-slate-900 px-3 py-2 transition-colors"
             >
               Login
             </Link>
-            <Link 
-              to="/analyze" 
+            <Link
+              to="/analyze"
               className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-xs hover:bg-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
             >
               Get Started
@@ -153,7 +153,7 @@ export default function Home() {
         {/* ── Hero Section ────────────────────────────────────────────────── */}
         <section className="relative py-16 md:py-24">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-            
+
             {/* Trusted Stamp */}
             <div className="inline-flex items-center gap-1.5 bg-slate-100 text-slate-800 border border-slate-200 text-xs font-bold px-3 py-1.5 rounded-full tracking-wider uppercase mb-6">
               🏛️ Trusted Digital Inheritance Companion
@@ -211,14 +211,14 @@ export default function Home() {
 
             {/* CTA Hero Buttons */}
             <div className="flex flex-wrap gap-4 justify-center">
-              <Link 
-                to="/analyze" 
+              <Link
+                to="/analyze"
                 className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-3.5 text-base font-bold text-white shadow-xs hover:bg-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
               >
                 Start Finding Assets
               </Link>
-              <Link 
-                to="/demo" 
+              <Link
+                to="/demo"
                 className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-6 py-3.5 text-base font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
               >
                 ▶️ Try Demo Mode
@@ -238,7 +238,7 @@ export default function Home() {
 
         {/* ── Central Component Grid: Deep Slate-Navy hardware vaults ─────── */}
         <section className="py-16 border-t border-slate-200/40 relative">
-          
+
           {/* Interactive Gold Data Flow Trail */}
           <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-1 pointer-events-none hidden md:block overflow-visible z-20">
             <svg className="w-full h-20 absolute -top-10 left-0 text-amber-500" viewBox="0 0 1000 80" fill="none">
@@ -264,7 +264,7 @@ export default function Home() {
 
             {/* Symmetry Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch relative z-10">
-              
+
               {/* Card 1: Varasat Mitra (AI recovery) */}
               <article className="bg-slate-950/98 backdrop-blur-md border border-slate-800 rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-slate-700 hover:shadow-2xl">
                 <div className="space-y-5">
@@ -282,10 +282,10 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="mt-8">
-                  <Link 
-                    to="/chat" 
+                  <Link
+                    to="/chat"
                     className="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-sm h-11 tracking-wider transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_16px_rgba(245,158,11,0.25)] cursor-pointer"
                   >
                     <span>Start Claim</span>
@@ -297,7 +297,7 @@ export default function Home() {
 
               {/* Card 2: Claimant Dashboard (Center) */}
               <article className="bg-slate-950/98 backdrop-blur-md border-2 border-slate-700 shadow-xl rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-slate-500 hover:shadow-2xl relative">
-                
+
                 {/* Visual Accent: Glowing node sync graphic */}
                 <div className="w-full h-16 mb-4 bg-slate-900/60 border border-slate-800 rounded-lg flex items-center justify-center relative overflow-hidden">
                   <svg className="w-full h-full text-teal-400" viewBox="0 0 240 80" fill="none">
@@ -328,8 +328,8 @@ export default function Home() {
                 </div>
 
                 <div className="mt-8">
-                  <Link 
-                    to="/analytics" 
+                  <Link
+                    to="/analytics"
                     className="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-sm h-11 tracking-wider transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_16px_rgba(245,158,11,0.25)] cursor-pointer"
                   >
                     Open Analytics Dashboard
@@ -356,8 +356,8 @@ export default function Home() {
                 </div>
 
                 <div className="mt-8">
-                  <Link 
-                    to="/login" 
+                  <Link
+                    to="/login"
                     className="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-sm h-11 tracking-wider transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_16px_rgba(245,158,11,0.25)] cursor-pointer"
                   >
                     Enter Bank Portal
@@ -376,7 +376,7 @@ export default function Home() {
               How Varasat Helps
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              
+
               <div className="bg-white/80 border border-slate-200/80 p-6 rounded-xl hover:border-slate-350 transition-all duration-200 shadow-2xs">
                 <div className="text-3xl mb-4">🔍</div>
                 <h3 className="font-bold text-slate-900 text-lg mb-2">Discover</h3>
@@ -411,8 +411,8 @@ export default function Home() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
               {[
                 { val: '₹32,000 Cr+', label: 'Unclaimed in RBI' },
-                { val: '75+ Mn',       label: 'Dormant accounts' },
-                { val: '5 Min',        label: 'To start claim search' },
+                { val: '75+ Mn', label: 'Dormant accounts' },
+                { val: '5 Min', label: 'To start claim search' },
                 { val: '15+ Indian Languages', label: 'Supported' },
               ].map(s => (
                 <div key={s.label} className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-6 hover:shadow-2xs transition-all duration-200">
@@ -433,12 +433,12 @@ export default function Home() {
 
         {/* ── Visual User Flow Diagram (Dark Blue Theme Overhaul) ──────────── */}
         <section className="bg-slate-950 py-20 border-t border-slate-900 relative overflow-hidden z-10">
-          
+
           {/* Subtle grid pattern background */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20 pointer-events-none"></div>
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-            
+
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="text-[10px] bg-slate-900 text-amber-400 border border-amber-500/20 px-3 py-1.5 rounded-full font-bold uppercase tracking-widest block w-fit mx-auto mb-4">
                 Operational Pipeline
@@ -453,7 +453,7 @@ export default function Home() {
 
             {/* Grid Flow Pipeline */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-stretch">
-              
+
               {/* Step 1 */}
               <div className="bg-slate-900/40 border border-slate-850 rounded-xl p-6 relative flex flex-col justify-between items-center text-center transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_4px_20px_rgba(245,158,11,0.08)] group">
                 <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center border-2 border-slate-950 shadow-md">
@@ -576,7 +576,7 @@ export default function Home() {
       {/* ── Footer ────────────────────────────────────────────────────────── */}
       <footer className="bg-slate-50/80 border-t border-slate-200 py-8 text-center text-slate-500 text-sm font-medium relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-2">
-          <p>© 2026 Varasat. Made with ❤️ for Indian families.</p>
+          <p>© 2026 Varasat.</p>
           <p className="text-xs text-slate-400">
             Aadhaar and DigiLocker names and logos are trademarks of their respective owners. Not a substitute for legal advice.
           </p>

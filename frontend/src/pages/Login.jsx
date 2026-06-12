@@ -19,50 +19,101 @@ export default function Login() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(160deg, #051020 0%, #0a1628 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 relative overflow-hidden font-sans">
       
-      <div className="glass animate-fade-in-up" style={{ maxWidth: '450px', width: '100%', padding: '2.5rem', borderRadius: '24px', border: '1px solid rgba(240,192,64,0.3)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
+      {/* Visual Ambient Depth Orbs */}
+      <div className="absolute w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[120px] -top-20 -left-20 pointer-events-none"></div>
+      <div className="absolute w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[120px] -bottom-20 -right-20 pointer-events-none"></div>
+
+      <div className="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md max-w-md w-full p-8 rounded-2xl shadow-2xl relative z-10 transition-all duration-300 hover:border-slate-800">
         
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>⚖️</div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f0f4ff', margin: 0 }}>Welcome to Varasat</h1>
-          <p style={{ color: '#8fa4c8', fontSize: '0.95rem', marginTop: '0.5rem' }}>Your trusted inheritance recovery companion.</p>
+        {/* Header Branding */}
+        <div className="text-center mb-8">
+          <div className="text-4xl mb-3">⚖️</div>
+          <h1 className="text-2xl font-black text-white tracking-tight">Welcome to Varasat</h1>
+          <p className="text-slate-400 text-xs mt-1.5 leading-relaxed">
+            Your secure digital inheritance recovery companion.
+          </p>
         </div>
 
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        {/* Profiles Creation Form */}
+        <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label style={{ display: 'block', color: '#c8d8f0', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem' }}>Full Name</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} required 
-              style={{ width: '100%', padding: '0.9rem', borderRadius: '12px', border: '1px solid rgba(59,130,246,0.4)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', color: '#c8d8f0', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem' }}>Email Address</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} required 
-              style={{ width: '100%', padding: '0.9rem', borderRadius: '12px', border: '1px solid rgba(59,130,246,0.4)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', color: '#c8d8f0', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem' }}>Phone Number</label>
-            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required 
-              style={{ width: '100%', padding: '0.9rem', borderRadius: '12px', border: '1px solid rgba(59,130,246,0.4)', background: 'rgba(0,0,0,0.2)', color: '#fff', fontSize: '1rem' }} />
+            <label className="block text-slate-300 text-xs font-bold uppercase tracking-wider mb-2">
+              Full Name
+            </label>
+            <input 
+              type="text" 
+              name="name" 
+              value={formData.name} 
+              onChange={handleChange} 
+              required 
+              placeholder="e.g. Ramesh Kumar"
+              className="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-sm font-semibold rounded-lg px-4 py-3 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+            />
           </div>
 
-          <button type="submit" className="btn-primary" style={{ marginTop: '0.5rem', padding: '1rem', fontSize: '1.1rem', borderRadius: '16px', fontWeight: 700 }}>
+          <div>
+            <label className="block text-slate-300 text-xs font-bold uppercase tracking-wider mb-2">
+              Email Address
+            </label>
+            <input 
+              type="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              required 
+              placeholder="e.g. ramesh@outlook.com"
+              className="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-sm font-semibold rounded-lg px-4 py-3 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="block text-slate-300 text-xs font-bold uppercase tracking-wider mb-2">
+              Phone Number
+            </label>
+            <input 
+              type="tel" 
+              name="phone" 
+              value={formData.phone} 
+              onChange={handleChange} 
+              required 
+              placeholder="e.g. +91 98765 43210"
+              className="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-sm font-semibold rounded-lg px-4 py-3 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="w-full mt-2 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-sm h-11 tracking-wider transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_16px_rgba(245,158,11,0.25)] cursor-pointer"
+          >
             Create Secure Profile
           </button>
         </form>
 
-        <div style={{ margin: '1.5rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
-          <span style={{ color: '#8fa4c8', fontSize: '0.85rem' }}>OR</span>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+        {/* Divider separator */}
+        <div className="my-6 flex items-center gap-3">
+          <div className="flex-1 h-px bg-slate-800"></div>
+          <span className="text-slate-500 text-2xs font-extrabold tracking-widest uppercase">OR</span>
+          <div className="flex-1 h-px bg-slate-800"></div>
         </div>
 
-        <button onClick={handleGuest} className="btn-secondary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', borderRadius: '16px' }}>
+        {/* Guest access action */}
+        <button 
+          onClick={handleGuest} 
+          className="w-full inline-flex items-center justify-center rounded-lg border border-slate-800 bg-transparent text-slate-300 font-semibold text-sm h-11 transition-all duration-200 hover:bg-slate-900/50 hover:text-white"
+        >
           Continue as Guest
         </button>
         
-        <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-          <Link to="/" style={{ color: '#8fa4c8', fontSize: '0.9rem', textDecoration: 'none' }}>← Back to Home</Link>
+        {/* Back Link */}
+        <div className="text-center mt-6">
+          <Link 
+            to="/" 
+            className="text-slate-500 hover:text-slate-350 text-xs font-semibold transition-colors"
+          >
+            ← Back to Home
+          </Link>
         </div>
 
       </div>
