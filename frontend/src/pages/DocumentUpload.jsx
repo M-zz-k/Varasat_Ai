@@ -307,7 +307,7 @@ function AIAnalysisCard({ data, file, financialInsight, onFieldChange }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function DocumentUpload() {
-  const { t } = useTranslation();
+  const { t, lang, toggleLanguage } = useTranslation();
   const setOcrResults = useDocumentStore(state => state.setOcrResults);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -557,6 +557,16 @@ export default function DocumentUpload() {
             <p className="text-[10px] text-slate-400 mt-1 font-semibold">{t('upload.subtitle')}</p>
           </div>
         </div>
+
+        <button
+          onClick={toggleLanguage}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:text-slate-900 transition-all cursor-pointer"
+        >
+          <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
+          </svg>
+          <span>{lang === 'en' ? 'हिंदी' : 'English'}</span>
+        </button>
       </header>
 
       {/* Steps checklist bar */}

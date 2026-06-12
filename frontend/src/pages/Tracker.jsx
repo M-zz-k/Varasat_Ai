@@ -78,11 +78,17 @@ function StageRow({ stage, index, currentStage, isLast }) {
 export default function Tracker() {
   const [claimId, setClaimId] = useState('');
   const [activeClaim, setActiveClaim] = useState(MOCK_CLAIMS[0]);
+  const [error, setError] = useState('');
 
   function lookupClaim() {
     const found = MOCK_CLAIMS.find(c => c.id === claimId.trim());
-    if (found) setActiveClaim(found);
-    else alert('Claim ID not found. Use: CLM-1718091234 for demo.');
+    if (found) {
+      setActiveClaim(found);
+      setError('');
+    } else {
+      setError('Claim ID not found. Use: CLM-1718091234 for demo.');
+      setActiveClaim(null);
+    }
   }
 
   return (
@@ -128,10 +134,13 @@ export default function Tracker() {
         </div>
 
         {/* Search Bar */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-10 bg-slate-900/40 border border-slate-850 p-3 rounded-2xl">
+        <div className="flex flex-col sm:flex-row gap-3 mb-4 bg-slate-900/40 border border-slate-850 p-3 rounded-2xl">
           <input
             value={claimId} 
-            onChange={e => setClaimId(e.target.value)}
+            onChange={e => {
+              setClaimId(e.target.value);
+              if (error) setError('');
+            }}
             placeholder="Enter Claim ID (e.g. CLM-1718091234)"
             onKeyDown={e => e.key === 'Enter' && lookupClaim()}
             className="flex-1 bg-slate-950 border border-slate-850 rounded-lg px-4 py-2.5 text-white placeholder-slate-650 text-sm font-semibold outline-none focus:border-amber-500 transition-all"
@@ -143,6 +152,15 @@ export default function Tracker() {
             Locate Claim
           </button>
         </div>
+
+        {error && (
+          <div className="mb-6 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold flex items-center gap-2">
+            <svg style={{ width: '1rem', height: '1rem', flexShrink: 0, stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            {error}
+          </div>
+        )}
 
         {activeClaim ? (
           <div className="space-y-6">

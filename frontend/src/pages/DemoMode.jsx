@@ -65,15 +65,16 @@ export default function DemoMode() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <Link to="/" style={{ color: '#8fa4c8', textDecoration: 'none', fontSize: '0.95rem' }}>← Home</Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>⚖️</span>
+            <svg style={{ width: '1.5rem', height: '1.5rem', stroke: '#f59e0b', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17M3 12h18M6 12l2 6h8l2-6" /></svg>
             <div>
               <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#f0f4ff' }}>Judge Demo Mode</div>
               <div style={{ fontSize: '0.72rem', color: '#f59e0b' }}>Prototype Simulation</div>
             </div>
           </div>
         </div>
-        <div style={{ padding: '0.3rem 0.8rem', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: '999px', color: '#f59e0b', fontSize: '0.8rem', fontWeight: 700 }}>
-          ⚠️ DEMO DATA
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.3rem 0.8rem', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: '999px', color: '#f59e0b', fontSize: '0.8rem', fontWeight: 700 }}>
+          <svg style={{ width: '0.95rem', height: '0.95rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          DEMO DATA
         </div>
       </header>
 
@@ -109,15 +110,24 @@ export default function DemoMode() {
               <div style={{ fontSize: '0.75rem', color: '#f59e0b', fontStyle: 'italic', marginBottom: '0.75rem' }}>"These are sample assets used for demonstration."</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                  <span style={{ color: '#c8d8f0' }}>🏦 SBI Savings</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#c8d8f0' }}>
+                    <svg style={{ width: '1.1rem', height: '1.1rem', stroke: '#3b82f6', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 21V10M5 21V10M2 10l10-7 10 7M3 21h18M12 21V10" /></svg>
+                    SBI Savings
+                  </span>
                   <span style={{ color: '#10b981', fontWeight: 700 }}>₹2,45,000</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                  <span style={{ color: '#c8d8f0' }}>📄 LIC Policy</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#c8d8f0' }}>
+                    <svg style={{ width: '1.1rem', height: '1.1rem', stroke: '#8b5cf6', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    LIC Policy
+                  </span>
                   <span style={{ color: '#10b981', fontWeight: 700 }}>₹5,00,000</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#c8d8f0' }}>📈 Mutual Fund</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#c8d8f0' }}>
+                    <svg style={{ width: '1.1rem', height: '1.1rem', stroke: '#f0c040', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                    Mutual Fund
+                  </span>
                   <span style={{ color: '#10b981', fontWeight: 700 }}>₹2,00,000</span>
                 </div>
               </div>
@@ -160,8 +170,9 @@ export default function DemoMode() {
             </div>
           </div>
 
-          <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(16,185,129,0.1)', borderLeft: '4px solid #10b981', color: '#a7f3d0', fontSize: '0.95rem' }}>
-            <strong>💡 Insight:</strong> Recovering assets earlier can preserve financial value against market inflation.
+          <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(16,185,129,0.1)', borderLeft: '4px solid #10b981', color: '#a7f3d0', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <svg style={{ width: '1.25rem', height: '1.25rem', flexShrink: 0, stroke: '#10b981', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 113.536 0V21h-2v-3.3a5 5 0 00-3.536-1.8z" /></svg>
+            <span><strong>Insight:</strong> Recovering assets earlier can preserve financial value against market inflation.</span>
           </div>
         </section>
 
@@ -193,10 +204,22 @@ export default function DemoMode() {
             <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
               <h3 style={{ fontSize: '1.1rem', color: '#f0f4ff', marginBottom: '1rem' }}>Required Documents</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <div style={{ color: '#a7f3d0' }}>✓ Death Certificate</div>
-                <div style={{ color: '#a7f3d0' }}>✓ Identity Proof</div>
-                <div style={{ color: '#a7f3d0' }}>✓ Relationship Proof</div>
-                <div style={{ color: '#fca5a5' }}>⏳ Legal Affidavit</div>
+                <div style={{ color: '#a7f3d0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <svg style={{ width: '1.1rem', height: '1.1rem', stroke: '#10b981', strokeWidth: 2.5, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  Death Certificate
+                </div>
+                <div style={{ color: '#a7f3d0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <svg style={{ width: '1.1rem', height: '1.1rem', stroke: '#10b981', strokeWidth: 2.5, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  Identity Proof
+                </div>
+                <div style={{ color: '#a7f3d0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <svg style={{ width: '1.1rem', height: '1.1rem', stroke: '#10b981', strokeWidth: 2.5, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  Relationship Proof
+                </div>
+                <div style={{ color: '#fca5a5', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <svg style={{ width: '1.1rem', height: '1.1rem', stroke: '#fca5a5', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  Legal Affidavit
+                </div>
               </div>
             </div>
           </div>
@@ -217,7 +240,7 @@ export default function DemoMode() {
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
             {pdfSuccess ? (
               <div style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid #10b981', color: '#a7f3d0', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', width: '100%' }}>
-                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
+                <svg style={{ width: '3rem', height: '3rem', margin: '0 auto 1rem auto', stroke: '#10b981', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 <h3 style={{ margin: '0 0 0.5rem 0', color: '#10b981' }}>Affidavit Generated!</h3>
                 <p style={{ margin: 0, fontSize: '0.9rem' }}>The demo document has been downloaded to your device.</p>
               </div>
@@ -228,7 +251,21 @@ export default function DemoMode() {
                 className="btn-primary" 
                 style={{ padding: '1.25rem 3rem', fontSize: '1.15rem', borderRadius: '999px', boxShadow: '0 8px 24px rgba(240,192,64,0.3)', opacity: loadingPdf ? 0.7 : 1 }}
               >
-                {loadingPdf ? '⏳ Generating AI Document...' : '📄 Generate Legal Affidavit'}
+                {loadingPdf ? (
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
+                    <svg style={{ width: '1.15rem', height: '1.15rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none', className: 'animate-spin' }} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1021 12h-1.5" />
+                    </svg>
+                    Generating AI Document...
+                  </span>
+                ) : (
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
+                    <svg style={{ width: '1.15rem', height: '1.15rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Generate Legal Affidavit
+                  </span>
+                )}
               </button>
             )}
           </div>

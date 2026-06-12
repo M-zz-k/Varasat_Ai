@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchAssetGraph } from '../services/assetApi';
 import AssetGraph from '../components/AssetGraph';
+import { useTranslation } from '../hooks/useTranslation';
 
 // Fallback demo graph shown when no documents have been uploaded yet
 const DEMO_GRAPH = {
@@ -20,6 +21,7 @@ const DEMO_GRAPH = {
 
 export default function AssetDiscovery() {
   const navigate = useNavigate();
+  const { lang, toggleLanguage } = useTranslation();
   const [loading, setLoading]             = useState(true);
   const [error, setError]                 = useState('');
   const [graphResponse, setGraphResponse] = useState(null);
@@ -80,32 +82,46 @@ export default function AssetDiscovery() {
   return (
     <div className="min-h-screen bg-slate-950 font-sans antialiased text-slate-300">
       {/* Header */}
-      <header className="flex items-center gap-3 px-6 py-3.5 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
-        <Link
-          to="/"
-          className="flex items-center gap-1.5 text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-800/50 transition-all"
-        >
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
-          Home
-        </Link>
+      <header className="flex items-center justify-between px-6 py-3.5 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+        <div className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="flex items-center gap-1.5 text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-800/50 transition-all mr-1"
+          >
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+            Home
+          </Link>
 
-        <div className="w-9 h-9 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-blue-400">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="2" y1="12" x2="22" y2="12" />
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10A15.3 15.3 0 0 1 8 12 15.3 15.3 0 0 1 12 2z" />
-          </svg>
-        </div>
-        <div>
-          <div className="font-extrabold text-white text-sm leading-none">Asset Map</div>
-          <div className="text-[10px] text-slate-500 mt-0.5 font-semibold">Knowledge Graph Visualization</div>
-        </div>
-
-        {isDemo && (
-          <div className="ml-auto px-2.5 py-1 bg-amber-900/20 border border-amber-700/30 rounded-full text-amber-400 text-[10px] font-bold uppercase tracking-wider">
-            Demo Data
+          <div className="w-9 h-9 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-blue-400">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10A15.3 15.3 0 0 1 8 12 15.3 15.3 0 0 1 12 2z" />
+            </svg>
           </div>
-        )}
+          <div>
+            <div className="font-extrabold text-white text-sm leading-none">Asset Map</div>
+            <div className="text-[10px] text-slate-500 mt-0.5 font-semibold">Knowledge Graph Visualization</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {isDemo && (
+            <div className="px-2.5 py-1 bg-amber-900/20 border border-amber-700/30 rounded-full text-amber-400 text-[10px] font-bold uppercase tracking-wider">
+              Demo Data
+            </div>
+          )}
+
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-950 hover:bg-slate-900 border border-slate-800 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer"
+          >
+            <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
+            </svg>
+            <span>{lang === 'en' ? 'हिंदी' : 'English'}</span>
+          </button>
+        </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-6 py-8">
