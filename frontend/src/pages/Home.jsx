@@ -431,21 +431,124 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ── Step-by-Step User Flow ───────────────────────────────────────── */}
-        <section className="bg-slate-50/70 py-16 border-t border-slate-200/40 relative z-10">
-          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-center text-3xl font-extrabold text-slate-900 mb-12 tracking-tight">
-              Step-by-Step User Flow
-            </h2>
-            <div className="space-y-4">
-              {steps.map((s, i) => (
-                <div key={i} className="flex items-center gap-4 bg-white/80 border border-slate-200/80 rounded-xl p-5 hover:border-slate-350 transition-all duration-200 shadow-2xs">
-                  <span className="w-10 h-10 rounded-lg bg-slate-900 text-white font-extrabold text-sm flex items-center justify-center flex-shrink-0">
-                    {s.num}
-                  </span>
-                  <span className="text-base font-semibold text-slate-800">{s.text}</span>
+        {/* ── Visual User Flow Diagram (Dark Blue Theme Overhaul) ──────────── */}
+        <section className="bg-slate-950 py-20 border-t border-slate-900 relative overflow-hidden z-10">
+          
+          {/* Subtle grid pattern background */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20 pointer-events-none"></div>
+
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="text-[10px] bg-slate-900 text-amber-400 border border-amber-500/20 px-3 py-1.5 rounded-full font-bold uppercase tracking-widest block w-fit mx-auto mb-4">
+                Operational Pipeline
+              </span>
+              <h2 className="text-3xl font-black text-white tracking-tight sm:text-4xl mb-4">
+                The Claim Recovery Journey
+              </h2>
+              <p className="text-sm sm:text-base text-zinc-400 leading-relaxed">
+                How Varasat's automated compliance engine securely navigates from family intake to bank disbursement.
+              </p>
+            </div>
+
+            {/* Grid Flow Pipeline */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-stretch">
+              
+              {/* Step 1 */}
+              <div className="bg-slate-900/40 border border-slate-850 rounded-xl p-6 relative flex flex-col justify-between items-center text-center transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_4px_20px_rgba(245,158,11,0.08)] group">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center border-2 border-slate-950 shadow-md">
+                  1
+                </span>
+                <div className="flex flex-col items-center mt-2">
+                  <div className="w-12 h-12 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-amber-500 mb-4 transition-transform group-hover:scale-110 duration-300">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-extrabold text-sm tracking-tight mb-1">Family Intake</h3>
+                  <span className="text-[9px] text-amber-400 font-bold uppercase tracking-wider block mb-3">01. Relationship Matrix</span>
+                  <p className="text-zinc-400 text-[11px] leading-relaxed">
+                    Provide the relationship hierarchy of the deceased to formulate legally valid heir claims.
+                  </p>
                 </div>
-              ))}
+              </div>
+
+              {/* Step 2 */}
+              <div className="bg-slate-900/40 border border-slate-850 rounded-xl p-6 relative flex flex-col justify-between items-center text-center transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_4px_20px_rgba(245,158,11,0.08)] group">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center border-2 border-slate-950 shadow-md">
+                  2
+                </span>
+                <div className="flex flex-col items-center mt-2">
+                  <div className="w-12 h-12 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-amber-500 mb-4 transition-transform group-hover:scale-110 duration-300">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-extrabold text-sm tracking-tight mb-1">Smart Ingestion</h3>
+                  <span className="text-[9px] text-amber-400 font-bold uppercase tracking-wider block mb-3">02. Secure Verification</span>
+                  <p className="text-zinc-400 text-[11px] leading-relaxed">
+                    Upload certificates, passbooks, and policies. System processes records without third-party exposure.
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="bg-slate-900/40 border border-slate-850 rounded-xl p-6 relative flex flex-col justify-between items-center text-center transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_4px_20px_rgba(245,158,11,0.08)] group">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center border-2 border-slate-950 shadow-md">
+                  3
+                </span>
+                <div className="flex flex-col items-center mt-2">
+                  <div className="w-12 h-12 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-amber-500 mb-4 transition-transform group-hover:scale-110 duration-300">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 21l8.982-11.825a.9.9 0 00-.715-1.428H14.24l.813-5.096L6.072 14.475a.9.9 0 00.715 1.428H9.81z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-extrabold text-sm tracking-tight mb-1">AI Discovery Engine</h3>
+                  <span className="text-[9px] text-amber-400 font-bold uppercase tracking-wider block mb-3">03. Wolfram Audit</span>
+                  <p className="text-zinc-400 text-[11px] leading-relaxed">
+                    Claude reasons across databases while Wolfram executes compound inflation loss modeling.
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 4 */}
+              <div className="bg-slate-900/40 border border-slate-850 rounded-xl p-6 relative flex flex-col justify-between items-center text-center transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_4px_20px_rgba(245,158,11,0.08)] group">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center border-2 border-slate-950 shadow-md">
+                  4
+                </span>
+                <div className="flex flex-col items-center mt-2">
+                  <div className="w-12 h-12 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-amber-500 mb-4 transition-transform group-hover:scale-110 duration-300">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-extrabold text-sm tracking-tight mb-1">Legal Compilation</h3>
+                  <span className="text-[9px] text-amber-400 font-bold uppercase tracking-wider block mb-3">04. Automated Drafting</span>
+                  <p className="text-zinc-400 text-[11px] leading-relaxed">
+                    Generate succession filings, affidavits, and bank indemnity bonds in official formats.
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 5 */}
+              <div className="bg-slate-900/40 border border-slate-850 rounded-xl p-6 relative flex flex-col justify-between items-center text-center transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_4px_20px_rgba(245,158,11,0.08)] group">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center border-2 border-slate-950 shadow-md">
+                  5
+                </span>
+                <div className="flex flex-col items-center mt-2">
+                  <div className="w-12 h-12 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-amber-500 mb-4 transition-transform group-hover:scale-110 duration-300">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-extrabold text-sm tracking-tight mb-1">Disbursement</h3>
+                  <span className="text-[9px] text-amber-400 font-bold uppercase tracking-wider block mb-3">05. Bank Integration</span>
+                  <p className="text-zinc-400 text-[11px] leading-relaxed">
+                    Track the file state directly until the partner bank settles the unclaimed legacy wealth.
+                  </p>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
