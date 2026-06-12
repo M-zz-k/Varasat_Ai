@@ -1,0 +1,38 @@
+[
+  {
+    "id": "doc_bank_claim_fast_track",
+    "topic": "Bank Account Fast Track Claim",
+    "tags": ["bank", "fast track", "nominee", "savings"],
+    "content": "For bank accounts with a registered nominee and balance below ₹5,00,000, the claim process is fast-tracked. The nominee must submit the death certificate, the passbook or account statement, their own ID proof (Aadhaar/PAN), and the bank's standard claim form. The amount is usually released within 15–30 business days without needing a succession certificate."
+  },
+  {
+    "id": "doc_bank_claim_legal_heir",
+    "topic": "Bank Account Legal Heir Process",
+    "tags": ["bank", "no nominee", "legal heir", "succession certificate"],
+    "content": "If a bank account has no registered nominee or the amount is large (often > ₹5,00,000), banks require legal heir documentation. This involves submitting a Legal Heir Certificate (obtained from the Tehsildar/Revenue office) or a Succession Certificate (from a Civil Court). All legal heirs must sign a No Objection Certificate (NOC) on a stamp paper. This process can take 3–6 months."
+  },
+  {
+    "id": "doc_insurance_lic_claim",
+    "topic": "LIC / Insurance Policy Claim",
+    "tags": ["insurance", "LIC", "policy", "nominee", "maturity"],
+    "content": "To claim an LIC or life insurance policy, the nominee must submit the original policy document, the original death certificate, their ID proof, a cancelled cheque for NEFT transfer, and the insurer's specific claim form (e.g., Form 3784 for LIC). The claim is typically processed within 30–60 business days. An official surveyor might visit if the claim is highly irregular or premature."
+  },
+  {
+    "id": "doc_mutual_fund_transmission",
+    "topic": "Mutual Fund / Equity Transmission",
+    "tags": ["mutual fund", "shares", "equity", "transmission"],
+    "content": "Transferring mutual funds to a nominee is called 'Transmission'. The nominee must submit a Transmission Request Form (Form T3), the death certificate attested by a gazetted officer or bank manager, their KYC details, and a FATCA declaration. If held in demat, the request goes to the Depository Participant (DP); if in physical or SOA form, it goes directly to the AMC or Registrar (CAMS/KFintech)."
+  },
+  {
+    "id": "doc_provident_fund_epf",
+    "topic": "EPF / Provident Fund Claim",
+    "tags": ["EPF", "provident fund", "PF", "form 20"],
+    "content": "To claim EPF of a deceased family member, the nominee or legal heir must submit Form 20 for PF settlement and Form 10D for pension (if applicable). These must be submitted through the deceased's last employer, along with the death certificate, nominee's ID, and a blank cancelled cheque. The EPFO normally processes these within 30–45 days."
+  },
+  {
+    "id": "doc_general_guidance_safety",
+    "topic": "General Guidance & Disclaimer",
+    "tags": ["disclaimer", "safety", "legal", "guarantee"],
+    "content": "Varasat AI provides guidance based on standard Indian financial procedures. It cannot guarantee legal outcomes, approve claims, or access internal bank databases. Claimants must always verify the exact requirements with the specific bank, AMC, or insurance institution branch where the asset is held."
+  }
+]
