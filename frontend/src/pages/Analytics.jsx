@@ -200,7 +200,12 @@ export default function Analytics() {
       setResult(data);
       
       // Call advanced real Wolfram engine
-      const advancedData = await analyzeWithWolframEngine([{ type: 'Mixed', amount: amt }], yrs);
+      const advancedData = await analyzeWithWolframEngine(
+        [{ type: 'Bank', amount: amt }], 
+        yrs,
+        inflationRate,
+        { nomineeAvailable: true, documentsComplete: true }
+      );
       setAdvancedResult(advancedData);
     } catch (err) {
       setError(err.message || 'Analysis failed. Please check backend and Wolfram key.');
@@ -438,75 +443,118 @@ export default function Analytics() {
           </div>
         )}
 
-        {/* ── Wolfram Results ── */}
-        {result && result.success && (
-          <>
-            <div className="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md p-6 rounded-2xl shadow-xl mb-5">
-              <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-5">
-                Compounding Audit Ledger
+        {/* ── Core Financial Intelligence Engine (Wolfram) ── */}
+        {advancedResult && advancedResult.success && (
+          <div className="mt-8 space-y-6">
+            <div className="flex items-center gap-2 mb-2">
+              <IconLightning />
+              <h2 className="text-xl font-black text-amber-500 tracking-tight">Core Financial Intelligence</h2>
+            </div>
+            <p className="text-xs text-slate-400 font-semibold mb-6">
+              Wolfram performs mathematical and financial analysis to support recovery decisions.
+            </p>
+
+            {/* 1. Financial Impact Model */}
+            <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl">
+              <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
+                1. Financial Impact Model
               </h3>
-
-              <div className="grid grid-cols-3 gap-4 mb-5">
-                <MetaStat label="Initial Value"        value={result.original_amount} />
-                <MetaStat label="Dormancy Period"      value={`${result.years_delayed} years`} />
-                <MetaStat label="Inflation Coefficient" value={result.inflation_rate} />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Future Value (Nominal)</span>
+                  <span className="text-lg font-black text-emerald-400 mt-1 block">₹{advancedResult.financialAnalysis?.futureValue?.toLocaleString('en-IN') || 0}</span>
+                </div>
+                <div className="bg-red-950/20 p-4 rounded-xl border border-red-800/30">
+                  <span className="text-[10px] text-red-400/70 font-bold uppercase tracking-wider block">Purchasing Power Loss</span>
+                  <span className="text-lg font-black text-red-400 mt-1 block">-₹{advancedResult.financialAnalysis?.impact?.toLocaleString('en-IN') || 0}</span>
+                </div>
               </div>
+              <p className="text-xs text-slate-400 mt-4 leading-relaxed">{advancedResult.financialAnalysis?.explanation}</p>
+            </div>
 
-              <div className="bg-slate-950 border border-slate-800 p-4 rounded-xl mb-5 flex flex-col md:flex-row justify-between items-center gap-4">
+            {/* 2. Claim Risk Analysis */}
+            <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl">
+              <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
+                2. Claim Risk Analysis
+              </h3>
+              <div className="flex items-center gap-6">
+                <div className="w-24 h-24 rounded-full border-4 border-slate-800 flex items-center justify-center flex-col shrink-0">
+                  <span className="text-2xl font-black text-white">{advancedResult.riskAnalysis?.score || 0}</span>
+                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Score</span>
+                </div>
                 <div>
-                  <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider leading-none">
-                    Wolfram Valuation Method
-                  </span>
-                  <span className="font-mono text-white text-base font-bold block mt-1.5">
-                    FV = P × (1 + r)^t
-                  </span>
-                </div>
-                <span className="bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                  Compounded Engine Verified
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-slate-950 border border-slate-800 p-4 rounded-xl">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
-                    Compounded Value (FV)
-                  </span>
-                  <span className="text-lg font-black text-emerald-400 mt-1 block">
-                    {result.analysis.futureValue}
-                  </span>
-                </div>
-                <div className="bg-red-950/20 border border-red-800/30 p-4 rounded-xl">
-                  <span className="text-[10px] text-red-400/70 font-bold uppercase tracking-wider block">
-                    Purchasing Power Loss
-                  </span>
-                  <span className="text-lg font-black text-red-400 mt-1 block">
-                    -{result.analysis.purchasingPowerLoss}
-                  </span>
+                  <div className="inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-2 bg-slate-800 text-slate-300">
+                    Risk Level: {advancedResult.riskAnalysis?.riskLevel || 'Unknown'}
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">{advancedResult.riskAnalysis?.reason}</p>
                 </div>
               </div>
             </div>
 
-            <WolframAnalysisCard analysisData={advancedResult} isLoading={loading} />
-
-            <div className="space-y-5">
-              <FinancialImpactCard data={result} />
-
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link
-                  to="/chat"
-                  className="flex-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-xs h-11 tracking-wide transition-all duration-200 hover:scale-[1.01]"
-                >
-                  Ask Varasat Mitra
-                </Link>
-                <Link
-                  to="/analyze"
-                  className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-800 bg-transparent hover:bg-slate-800/40 text-slate-300 font-semibold text-xs h-11 transition-all duration-200"
-                >
-                  Ingest New Documents
-                </Link>
+            {/* 3. Recovery Simulation */}
+            <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl">
+              <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
+                3. Recovery Simulation
+              </h3>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-slate-950 p-4 rounded-xl border border-emerald-900/30 text-center">
+                  <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider block mb-1">Fast Track</span>
+                  <span className="text-xl font-black text-white">{advancedResult.recoverySimulation?.fastRecoveryDays || 0}</span>
+                  <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
+                </div>
+                <div className="bg-slate-950 p-4 rounded-xl border border-blue-900/30 text-center">
+                  <span className="text-[10px] text-blue-500 font-bold uppercase tracking-wider block mb-1">Normal</span>
+                  <span className="text-xl font-black text-white">{advancedResult.recoverySimulation?.normalRecoveryDays || 0}</span>
+                  <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
+                </div>
+                <div className="bg-slate-950 p-4 rounded-xl border border-amber-900/30 text-center">
+                  <span className="text-[10px] text-amber-500 font-bold uppercase tracking-wider block mb-1">Delayed</span>
+                  <span className="text-xl font-black text-white">{advancedResult.recoverySimulation?.delayedRecoveryDays || 0}</span>
+                  <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
+                </div>
               </div>
             </div>
-          </>
+
+            {/* 4. Asset Portfolio Intelligence */}
+            <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl">
+              <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
+                4. Asset Portfolio Intelligence
+              </h3>
+              <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                <div className="flex justify-between items-end mb-4">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Total Value</span>
+                  <span className="text-lg font-black text-white">₹{advancedResult.portfolioAnalysis?.totalValue?.toLocaleString('en-IN') || 0}</span>
+                </div>
+                {advancedResult.portfolioAnalysis?.distribution?.map((item, idx) => (
+                  <div key={idx} className="mb-3 last:mb-0">
+                    <div className="flex justify-between text-xs font-semibold mb-1">
+                      <span className="text-slate-300">{item.type}</span>
+                      <span className="text-slate-400">{item.percentage}%</span>
+                    </div>
+                    <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-amber-500 h-full rounded-full" style={{ width: `${item.percentage}%` }}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <Link
+                to="/chat"
+                className="flex-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-xs h-11 tracking-wide transition-all duration-200 hover:scale-[1.01]"
+              >
+                Ask Varasat Mitra
+              </Link>
+              <Link
+                to="/analyze"
+                className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-800 bg-transparent hover:bg-slate-800/40 text-slate-300 font-semibold text-xs h-11 transition-all duration-200"
+              >
+                Ingest New Documents
+              </Link>
+            </div>
+          </div>
         )}
 
         {/* ── Empty state instructions ── */}

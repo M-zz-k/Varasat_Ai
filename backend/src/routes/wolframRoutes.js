@@ -2,9 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const wolframController = require('../controllers/wolframController');
+const { handleAnalyze } = require('../controllers/wolframController');
 
-// Define Wolfram analysis route
-router.post('/analyze', wolframController.analyzeAssets);
+// Unified Endpoint for the Core Financial Intelligence Engine
+router.post('/analyze', handleAnalyze);
 
 module.exports = router;
