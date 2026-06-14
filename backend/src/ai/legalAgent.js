@@ -1,63 +1,82 @@
 'use strict';
 
-const Anthropic = require('@anthropic-ai/sdk');
+/**
+ * legalAgent.js
+ *
+ * Generates a conversational claim recommendation via Groq (llama-3.3-70b-versatile).
+ *
+ * Legacy reference (kept as comment):
+ * // const Anthropic = require('@anthropic-ai/sdk');
+ * // const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+ */
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const { getGroq, isGroqConfigured, classifyGroqError } = require('./aiClients');
 
 /**
  * generateLegalExplanation
- * 
- * Takes analytical scores computed by Wolfram and generates a conversational,
- * elderly-friendly explanation of the claim route and required documents.
- * 
- * @param {Object} wolframScores - { eligibilityScore, riskScore, complexity, estimatedDays }
- * @param {Object} assetData - { assetType, amount, institution, nomineeExists }
- * @returns {Promise<Object>} - { recommendation: string, requiredDocuments: string[] }
+ *
+ * @param {Object} claimScores - { eligibilityScore, riskScore, complexity, estimatedDays }
+ * @param {Object} assetData   - { assetType, amount, institution, nomineeExists }
+ * @returns {Promise<{ recommendation: string, requiredDocuments: string[] }>}
  */
-async function generateLegalExplanation(wolframScores, assetData) {
-  const prompt = `You are Varasat Mitra, an empathetic inheritance assistant.
-We have used our Wolfram Language calculation engine to analyze an inheritance claim for an asset.
+async function generateLegalExplanation(claimScores, assetData) {
+  const fallback = {
+    recommendation: `Based on mathematical analysis, your claim complexity is ${claimScores.complexity}. It may take around ${claimScores.estimatedDays} days to process. ${assetData.nomineeExists ? 'Having a registered nominee will speed things up.' : 'Since there is no registered nominee, a Succession Certificate will be required.'}`,
+    requiredDocuments: [
+      'Death Certificate (original + 2 copies)',
+      'Identity Proof of Claimant (Aadhaar / PAN)',
+      `Original ${assetData.assetType || 'asset'} document (passbook / policy bond / statement)`,
+      ...(assetData.nomineeExists ? [] : ['Legal Heir Certificate or Succession Certificate']),
+      'Institution Claim Form (available at branch)',
+    ],
+  };
+
+  if (!isGroqConfigured()) return fallback;
+
+  const prompt = `You are Varasat Mitra, an empathetic inheritance assistant for Indian families.
 
 Asset Details:
-- Type: ${assetData.assetType || 'Unknown'}
-- Institution: ${assetData.institution || 'Unknown'}
-- Nominee Exists: ${assetData.nomineeExists ? 'Yes' : 'No'}
+- Type:            ${assetData.assetType  || 'Unknown'}
+- Institution:     ${assetData.institution || 'Unknown'}
+- Nominee Exists:  ${assetData.nomineeExists ? 'Yes' : 'No'}
 
-Wolfram Analysis Results:
-- Eligibility Score: ${wolframScores.eligibilityScore}/100
-- Complexity: ${wolframScores.complexity}
-- Estimated Processing Time: ${wolframScores.estimatedDays} days
+Mathematical Analysis Results:
+- Eligibility Score:      ${claimScores.eligibilityScore}/100
+- Risk Score:             ${claimScores.riskScore}/100
+- Complexity:             ${claimScores.complexity}
+- Estimated Processing:   ${claimScores.estimatedDays} days
 
-Your task is to:
-1. Explain the claim route simply and warmly based on these scores.
-2. List the likely required documents.
+Tasks:
+1. Explain the claim route simply and warmly (2–3 sentences max).
+2. List the required documents for this specific claim type.
 
-Respond ONLY with valid JSON in this exact format:
+Respond ONLY with valid JSON in this exact format — no markdown, no extra text:
 {
-  "recommendation": "A warm, simple explanation of the claim route and the Wolfram time/complexity estimates (2-3 sentences max).",
+  "recommendation": "A warm, simple 2-3 sentence explanation.",
   "requiredDocuments": ["Document 1", "Document 2", "Document 3"]
-}
-
-Do not include any other text or markdown outside the JSON.`;
+}`;
 
   try {
-    const response = await client.messages.create({
-      model:      'claude-3-5-sonnet-latest',
-      max_tokens: 400,
-      system:     'You are Varasat Mitra. Explain legal processes simply. Do not use complex jargon. Return pure JSON.',
-      messages:   [{ role: 'user', content: prompt }],
+    const groq = getGroq();
+    const completion = await groq.chat.completions.create({
+      model:       'llama-3.3-70b-versatile',
+      max_tokens:  400,
+      temperature: 0.3,
+      messages: [
+        { role: 'system', content: 'You are Varasat Mitra. Explain legal processes simply. Return pure JSON only.' },
+        { role: 'user',   content: prompt },
+      ],
     });
 
-    const raw = response.content[0].text;
-    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
-    
-    return JSON.parse(cleaned);
-  } catch (error) {
-    console.warn('[LegalAgent] Failed to generate AI explanation:', error.message);
-    return {
-      recommendation: `Based on a mathematical analysis, your claim complexity is ${wolframScores.complexity}. It may take around ${wolframScores.estimatedDays} days to process.`,
-      requiredDocuments: ['Death Certificate', 'Identity Proof of Claimant', 'Original Asset Document']
-    };
+    const raw = completion.choices[0].message.content
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```\s*$/, '')
+      .trim();
+
+    return JSON.parse(raw);
+  } catch (err) {
+    console.warn('[LegalAgent] Groq failed:', err.message);
+    return fallback;
   }
 }
 

@@ -3,104 +3,64 @@
 /**
  * claimAnalyzer.js
  *
- * Wolfram Language Claim Intelligence Engine
- * Computes deterministic scores for inheritance claims.
+ * Pure Node.js claim scoring engine.
+ * Replaces Wolfram Alpha API calls with identical local math.
+ *
+ * Legacy reference (kept as comment):
+ * // const WOLFRAM_URL = 'https://api.wolframalpha.com/v1/result';
+ * // async function callWolframNum(query) { ... }
  */
 
-const axios = require('axios');
-
-const WOLFRAM_URL     = 'https://api.wolframalpha.com/v1/result';
-const WOLFRAM_TIMEOUT = 12000;
-
-async function callWolframNum(query) {
-  const appId = process.env.WOLFRAM_APP_ID;
-  if (!appId || appId === 'your_wolfram_app_id_here') {
-    throw new Error('WOLFRAM_APP_ID not configured');
-  }
-
-  const response = await axios.get(WOLFRAM_URL, {
-    params:       { appid: appId, i: query },
-    timeout:      WOLFRAM_TIMEOUT,
-    responseType: 'text',
-  });
-
-  const raw = response.data?.trim();
-  if (!raw || raw.toLowerCase().includes('did not understand')) {
-    throw new Error(`Wolfram could not compute: "${query}"`);
-  }
-
-  const cleaned = raw
-    .replace(/×10\^(\d+)/g, 'e$1')
-    .replace(/[^0-9.\-e]/g, '');
-  const n = parseFloat(cleaned);
-  
-  if (isNaN(n)) throw new Error(`Non-numeric from Wolfram: ${raw}`);
-  return n;
-}
-
-/**
- * Parses raw amount to a number.
- */
+// ─── Amount Parser ────────────────────────────────────────────────────────────
 function parseAmount(amountStr) {
   if (!amountStr) return 0;
   const cleaned = String(amountStr).replace(/[₹,\sa-zA-Z]/g, '');
   return parseFloat(cleaned) || 0;
 }
 
+// ─── Core Scoring (same formulas as Wolfram expressions) ─────────────────────
 /**
- * Uses Wolfram to compute claim metrics.
- * 
- * @param {Object} data 
- * { amount: number/string, nomineeExists: boolean, documentCount: number, assetType: string }
+ * analyzeClaimScores
+ *
+ * All three expressions mirror the exact Wolfram queries:
+ *   eligibilityScore: min(100, max(0, 40 + (nomineeVal * 40) + (docCount * 5)))
+ *   riskScore:        min(100, max(0, (amount / 100000) * (1 - nomineeVal) * 10 + 5))
+ *   estimatedDays:    15 + (30 * (1 - nomineeVal)) + (amount / 500000)
+ *
+ * @param {Object} data - { amount, nomineeExists, documentCount, assetType }
+ * @returns {Promise<{ eligibilityScore, riskScore, complexity, estimatedDays }>}
  */
 async function analyzeClaimScores(data) {
-  const amount = parseAmount(data.amount);
-  const nomineeVal = data.nomineeExists ? 1 : 0;
-  const docCount = data.documentCount || 1;
+  const amount      = parseAmount(data.amount);
+  const nomineeVal  = data.nomineeExists ? 1 : 0;
+  const docCount    = Math.max(1, data.documentCount || 1);
 
-  // 1. Eligibility Score (0-100)
-  // Higher if nominee exists and more documents are provided.
-  const eligExpr = `min(100, max(0, 40 + (${nomineeVal} * 40) + (${docCount} * 5)))`;
-  
-  // 2. Risk Score (0-100)
-  // Higher risk for large amounts without a nominee.
-  const riskExpr = `min(100, max(0, (${amount} / 100000) * (1 - ${nomineeVal}) * 10 + 5))`;
+  // Eligibility: higher when nominee exists and more docs are provided
+  const eligibilityScore = Math.min(100, Math.max(0,
+    40 + (nomineeVal * 40) + (docCount * 5)
+  ));
 
-  // 3. Base Time (Days)
-  // Nominee route is faster. Large amounts take longer.
-  const timeExpr = `15 + (30 * (1 - ${nomineeVal})) + (${amount} / 500000)`;
+  // Risk: higher for large amounts without a nominee
+  const riskScore = Math.min(100, Math.max(0,
+    (amount / 100_000) * (1 - nomineeVal) * 10 + 5
+  ));
 
-  let eligibilityScore = 50;
-  let riskScore = 20;
-  let estimatedDays = 30;
+  // Time estimate in days
+  const rawDays    = 15 + (30 * (1 - nomineeVal)) + (amount / 500_000);
+  const estimatedDays = Math.round(rawDays);
 
-  try {
-    console.log(`[Wolfram ClaimAnalyzer] Querying scores for amount ${amount}, nominee ${data.nomineeExists}`);
-    
-    // We run them sequentially for safety, or we could do Promise.all if we want speed.
-    // Given Wolfram API rate limits on free tier, sequential is safer.
-    eligibilityScore = await callWolframNum(eligExpr);
-    riskScore        = await callWolframNum(riskExpr);
-    const rawDays    = await callWolframNum(timeExpr);
-    estimatedDays    = Math.round(rawDays);
-    
-  } catch (error) {
-    console.warn('[Wolfram ClaimAnalyzer] Fallback calculations used:', error.message);
-    eligibilityScore = Math.min(100, Math.max(0, 40 + (nomineeVal * 40) + (docCount * 5)));
-    riskScore        = Math.min(100, Math.max(0, (amount / 100000) * (1 - nomineeVal) * 10 + 5));
-    estimatedDays    = Math.round(15 + (30 * (1 - nomineeVal)) + (amount / 500000));
-  }
-
-  // Derived Complexity
+  // Derived complexity
   let complexity = 'Medium';
   if (riskScore < 15 && nomineeVal === 1) complexity = 'Low';
   if (riskScore > 50 || nomineeVal === 0) complexity = 'High';
 
+  console.log(`[ClaimAnalyzer] eligibility=${Math.round(eligibilityScore)} risk=${Math.round(riskScore)} days=${estimatedDays} complexity=${complexity}`);
+
   return {
     eligibilityScore: Math.round(eligibilityScore),
-    riskScore: Math.round(riskScore),
+    riskScore:        Math.round(riskScore),
     complexity,
-    estimatedDays
+    estimatedDays,
   };
 }
 

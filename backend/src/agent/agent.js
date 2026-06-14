@@ -1,120 +1,147 @@
 'use strict';
 
-const Anthropic = require('@anthropic-ai/sdk');
-const { 
-  agentTools, 
-  executeKnowledgeSearch, 
-  executeFinancialAnalysis, 
-  executeDocumentAnalysis, 
-  executePdfGeneration 
+/**
+ * agent.js
+ *
+ * Orchestrates tool-augmented conversations using Groq (llama-3.3-70b-versatile).
+ * Groq does not yet support native function calling the same way Claude does,
+ * so we use a prompt-guided approach: the model decides which tool to invoke
+ * by emitting a JSON action block, and we execute it.
+ *
+ * Legacy reference (kept as comment):
+ * // const Anthropic = require('@anthropic-ai/sdk');
+ * // const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+ */
+
+const { getGroq, isGroqConfigured } = require('../ai/aiClients');
+const {
+  executeKnowledgeSearch,
+  executeFinancialAnalysis,
+  executeDocumentAnalysis,
+  executePdfGeneration,
 } = require('./tools');
 
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
-
+// ─── System prompt ────────────────────────────────────────────────────────────
 const AGENT_SYSTEM_PROMPT = `You are Varasat AI Agent, an advanced inheritance assistant for Indian families.
-You have access to specialized tools. You must use them to provide reliable, mathematically sound, and procedurally correct answers.
 
-IMPORTANT RULES:
-1. ALWAYS use the 'knowledgeSearchTool' when a user asks about the process, required documents, or steps for an inheritance claim (e.g., LIC, Bank, Mutual Fund). Do NOT guess the legal procedure.
-2. ALWAYS use the 'financialAnalysisTool' when a user asks about the value of an asset over time, inflation, or how much they lost/gained.
-3. If a user asks to analyze a document, use 'documentAnalysisTool'.
-4. If a user asks to generate a legal document, use 'pdfGenerationTool'.
+You have access to these tools:
+1. knowledgeSearchTool  — Use when the user asks about the process, required documents, or steps for any inheritance claim.
+2. financialAnalysisTool — Use when the user asks about asset value over time, inflation impact, or how much they may have lost.
+3. documentAnalysisTool  — Use when the user explicitly asks to analyze a document.
+4. pdfGenerationTool     — Use when the user explicitly asks to generate a legal document or PDF.
+
+To use a tool, respond ONLY with this exact JSON (no other text):
+{"action":"TOOL_CALL","tool":"<toolName>","args":{"query":"<if needed>","amount":<number or null>,"years":<number or null>,"inflationRate":<number or null>,"documentType":"<if needed>"}}
+
+After receiving the tool result, respond in natural language to the user.
 
 SAFETY RULES:
-- NEVER say "I found your bank account". Say "I identified possible assets from the documents provided."
-- NEVER provide guaranteed legal outcomes.
-- If you use the knowledgeSearchTool, cite that the information comes from standard Indian financial procedures.
-- Be empathetic and warm.`;
+- NEVER guarantee legal outcomes.
+- NEVER say "I found your bank account". Say "Based on documents provided..."
+- Be empathetic and warm.
+- Cite that process information follows standard Indian financial procedures.`;
 
+// ─── Tool dispatcher ──────────────────────────────────────────────────────────
+async function dispatchTool(toolName, args) {
+  switch (toolName) {
+    case 'knowledgeSearchTool':
+      return await executeKnowledgeSearch(args.query || '');
+    case 'financialAnalysisTool':
+      return await executeFinancialAnalysis(args.amount, args.years, args.inflationRate || 0.06);
+    case 'documentAnalysisTool':
+      return await executeDocumentAnalysis();
+    case 'pdfGenerationTool':
+      return await executePdfGeneration(args.documentType || 'claim-letter');
+    default:
+      return `Unknown tool: ${toolName}`;
+  }
+}
+
+// ─── Try to parse an action block from LLM output ─────────────────────────────
+function tryParseAction(text) {
+  try {
+    const match = text.match(/\{[\s\S]*?"action"\s*:\s*"TOOL_CALL"[\s\S]*?\}/);
+    if (match) return JSON.parse(match[0]);
+  } catch {}
+  return null;
+}
+
+// ─── Main agent runner ────────────────────────────────────────────────────────
 /**
  * runAgent
- * 
- * Takes a conversation history, sends it to Claude with tools, 
- * executes any requested tools, and returns the final AI string.
+ *
+ * @param {Array} messages - Conversation history [{role, content}]
+ * @returns {{ reply: string, updatedMessages: Array, assistantMessage: string }}
  */
 async function runAgent(messages) {
   console.log(`[Agent] Starting run with ${messages.length} messages.`);
-  
-  // Step 1: Send user message and tools to Claude
-  const response = await client.messages.create({
-    model: 'claude-3-5-sonnet-latest',
-    max_tokens: 1024,
-    system: AGENT_SYSTEM_PROMPT,
-    messages: messages,
-    tools: agentTools,
+
+  // ── Offline fallback ────────────────────────────────────────────────────────
+  if (!isGroqConfigured()) {
+    const lastUser = messages.findLast(m => m.role === 'user');
+    const fallback = `I'm here to help with your inheritance claim. ${lastUser?.content ? `You asked: "${lastUser.content}"` : ''} Please configure GROQ_API_KEY in the backend .env to enable full AI responses.`;
+    return { reply: fallback, updatedMessages: messages, assistantMessage: fallback };
+  }
+
+  const groq = getGroq();
+
+  // Step 1: Ask Groq what to do
+  const step1 = await groq.chat.completions.create({
+    model:       'llama-3.3-70b-versatile',
+    max_tokens:  512,
+    temperature: 0.2,
+    messages: [
+      { role: 'system', content: AGENT_SYSTEM_PROMPT },
+      ...messages,
+    ],
   });
 
-  // Check if Claude decided to use a tool
-  if (response.stop_reason === 'tool_use') {
-    // Claude wants to use a tool. Find the tool_use blocks.
-    const toolUseBlocks = response.content.filter(b => b.type === 'tool_use');
-    
-    // We must append Claude's request to the history so we can reply to it
-    messages.push({ role: 'assistant', content: response.content });
+  const step1Text = step1.choices[0].message.content;
+  console.log(`[Agent] Step 1 response: ${step1Text.slice(0, 100)}...`);
 
-    // Execute each tool Claude requested
-    const toolResults = [];
-    for (const block of toolUseBlocks) {
-      const toolName = block.name;
-      const args = block.input;
-      let resultString = '';
+  // Step 2: Check if it wants to call a tool
+  const action = tryParseAction(step1Text);
 
-      try {
-        switch (toolName) {
-          case 'knowledgeSearchTool':
-            resultString = await executeKnowledgeSearch(args.query);
-            break;
-          case 'financialAnalysisTool':
-            resultString = await executeFinancialAnalysis(args.amount, args.years, args.inflationRate);
-            break;
-          case 'documentAnalysisTool':
-            resultString = await executeDocumentAnalysis();
-            break;
-          case 'pdfGenerationTool':
-            resultString = await executePdfGeneration(args.documentType);
-            break;
-          default:
-            resultString = `Error: Unknown tool ${toolName}`;
-        }
-      } catch (err) {
-        resultString = `Tool execution failed: ${err.message}`;
-      }
-
-      toolResults.push({
-        type: 'tool_result',
-        tool_use_id: block.id,
-        content: resultString,
-      });
+  if (action?.tool) {
+    console.log(`[Agent] Tool requested: ${action.tool}`);
+    let toolResult = '';
+    try {
+      toolResult = await dispatchTool(action.tool, action.args || {});
+    } catch (err) {
+      toolResult = `Tool execution failed: ${err.message}`;
     }
 
-    // Append the tool results to the conversation
-    messages.push({ role: 'user', content: toolResults });
+    // Step 3: Feed result back to Groq for synthesis
+    const augmentedMessages = [
+      ...messages,
+      { role: 'assistant', content: step1Text },
+      { role: 'user',      content: `Tool result from ${action.tool}:\n${toolResult}\n\nNow please answer the user's original question using this information.` },
+    ];
 
-    // Step 2: Send the tool results back to Claude so it can formulate the final answer
-    console.log(`[Agent] Returning tool results to Claude for synthesis.`);
-    const finalResponse = await client.messages.create({
-      model: 'claude-3-5-sonnet-latest',
-      max_tokens: 1024,
-      system: AGENT_SYSTEM_PROMPT,
-      messages: messages,
-      tools: agentTools, // pass tools again just in case it wants to call another one
+    const step2 = await groq.chat.completions.create({
+      model:       'llama-3.3-70b-versatile',
+      max_tokens:  1024,
+      temperature: 0.5,
+      messages: [
+        { role: 'system', content: AGENT_SYSTEM_PROMPT },
+        ...augmentedMessages,
+      ],
     });
 
-    // We assume the second turn finishes the conversation for this MVP
+    const finalReply = step2.choices[0].message.content;
+
     return {
-      reply: finalResponse.content.find(c => c.type === 'text')?.text || "I processed that using my tools.",
-      updatedMessages: messages,
-      assistantMessage: finalResponse.content
+      reply:            finalReply,
+      updatedMessages:  augmentedMessages,
+      assistantMessage: finalReply,
     };
   }
 
-  // Claude did NOT use a tool, it just replied directly.
+  // No tool needed — direct reply
   return {
-    reply: response.content.find(c => c.type === 'text')?.text || "I'm here to help.",
-    updatedMessages: messages,
-    assistantMessage: response.content
+    reply:            step1Text,
+    updatedMessages:  [...messages, { role: 'assistant', content: step1Text }],
+    assistantMessage: step1Text,
   };
 }
 
