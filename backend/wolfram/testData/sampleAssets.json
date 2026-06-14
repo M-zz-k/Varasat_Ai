@@ -1,0 +1,23 @@
+[
+  {
+    "type": "Bank",
+    "amount": 245000,
+    "urgency": 0.8,
+    "docsComplete": true,
+    "riskDelay": 1.0
+  },
+  {
+    "type": "Insurance",
+    "amount": 1000000,
+    "urgency": 1.2,
+    "docsComplete": false,
+    "riskDelay": 2.5
+  },
+  {
+    "type": "Investments",
+    "amount": 500000,
+    "urgency": 1.0,
+    "docsComplete": true,
+    "riskDelay": 1.2
+  }
+]

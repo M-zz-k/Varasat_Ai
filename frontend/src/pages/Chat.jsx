@@ -167,6 +167,14 @@ function MessageBubble({ msg }) {
           <FormattedText text={msg.content} />
         </div>
 
+        {/* Diagnostic / Tool usage badge */}
+        {!isUser && msg.toolUsed && msg.toolUsed !== 'none' && (
+          <div className="mt-3 inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-800/50 border border-slate-700/50 text-[9px] font-bold tracking-widest uppercase text-amber-500/80">
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+            Varasat AI used: {msg.toolUsed.replace(/Tool/g, '')}
+          </div>
+        )}
+
         {/* Timestamp */}
         <div className="text-[10px] text-slate-500 mt-2 text-right font-mono">{time}</div>
       </div>
@@ -282,7 +290,12 @@ export default function Chat() {
         const data = await res.json();
         const reply = data.reply || data.message || 'Varasat Mitra responded.';
         setMessages(prev =>
-          prev.map(m => m.id === assistantId ? { ...m, content: reply } : m)
+          prev.map(m => m.id === assistantId ? { 
+            ...m, 
+            content: reply, 
+            intent: data.intent,
+            toolUsed: data.toolUsed
+          } : m)
         );
       }
       // ── Handle SSE / text stream (future backend upgrade) ──────────────────

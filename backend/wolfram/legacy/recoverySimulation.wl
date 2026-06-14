@@ -1,14 +1,7 @@
 (* ::Package:: *)
 
-(* 
-  Recovery Simulation
-  Uses simulation models to estimate fast, normal, and delayed recovery timelines in days.
-*)
-
 simulateRecoveryTimeline[nomineeAvailable_, docsComplete_] := 
-  Module[{baseTime, fast, normal, delayed, jsonOutput},
-    
-    (* Base time in days *)
+  Module[{baseTime, fast, normal, delayed},
     baseTime = If[nomineeAvailable && docsComplete, 30, 
                  If[nomineeAvailable, 60, 
                  If[docsComplete, 120, 180]]];
@@ -17,14 +10,9 @@ simulateRecoveryTimeline[nomineeAvailable_, docsComplete_] :=
     normal = baseTime;
     delayed = Round[baseTime * RandomReal[{1.2, 1.5}]];
     
-    <|
-      "fastRecoveryDays" -> fast,
-      "normalRecoveryDays" -> normal,
-      "delayedRecoveryDays" -> delayed
-    |>
+    <|"fastRecoveryDays" -> fast, "normalRecoveryDays" -> normal, "delayedRecoveryDays" -> delayed|>
   ]
 
-(* Command Line Argument Parsing *)
 If[Length[$ScriptCommandLine] >= 3,
   Module[{nomineeAvailable, docsComplete, result, jsonOutput},
     nomineeAvailable = ToExpression[$ScriptCommandLine[[2]]];
@@ -32,7 +20,13 @@ If[Length[$ScriptCommandLine] >= 3,
     
     result = simulateRecoveryTimeline[nomineeAvailable, docsComplete];
     
-    jsonOutput = ExportString[result, "JSON", "Compact" -> True];
+    jsonOutput = ExportString[<|
+      "module" -> "analytics/recoverySimulation",
+      "inputs" -> <|"nomineeAvailable" -> nomineeAvailable, "docsComplete" -> docsComplete|>,
+      "calculation" -> "Monte Carlo simulation bounding delay variance",
+      "result" -> result,
+      "explanation" -> "Simulation based estimate of recovery timelines across three confidence intervals."
+    |>, "JSON", "Compact" -> True];
     Print[jsonOutput];
   ]
 ]

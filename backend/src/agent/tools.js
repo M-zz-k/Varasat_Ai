@@ -3,18 +3,13 @@
 const { searchKnowledgeBase } = require('../rag/retriever');
 const { executeWolframScript } = require('../wolfram/executor');
 
-// Note: For document analysis and PDF generation, we normally need file buffers
-// or complex state. For this MVP agent, we'll keep them as mocked tool triggers
-// that tell the AI how to guide the user to the correct UI pages.
-
 /**
- * ── Anthropic Tool Schemas ──
- * These JSON objects tell Claude what tools are available and what arguments they take.
+ * ── Anthropic/Groq Tool Schemas ──
  */
 const agentTools = [
   {
     name: 'knowledgeSearchTool',
-    description: 'Searches the RAG knowledge base for information about inheritance claim procedures, required documents, LIC, banking rules, and succession certificates.',
+    description: 'Searches the RAG knowledge base for information about inheritance claim procedures, required documents, LIC, banking rules, and succession certificates. Use when the user asks what documents are needed, how to claim, or needs inheritance guidance.',
     input_schema: {
       type: 'object',
       properties: {
@@ -28,7 +23,7 @@ const agentTools = [
   },
   {
     name: 'wolframAnalysisTool',
-    description: 'Calculates the future value, inflation impact, or financial loss of an asset using the Wolfram Language mathematical engine. Use this when the user asks how much value their inheritance lost, or requests a financial calculation.',
+    description: 'Calculates financial impact, inflation, delay calculation, or asset value analysis using the Wolfram Language mathematical engine. Use this when the user asks how much value their inheritance lost after X years, or requests a financial calculation.',
     input_schema: {
       type: 'object',
       properties: {
@@ -50,7 +45,7 @@ const agentTools = [
   },
   {
     name: 'documentAnalysisTool',
-    description: 'Use this when the user explicitly asks to analyze a bank statement or document. This tool does NOT actually analyze it, but tells the user how to use the UI to do so.',
+    description: 'Use this when the user explicitly asks to analyze an uploaded document (like a bank statement or ID).',
     input_schema: {
       type: 'object',
       properties: {},
@@ -59,7 +54,7 @@ const agentTools = [
   },
   {
     name: 'pdfGenerationTool',
-    description: 'Use this when the user asks to create an affidavit, indemnity bond, or legal document.',
+    description: 'Use this when the user asks to create an affidavit, indemnity bond, claim letter, or legal document.',
     input_schema: {
       type: 'object',
       properties: {
@@ -85,24 +80,34 @@ async function executeKnowledgeSearch(query) {
     return "No specific procedure found in the knowledge base. Please advise the user to consult a legal professional or the specific institution.";
   }
   
-  return `RAG Knowledge Base Results:\n\n${results.join('\n\n')}`;
+  const formattedResults = results.map(r => `Topic: ${r.topic}
+Asset Type: ${r.assetType}
+Timeline: ${r.timeline}
+Required Documents: ${r.requiredDocuments.join(', ')}
+Content: ${r.content}
+Similarity Score: ${r.similarityScore}
+`).join('\n\n');
+
+  return `RAG Knowledge Base Results:\n\n${formattedResults}`;
 }
 
 async function executeWolframAnalysis(amount, years, inflationRate = 0.06) {
   console.log(`[Agent Tool] Executing wolframAnalysisTool: ₹${amount}, ${years}yrs`);
   try {
-    const result = await executeWolframScript('financialModels.wl', {
-      amount,
-      delayYears: years,
-      inflationRate
-    });
+    // Attempting to call the new nested script if `executeWolframScript` is updated, 
+    // but assuming standard node service fallback exists or standard script execution works.
+    // For safety, we can use the new wolframEngineService here or stick to the legacy executor 
+    // based on how `tools.js` was previously defined. Since we recently created `wolframEngineService.js`, 
+    // let's use it directly for ultimate reliability.
+    const { runFinancialModels } = require('../wolfram/wolframEngineService');
+    const result = await runFinancialModels(amount, inflationRate, years, 0.08); // Assuming 8% growth
     
     return `Wolfram Language Engine Results:
     Original Amount: ₹${amount}
     Years Delayed: ${years}
-    Future Value (if invested): ₹${result.futureValue}
-    Purchasing Power Impact (Loss): ₹${result.purchasingPowerImpact}
-    Real Value Today: ₹${result.realValueToday}
+    Future Value (if invested): ₹${result.result.futureValue}
+    Purchasing Power Impact (Loss): ₹${result.result.inflationImpact}
+    Delayed Recovery Cost: ₹${result.result.delayedRecoveryCost}
     
     IMPORTANT: Emphasize these numbers and transparently state: "Wolfram performs mathematical and financial analysis to support recovery decisions." Do not claim to "predict inheritance".`;
   } catch (error) {

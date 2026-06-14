@@ -4,6 +4,22 @@ Varasat relies on a dual-intelligence architecture that cleanly separates genera
 
 ## The Dual-Intelligence Paradigm
 
+**Data Flow Architecture:**
+```text
+React
+ |
+Node.js Backend
+ |
+AI Agent
+ |
+--------------------------------
+|              |               |
+RAG          Wolfram        Document AI
+Knowledge    Engine         Extraction
+ |
+Claude/Gemini Reasoning
+```
+
 ### 1. Claude/Gemini (Generative Intelligence)
 - **Natural Language Reasoning**: Interprets user intent, simplifies complex legal jargon, and communicates empathetically with heirs (Varasat Saathi).
 - **RAG Knowledge Retrieval**: Queries vector databases to inject factual context about succession laws and affidavit requirements.
@@ -14,12 +30,13 @@ Varasat relies on a dual-intelligence architecture that cleanly separates genera
 - **Risk Modelling**: Computes deterministic readiness scores using explicit algorithmic weights rather than arbitrary generative guessing.
 - **Simulation**: Uses mathematical bounded randomness (Monte Carlo methodologies) to estimate recovery timelines based on document availability.
 
-## Deep Wolfram Integration (`backend/wolfram/`)
+## Ultimate Wolfram Integration (`backend/wolfram/`)
 
-The repository contains a deeply nested set of 10+ `.wl` scripts executing distinct models:
-- `/core`: Base formulas for Present Value and discrete compound growth mapping.
-- `/analytics`: Distribution of multi-class asset portfolios and inflation projections.
-- `/intelligence`: Heuristic risk scoring evaluating structural missing components (documents vs. nominees).
-- `/visualization`: Generation of exact Cartesian plotting points for React UI components.
+The repository contains a highly developed native engine of `.wl` scripts executing distinct models:
+- `/models`: Unifies advanced financial structures (Compound Interest, Delayed Recovery Costs, Present/Future Values).
+- `/analytics`: Projects asset growth trajectories, simulates multiple recovery delay bounds, and profiles portfolio intelligence.
+- `/intelligence`: Heuristic optimization logic for prioritizing asset recovery sequences and checking document readiness scoring.
+- `/visualization`: Native generation of Recharts-compatible discrete data arrays mapping out computational timelines.
+- `/tests`: Native `.wlt` Wolfram test frameworks asserting computational correctness directly in the engine language.
 
 *Note: Wolfram is explicitly used for "Computational Support" (e.g., Claim Readiness, Document Completeness, Recovery Priorities). It does not predict legal outcomes or claim approvals.*

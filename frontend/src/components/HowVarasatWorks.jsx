@@ -48,14 +48,17 @@ export default function HowVarasatWorks() {
 
       {/* AI Pipeline Flow */}
       <div className="flex flex-col items-center gap-2 mb-8">
-        <FlowStep iconKey="robot" title="Varasat AI Agent" desc="Understands intent and reasons securely" color="#10b981" />
+        <FlowStep iconKey="document" title="User Question" desc="Inheritance or financial query" color="#3b82f6" />
         <FlowArrow />
-        <FlowStep iconKey="book" title="Knowledge Retrieval (RAG)" desc="Fetches verified legal procedures" color="#f59e0b" />
+        <FlowStep iconKey="robot" title="AI Agent" desc="Understands intent and reasons securely" color="#10b981" />
         <FlowArrow />
-        <FlowStep iconKey="lightning" title="Financial Analysis" desc="Calculates inflation impact with Wolfram" color="#8b5cf6" />
+        <FlowStep iconKey="book" title="RAG Knowledge Retrieval" desc="Fetches verified legal procedures" color="#f59e0b" />
         <FlowArrow />
-        <FlowStep iconKey="document" title="Document Assistance" desc="Analyzes statements & drafts legal forms" color="#3b82f6" />
+        <FlowStep iconKey="lightning" title="Wolfram Analysis" desc="Calculates financial impact" color="#8b5cf6" />
+        <FlowArrow />
+        <FlowStep iconKey="ai" title="Final Answer" desc="Synthesized transparent response" color="#ec4899" />
       </div>
+
 
       {/* Engine Breakdown */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

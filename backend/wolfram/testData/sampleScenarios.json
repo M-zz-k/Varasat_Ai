@@ -1,0 +1,14 @@
+[
+  {
+    "scenarioName": "Perfect Execution",
+    "requiredDocs": ["Death Certificate", "Legal Heir Certificate", "ID Proof"],
+    "missingDocs": [],
+    "assetInfoAvailable": true
+  },
+  {
+    "scenarioName": "High Risk Missing Docs",
+    "requiredDocs": ["Death Certificate", "Legal Heir Certificate", "Succession Certificate"],
+    "missingDocs": ["Succession Certificate"],
+    "assetInfoAvailable": false
+  }
+]

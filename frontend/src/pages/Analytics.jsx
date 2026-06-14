@@ -463,121 +463,102 @@ export default function Analytics() {
                 onClick={() => setActiveTab('financial')} 
                 className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'financial' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
               >
-                Financial Model
+                Financial Intelligence
               </button>
               <button 
-                onClick={() => setActiveTab('risk')} 
-                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'risk' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+                onClick={() => setActiveTab('simulation')} 
+                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'simulation' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
               >
-                Risk Analysis
-              </button>
-              <button 
-                onClick={() => setActiveTab('recovery')} 
-                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'recovery' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
-              >
-                Recovery Simulation
+                Scenario Simulation
               </button>
               <button 
                 onClick={() => setActiveTab('portfolio')} 
                 className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'portfolio' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
               >
-                Portfolio Analysis
+                Asset Portfolio
+              </button>
+              <button 
+                onClick={() => setActiveTab('readiness')} 
+                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'readiness' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+              >
+                Recovery Readiness
               </button>
             </div>
 
-            {/* 1. Financial Impact Model */}
+            {/* 1. Financial Intelligence */}
             {activeTab === 'financial' && (
               <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl animate-fade-in">
                 <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
-                  1. Financial Impact Model
+                  1. Advanced Financial Modelling
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
                     <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Future Value (Nominal)</span>
-                    <span className="text-lg font-black text-emerald-400 mt-1 block">₹{advancedResult.data.financialModel.futureValue.result?.toLocaleString('en-IN') || 0}</span>
+                    <span className="text-lg font-black text-emerald-400 mt-1 block">₹{advancedResult.data.financialModel.result?.futureValue?.toLocaleString('en-IN') || 0}</span>
                   </div>
                   <div className="bg-red-950/20 p-4 rounded-xl border border-red-800/30">
                     <span className="text-[10px] text-red-400/70 font-bold uppercase tracking-wider block">Purchasing Power Loss</span>
-                    <span className="text-lg font-black text-red-400 mt-1 block">-₹{advancedResult.data.financialModel.inflationImpact.result?.toLocaleString('en-IN') || 0}</span>
+                    <span className="text-lg font-black text-red-400 mt-1 block">-₹{advancedResult.data.financialModel.result?.inflationImpact?.toLocaleString('en-IN') || 0}</span>
                   </div>
                 </div>
+                <div className="mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Cost of Delayed Recovery</span>
+                  <div className="text-lg font-black text-amber-400">₹{advancedResult.data.financialModel.result?.delayedRecoveryCost?.toLocaleString('en-IN') || 0}</div>
+                </div>
                 <p className="text-xs text-slate-400 mt-4 leading-relaxed font-mono bg-slate-950 p-3 rounded border border-slate-800">
-                  <span className="text-amber-500">Wolfram Math:</span> {advancedResult.data.financialModel.futureValue.calculation}
-                  <br/><span className="text-slate-500 mt-1 block">{advancedResult.data.financialModel.inflationImpact.explanation}</span>
+                  <span className="text-amber-500">Wolfram Math:</span> {advancedResult.data.financialModel.calculation}
+                  <br/><span className="text-slate-500 mt-1 block">{advancedResult.data.financialModel.explanation}</span>
                 </p>
               </div>
             )}
 
-            {/* 2. Claim Risk Analysis */}
-            {activeTab === 'risk' && (
-              <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl animate-fade-in">
-                <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
-                  2. Claim Readiness Scoring
-                </h3>
-                <div className="flex items-center gap-6">
-                  <div className="w-24 h-24 rounded-full border-4 border-slate-800 flex items-center justify-center flex-col shrink-0">
-                    <span className="text-2xl font-black text-white">{advancedResult.data.riskAnalysis.result.score || 0}</span>
-                    <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Score</span>
-                  </div>
-                  <div>
-                    <div className="inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-2 bg-slate-800 text-slate-300">
-                      Risk Level: {advancedResult.data.riskAnalysis.result.riskLevel || 'Unknown'}
-                    </div>
-                    <ul className="text-xs text-slate-400 leading-relaxed list-disc ml-4">
-                      {Object.entries(advancedResult.data.riskAnalysis.result.factors || {}).map(([key, val]) => (
-                        <li key={key} className={val === 'Missing' ? 'text-red-400' : 'text-emerald-400'}>
-                          <span className="text-slate-300">{key}:</span> {val}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* 3. Recovery Simulation */}
-            {activeTab === 'recovery' && (
+            {/* 2. Scenario Simulation */}
+            {activeTab === 'simulation' && (
               <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl animate-fade-in">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">
-                    3. Recovery Timeline Scenarios
+                    2. Recovery Scenario Simulation
                   </h3>
                   <span className="text-[10px] text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded font-bold">
-                    Simulation based estimate
+                    Simulation based on provided assumptions
                   </span>
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div className="bg-slate-950 p-4 rounded-xl border border-emerald-900/30 text-center">
-                    <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider block mb-1">Fast Track</span>
-                    <span className="text-xl font-black text-white">{advancedResult.data.recoverySimulation.result.fastRecoveryDays || 0}</span>
+                    <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider block mb-1">Fast Recovery</span>
+                    <span className="text-xl font-black text-white">{advancedResult.data.recoverySimulation.result?.fastScenario?.days || 0}</span>
                     <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
                   </div>
                   <div className="bg-slate-950 p-4 rounded-xl border border-blue-900/30 text-center">
-                    <span className="text-[10px] text-blue-500 font-bold uppercase tracking-wider block mb-1">Normal</span>
-                    <span className="text-xl font-black text-white">{advancedResult.data.recoverySimulation.result.normalRecoveryDays || 0}</span>
+                    <span className="text-[10px] text-blue-500 font-bold uppercase tracking-wider block mb-1">Normal Recovery</span>
+                    <span className="text-xl font-black text-white">{advancedResult.data.recoverySimulation.result?.normalScenario?.days || 0}</span>
                     <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
                   </div>
                   <div className="bg-slate-950 p-4 rounded-xl border border-amber-900/30 text-center">
-                    <span className="text-[10px] text-amber-500 font-bold uppercase tracking-wider block mb-1">Delayed</span>
-                    <span className="text-xl font-black text-white">{advancedResult.data.recoverySimulation.result.delayedRecoveryDays || 0}</span>
+                    <span className="text-[10px] text-amber-500 font-bold uppercase tracking-wider block mb-1">Delayed Recovery</span>
+                    <span className="text-xl font-black text-white">{advancedResult.data.recoverySimulation.result?.delayedScenario?.days || 0}</span>
                     <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
                   </div>
                 </div>
+                <p className="text-xs text-slate-400 mt-4 leading-relaxed font-mono bg-slate-950 p-3 rounded border border-slate-800">
+                  <span className="text-amber-500">Wolfram Method:</span> {advancedResult.data.recoverySimulation.method}
+                  <br/><span className="text-slate-500 mt-1 block">{advancedResult.data.recoverySimulation.explanation}</span>
+                </p>
               </div>
             )}
 
-            {/* 4. Asset Portfolio Intelligence */}
+            {/* 3. Asset Portfolio */}
             {activeTab === 'portfolio' && (
               <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl animate-fade-in">
                 <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
-                  4. Asset Portfolio Distribution
+                  3. Asset Portfolio Distribution
                 </h3>
                 <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
                   <div className="flex justify-between items-end mb-4">
                     <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Total Value</span>
-                    <span className="text-lg font-black text-white">₹{advancedResult.data.portfolioAnalysis.result.totalValue?.toLocaleString('en-IN') || 0}</span>
+                    <span className="text-lg font-black text-white">₹{advancedResult.data.portfolioAnalysis.result?.totalAssets?.toLocaleString('en-IN') || 0}</span>
                   </div>
-                  {advancedResult.data.portfolioAnalysis.result.distribution?.map((item, idx) => (
+                  {advancedResult.data.portfolioAnalysis.result?.distribution?.map((item, idx) => (
                     <div key={idx} className="mb-3 last:mb-0">
                       <div className="flex justify-between text-xs font-semibold mb-1">
                         <span className="text-slate-300">{item.type}</span>
@@ -589,6 +570,54 @@ export default function Analytics() {
                     </div>
                   ))}
                 </div>
+                <p className="text-xs text-slate-400 mt-4 leading-relaxed font-mono bg-slate-950 p-3 rounded border border-slate-800">
+                  <span className="text-amber-500">Calculation:</span> {advancedResult.data.portfolioAnalysis.calculation}
+                </p>
+              </div>
+            )}
+
+            {/* 4. Recovery Readiness */}
+            {activeTab === 'readiness' && (
+              <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl animate-fade-in">
+                <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
+                  4. Document Completeness Analysis
+                </h3>
+                <div className="flex items-center gap-6 mb-6">
+                  <div className="w-24 h-24 rounded-full border-4 border-slate-800 flex items-center justify-center flex-col shrink-0">
+                    <span className="text-2xl font-black text-white">{advancedResult.data.documentReadiness.result?.readinessScore || 0}</span>
+                    <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Score</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-200 leading-relaxed mb-2">
+                      {advancedResult.data.documentReadiness.result?.recommendation}
+                    </p>
+                    {advancedResult.data.documentReadiness.result?.missingItems?.length > 0 && (
+                      <div className="text-xs text-red-400 font-semibold">
+                        Missing: {advancedResult.data.documentReadiness.result.missingItems.join(', ')}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4 border-t border-slate-800/80 pt-4">
+                  Asset Priority Ranking
+                </h3>
+                <div className="space-y-3">
+                  {advancedResult.data.priorityOptimization.result?.ranking?.map((r, i) => (
+                    <div key={i} className="flex justify-between items-center bg-slate-950 p-3 rounded-lg border border-slate-800">
+                      <div>
+                        <div className="text-sm font-bold text-slate-200">{r.type}</div>
+                        <div className="text-[10px] text-slate-500">{r.reason}</div>
+                      </div>
+                      <div className="text-amber-500 font-mono text-sm">Score: {r.score}</div>
+                    </div>
+                  ))}
+                </div>
+                
+                <p className="text-xs text-slate-400 mt-4 leading-relaxed font-mono bg-slate-950 p-3 rounded border border-slate-800">
+                  <span className="text-amber-500">Wolfram Method:</span> {advancedResult.data.priorityOptimization.method}
+                  <br/><span className="text-slate-500 mt-1 block">{advancedResult.data.documentReadiness.explanation}</span>
+                </p>
               </div>
             )}
 
