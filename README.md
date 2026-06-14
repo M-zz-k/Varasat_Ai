@@ -1,4 +1,4 @@
-# Varasat AI 🏛️
+# Varasat AI 
 
 > AI-powered dormant wealth recovery for Indian families — unclaimed bank accounts, LIC policies, provident funds, and shares.
 
