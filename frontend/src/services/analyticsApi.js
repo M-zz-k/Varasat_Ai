@@ -44,7 +44,7 @@ export async function analyzeFinancialImpact(amount, years, inflationRate = 0.06
  * multi-faceted financial models, scoring, and risk analytics.
  */
 export async function analyzeWithWolframEngine(assets, delayYears, inflationRate, claimData) {
-  const response = await api.post('/wolfram/analyze', {
+  const response = await api.post('/wolfram/full-analysis', {
     assets,
     delayYears: Number(delayYears),
     inflationRate: Number(inflationRate),

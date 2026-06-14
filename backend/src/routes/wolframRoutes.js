@@ -2,9 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const { handleAnalyze } = require('../controllers/wolframController');
+const { handleFullAnalysis } = require('../controllers/wolframController');
 
-// Unified Endpoint for the Core Financial Intelligence Engine
-router.post('/analyze', handleAnalyze);
+// Unified Endpoint for the Major Wolfram Engine Expansion
+router.post('/full-analysis', handleFullAnalysis);
 
 module.exports = router;

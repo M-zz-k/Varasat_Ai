@@ -1,50 +1,25 @@
 'use strict';
 
-const wolframService = require('../wolfram/wolframService');
+const wolframEngineService = require('../wolfram/wolframEngineService');
 
 /**
- * POST /api/wolfram/analyze
- * Body:
- * {
- *   assets: [{ type: "Bank", amount: 245000 }],
- *   delayYears: 10,
- *   inflationRate: 0.06,
- *   claimData: { nomineeAvailable: true, documentsComplete: true }
- * }
+ * POST /api/wolfram/full-analysis
  */
-async function handleAnalyze(req, res) {
+async function handleFullAnalysis(req, res) {
     const { assets = [], delayYears = 0, inflationRate = 0.06, claimData = {} } = req.body;
     
-    const nomineeAvailable = claimData.nomineeAvailable || false;
-    const documentsComplete = claimData.documentsComplete || false;
-    
-    // Calculate total asset value
-    const totalAmount = assets.reduce((sum, a) => sum + (a.amount || 0), 0);
+    // Default assetClarity to true if missing
+    if (claimData.assetClarity === undefined) claimData.assetClarity = true;
     
     try {
-        // Execute the 5 core Wolfram modules concurrently
-        const [
-            financialAnalysis,
-            riskAnalysis,
-            recoverySimulation,
-            portfolioAnalysis,
-            eligibility
-        ] = await Promise.all([
-            wolframService.runFinancialAnalysis(totalAmount, inflationRate, delayYears),
-            wolframService.runRiskAnalysis(totalAmount, documentsComplete, nomineeAvailable, delayYears),
-            wolframService.runRecoverySimulation(nomineeAvailable, documentsComplete),
-            wolframService.runPortfolioAnalysis(assets),
-            wolframService.runEligibilityCheck(nomineeAvailable, totalAmount, documentsComplete)
-        ]);
+        const fullAnalysis = await wolframEngineService.runFullAnalysisPipeline(
+            assets, delayYears, inflationRate, claimData
+        );
 
         return res.json({
             success: true,
-            financialAnalysis,
-            riskAnalysis,
-            recoverySimulation,
-            portfolioAnalysis,
-            eligibility,
-            _engineInfo: "Core Financial Intelligence Engine powered by Wolfram Language"
+            data: fullAnalysis,
+            _engineInfo: "Varasat Computational Intelligence Engine powered by Wolfram Language"
         });
         
     } catch (error) {
@@ -54,5 +29,5 @@ async function handleAnalyze(req, res) {
 }
 
 module.exports = {
-    handleAnalyze
+    handleFullAnalysis
 };

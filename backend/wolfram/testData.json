@@ -1,0 +1,31 @@
+{
+  "scenarios": [
+    {
+      "name": "Standard Claim",
+      "assets": [
+        { "type": "Bank", "amount": 245000 }
+      ],
+      "delayYears": 5,
+      "inflationRate": 0.06,
+      "claimData": {
+        "nomineeAvailable": true,
+        "documentsComplete": true,
+        "assetClarity": true
+      }
+    },
+    {
+      "name": "High Risk Claim",
+      "assets": [
+        { "type": "Real Estate", "amount": 5000000 },
+        { "type": "Insurance", "amount": 1000000 }
+      ],
+      "delayYears": 12,
+      "inflationRate": 0.07,
+      "claimData": {
+        "nomineeAvailable": false,
+        "documentsComplete": false,
+        "assetClarity": false
+      }
+    }
+  ]
+}
