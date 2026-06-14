@@ -34,14 +34,25 @@ async function handleChat(req, res) {
     return res.status(400).json({ success: false, error: 'Message is required.' });
   }
 
+  const { translateText } = require('../ai/bhashiniService');
+
+  let queryForAgent = message.trim();
+  if (language !== 'English') {
+    queryForAgent = await translateText(queryForAgent, language, 'English');
+  }
+
   if (!isGroqConfigured()) {
     console.log('[Chat] Offline mode.');
-    return res.json({ success: true, reply: getOfflineReply(message.trim()), sessionId, mode: 'offline' });
+    let reply = getOfflineReply(queryForAgent);
+    if (language !== 'English') {
+      reply = await translateText(reply, 'English', language);
+    }
+    return res.json({ success: true, reply, sessionId, mode: 'offline' });
   }
 
   try {
     const history = getSession(sessionId);
-    history.push({ role: 'user', content: message.trim() + (language !== 'English' ? ` (Please reply in ${language})` : '') });
+    history.push({ role: 'user', content: queryForAgent });
 
     if (history.length > MAX_SESSION_MESSAGES) {
       history.splice(0, history.length - MAX_SESSION_MESSAGES);
@@ -52,13 +63,18 @@ async function handleChat(req, res) {
     // Call Agent instead of direct LLM
     const agentResponse = await runAgent(history);
 
-    // Save assistant reply
+    // Save assistant reply in English internally
     history.push({ role: 'assistant', content: agentResponse.finalResponse });
+
+    let finalTranslatedResponse = agentResponse.finalResponse;
+    if (language !== 'English') {
+      finalTranslatedResponse = await translateText(finalTranslatedResponse, 'English', language);
+    }
 
     // Send complete diagnostic packet
     return res.json({ 
       success: true, 
-      reply: agentResponse.finalResponse,
+      reply: finalTranslatedResponse,
       intent: agentResponse.intent,
       toolUsed: agentResponse.toolUsed,
       retrievedContext: agentResponse.retrievedContext,
@@ -68,7 +84,10 @@ async function handleChat(req, res) {
 
   } catch (err) {
     console.error('[ChatController] Error:', err.message);
-    const reply = getOfflineReply(message.trim());
+    let reply = getOfflineReply(queryForAgent);
+    if (language !== 'English') {
+      reply = await translateText(reply, 'English', language);
+    }
     return res.json({ success: true, reply, sessionId, mode: 'offline' });
   }
 }

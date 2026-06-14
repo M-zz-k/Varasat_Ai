@@ -117,12 +117,12 @@ async function executeWolframAnalysis(amount, years, inflationRate = 0.06) {
 
 async function executeDocumentAnalysis() {
   console.log(`[Agent Tool] Executing documentAnalysisTool`);
-  return `System Directive: Tell the user that Varasat can securely analyze their financial documents, but they must go to the "Discover Assets" or "Analyse Document" page to upload their file. Do not pretend you can read files through the chat interface.`;
+  return `System Directive: Tell the user that Varasat can securely analyze their financial documents, but they must go to the "Get Started" or "/analyze" page to upload their file. Do not pretend you can read files through the chat interface.`;
 }
 
 async function executePdfGeneration(documentType) {
   console.log(`[Agent Tool] Executing pdfGenerationTool for: ${documentType}`);
-  return `System Directive: Tell the user that Varasat can generate their ${documentType}, and instruct them to navigate to the "Analyze Claim" -> "Generate Documents" section of the app after completing their asset discovery. Do not try to generate the raw text of the document here in the chat.`;
+  return `System Directive: Tell the user that Varasat can generate their ${documentType}, and instruct them to navigate to the "Analyze Claim" or "/generate-document" section of the app. Do not try to generate the raw text of the document here in the chat.`;
 }
 
 module.exports = {

@@ -18,7 +18,7 @@ const { getGenAI, isGeminiConfigured } = require('./aiClients');
 // ─── System / extraction prompt ───────────────────────────────────────────────
 const EXTRACTION_PROMPT = `You are Varasat Document AI, a specialist in analysing Indian financial documents for inheritance recovery.
 
-Analyse the provided document image or text and extract these fields:
+Analyse the provided document image or text (including complex layouts, tables, stamps, and handwritten fields) and extract these fields:
 - person_name      : Full name of the account / policy holder (usually the deceased)
 - institution      : Name of the bank, insurance company, or financial institution
 - asset_type       : Type of asset (e.g. "Savings Account", "Fixed Deposit", "LIC Policy", "PPF", "Mutual Fund")
@@ -28,6 +28,9 @@ Analyse the provided document image or text and extract these fields:
 - nominee          : Name of the nominee if mentioned
 - branch_address   : Branch name or address if visible
 - date_of_document : Date on the document (statement date, policy date, etc.)
+- document_type    : The specific type of document (e.g., "Passbook", "Death Certificate", "Handwritten Legal Paper")
+- validity_status  : Apparent validity status (e.g., "Valid", "Expired", "Illegible")
+- verification_status : Return "needs_review" if key fields are missing, blurred, incomplete, or dates mismatch. Otherwise return "verified".
 
 Rules:
 - Return ONLY a valid JSON object. No explanation, no markdown, no code fences.
@@ -44,7 +47,10 @@ Required JSON shape:
   "amount": string | null,
   "nominee": string | null,
   "branch_address": string | null,
-  "date_of_document": string | null
+  "date_of_document": string | null,
+  "document_type": string | null,
+  "validity_status": string | null,
+  "verification_status": "verified" | "needs_review"
 }`;
 
 // ─── JSON parse helper ────────────────────────────────────────────────────────
@@ -126,6 +132,9 @@ function mockExtraction(filePath) {
     nominee:          'Sunita Kumar',
     branch_address:   'Main Branch, New Delhi',
     date_of_document: '2019-04-12',
+    document_type:    isLIC ? 'Insurance Policy Document' : 'Bank Statement',
+    validity_status:  'Valid',
+    verification_status: 'verified'
   };
 }
 
@@ -161,11 +170,12 @@ Extracted Data:
 - Asset Type:  ${data.asset_type  || 'Unknown'}
 - Amount:      ${data.amount      || 'Unknown'}
 - Nominee:     ${data.nominee     || 'Unknown'}
+- Verification Status: ${data.verification_status || 'Unknown'}
 
 Confidence score: ${confidenceScore}%
 
 Write a warm, 2-3 sentence explanation for the family.
-Acknowledge the asset found. If confidence is below 60%, gently suggest the document may be hard to read.
+Acknowledge the asset found. If verification status is "needs_review" or confidence is below 60%, gently suggest the document may be hard to read or missing fields.
 Do not use technical jargon.`;
 
   try {
@@ -201,6 +211,9 @@ const DOCUMENT_SCHEMA = {
   nominee:          null,
   branch_address:   null,
   date_of_document: null,
+  document_type:    null,
+  validity_status:  null,
+  verification_status: null,
 };
 
 module.exports = { analyzeDocument, extractDocumentData, DOCUMENT_SCHEMA, generateDocumentInsight };

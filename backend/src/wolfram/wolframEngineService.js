@@ -22,6 +22,20 @@ const fallbacks = {
         const impact = principal - pv;
         const cost = fv - pv;
         
+        const score = Math.round(Math.min(100, Math.max(0, delayYears * 10)));
+        const familyImpact = {
+            groceriesMonths: Math.round(impact / 5000),
+            schoolFeeYears: Math.round((impact / (25000 * 12)) * 10) / 10,
+            medicalEquivalence: Math.round((impact / 100000) * 10) / 10,
+            householdSurvivalMonths: Math.round(impact / 15000)
+        };
+        const recoverySummary = {
+            originalAmount: principal,
+            inflationAdjustedValue: pv,
+            totalLoss: impact,
+            recoveryEfficiencyScore: 100 - score
+        };
+        
         const scenarios = [0, 1, 5, 10].map(y => ({
             scenario: y === 0 ? "Immediate" : y === 1 ? "1 Year Delay" : y === 5 ? "5 Year Delay" : "10 Year Delay",
             delayYears: y,
@@ -30,7 +44,7 @@ const fallbacks = {
             opportunityCost: Math.round((principal * Math.pow(1 + growthRate, y)) - (principal / Math.pow(1 + inflationRate, y)))
         }));
 
-        return { moduleName: "models/advancedFinancialModels", inputs: { principal, inflationRate, delayYears, growthRate }, method: "Compound Interest and Discounting", calculation: "FV = P(1+r)^t; PV = FV/(1+i)^t", result: { futureValue: fv, presentValue: pv, inflationImpact: impact, delayedRecoveryCost: cost, scenarios }, explanation: "Computed future nominal values and evaluated real purchasing power loss." };
+        return { moduleName: "models/advancedFinancialModels", inputs: { principal, inflationRate, delayYears, growthRate }, method: "Compound Interest and Discounting with Family Impact Translation", calculation: "FV = P(1+r)^t; PV = FV/(1+i)^t", result: { futureValue: fv, presentValue: pv, inflationImpact: impact, delayedRecoveryCost: cost, scenarios, familyImpact, delayImpactScore: score, recoverySummary }, explanation: "Computed future nominal values, evaluated real purchasing power loss, and translated financial loss into real-life human impact metrics." };
     },
     'analytics/assetGrowthAnalysis.wl': (args) => {
         const assetsList = JSON.parse(args[0]);
