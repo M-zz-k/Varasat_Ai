@@ -1,7 +1,7 @@
 'use strict';
 
 const { searchKnowledgeBase } = require('../rag/retriever');
-const { callWolframExpression } = require('../wolfram/financialAnalytics');
+const { executeWolframScript } = require('../wolfram/executor');
 
 // Note: For document analysis and PDF generation, we normally need file buffers
 // or complex state. For this MVP agent, we'll keep them as mocked tool triggers
@@ -27,8 +27,8 @@ const agentTools = [
     }
   },
   {
-    name: 'financialAnalysisTool',
-    description: 'Calculates the future value or inflation impact of an asset using the Wolfram Language mathematical engine. Use this when the user asks how much money they lost due to inflation or delay.',
+    name: 'wolframAnalysisTool',
+    description: 'Calculates the future value, inflation impact, or financial loss of an asset using the Wolfram Language mathematical engine. Use this when the user asks how much value their inheritance lost, or requests a financial calculation.',
     input_schema: {
       type: 'object',
       properties: {
@@ -88,26 +88,23 @@ async function executeKnowledgeSearch(query) {
   return `RAG Knowledge Base Results:\n\n${results.join('\n\n')}`;
 }
 
-async function executeFinancialAnalysis(amount, years, inflationRate = 0.06) {
-  console.log(`[Agent Tool] Executing financialAnalysisTool: ₹${amount}, ${years}yrs`);
+async function executeWolframAnalysis(amount, years, inflationRate = 0.06) {
+  console.log(`[Agent Tool] Executing wolframAnalysisTool: ₹${amount}, ${years}yrs`);
   try {
-    // Formula: amount * (1 + inflation)^years
-    const exprFutureValue = `${amount} * (1 + ${inflationRate})^${years}`;
-    const fv = await callWolframExpression(exprFutureValue);
+    const result = await executeWolframScript('financialModels.wl', {
+      amount,
+      delayYears: years,
+      inflationRate
+    });
     
-    const exprRealValue = `${amount} / (1 + ${inflationRate})^${years}`;
-    const realValue = await callWolframExpression(exprRealValue);
-    
-    const loss = amount - realValue;
-    
-    return `Wolfram Financial Engine Results:
+    return `Wolfram Language Engine Results:
     Original Amount: ₹${amount}
     Years Delayed: ${years}
-    Future Value (if invested): ₹${Math.round(fv)}
-    Purchasing Power Impact: ₹${Math.round(loss)}
-    Real Value Today: ₹${Math.round(realValue)}
+    Future Value (if invested): ₹${result.futureValue}
+    Purchasing Power Impact (Loss): ₹${result.purchasingPowerImpact}
+    Real Value Today: ₹${result.realValueToday}
     
-    Tell the user these numbers and emphasize that delaying further will erode more purchasing power.`;
+    IMPORTANT: Emphasize these numbers and transparently state: "Wolfram performs mathematical and financial analysis to support recovery decisions." Do not claim to "predict inheritance".`;
   } catch (error) {
     return `Error calculating financial impact: ${error.message}`;
   }
@@ -126,7 +123,7 @@ async function executePdfGeneration(documentType) {
 module.exports = {
   agentTools,
   executeKnowledgeSearch,
-  executeFinancialAnalysis,
+  executeWolframAnalysis,
   executeDocumentAnalysis,
   executePdfGeneration
 };

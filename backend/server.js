@@ -23,12 +23,14 @@ const documentRoutes  = require('./src/routes/documentRoutes');
 const claimRoutes     = require('./src/routes/claimRoutes');
 const analyticsRoutes = require('./src/routes/analyticsRoutes');
 const assetsRoutes    = require('./src/routes/assetsRoutes');
+const wolframRoutes   = require('./src/routes/wolframRoutes');
 
 app.use('/api/chat',      chatRoutes);
 app.use('/api/document',  documentRoutes);
 app.use('/api/claim',     claimRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/assets',    assetsRoutes);
+app.use('/api/wolfram',   wolframRoutes);
 
 // ─── Health check ─────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {

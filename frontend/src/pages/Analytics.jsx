@@ -4,8 +4,9 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, ReferenceLine,
 } from 'recharts';
-import { analyzeFinancialImpact } from '../services/analyticsApi';
+import { analyzeFinancialImpact, analyzeWithWolframEngine } from '../services/analyticsApi';
 import FinancialImpactCard from '../components/FinancialImpactCard';
+import WolframAnalysisCard from '../components/WolframAnalysisCard';
 
 // ─── SVG Icons ─────────────────────────────────────────────────────────────────
 
@@ -161,6 +162,7 @@ export default function Analytics() {
   const [inflationRate, setInflationRate] = useState(0.06);
   const [loading,       setLoading]       = useState(false);
   const [result,        setResult]        = useState(null);
+  const [advancedResult, setAdvancedResult] = useState(null);
   const [error,         setError]         = useState('');
 
   // Build chart data from user inputs (live preview)
@@ -176,6 +178,7 @@ export default function Analytics() {
     setYears(String(p.years));
     setInflationRate(p.rate);
     setResult(null);
+    setAdvancedResult(null);
     setError('');
   }
 
@@ -189,10 +192,16 @@ export default function Analytics() {
     setError('');
     setLoading(true);
     setResult(null);
+    setAdvancedResult(null);
 
     try {
+      // Keep legacy for existing cards
       const data = await analyzeFinancialImpact(amt, yrs, inflationRate);
       setResult(data);
+      
+      // Call advanced real Wolfram engine
+      const advancedData = await analyzeWithWolframEngine([{ type: 'Mixed', amount: amt }], yrs);
+      setAdvancedResult(advancedData);
     } catch (err) {
       setError(err.message || 'Analysis failed. Please check backend and Wolfram key.');
     } finally {
@@ -476,6 +485,8 @@ export default function Analytics() {
                 </div>
               </div>
             </div>
+
+            <WolframAnalysisCard analysisData={advancedResult} isLoading={loading} />
 
             <div className="space-y-5">
               <FinancialImpactCard data={result} />

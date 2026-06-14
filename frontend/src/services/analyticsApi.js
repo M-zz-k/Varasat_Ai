@@ -36,3 +36,17 @@ export async function analyzeFinancialImpact(amount, years, inflationRate = 0.06
   });
   return response.data;
 }
+
+/**
+ * analyzeWithWolframEngine
+ *
+ * Calls POST /api/wolfram/analyze which uses real .wl scripts to compute
+ * multi-faceted financial models, scoring, and risk analytics.
+ */
+export async function analyzeWithWolframEngine(assets, delayYears) {
+  const response = await api.post('/wolfram/analyze', {
+    assets,
+    delayYears: Number(delayYears),
+  });
+  return response.data;
+}

@@ -16,7 +16,7 @@
 const { getGroq, isGroqConfigured } = require('../ai/aiClients');
 const {
   executeKnowledgeSearch,
-  executeFinancialAnalysis,
+  executeWolframAnalysis,
   executeDocumentAnalysis,
   executePdfGeneration,
 } = require('./tools');
@@ -26,7 +26,7 @@ const AGENT_SYSTEM_PROMPT = `You are Varasat AI Agent, an advanced inheritance a
 
 You have access to these tools:
 1. knowledgeSearchTool  — Use when the user asks about the process, required documents, or steps for any inheritance claim.
-2. financialAnalysisTool — Use when the user asks about asset value over time, inflation impact, or how much they may have lost.
+2. wolframAnalysisTool  — Use when the user asks about asset value over time, financial loss, or requires mathematical intelligence.
 3. documentAnalysisTool  — Use when the user explicitly asks to analyze a document.
 4. pdfGenerationTool     — Use when the user explicitly asks to generate a legal document or PDF.
 
@@ -39,6 +39,7 @@ SAFETY RULES:
 - NEVER guarantee legal outcomes.
 - NEVER say "I found your bank account". Say "Based on documents provided..."
 - Be empathetic and warm.
+- Keep calculations transparent. Say: "Wolfram performs mathematical and financial analysis to support recovery decisions."
 - Cite that process information follows standard Indian financial procedures.`;
 
 // ─── Tool dispatcher ──────────────────────────────────────────────────────────
@@ -46,8 +47,8 @@ async function dispatchTool(toolName, args) {
   switch (toolName) {
     case 'knowledgeSearchTool':
       return await executeKnowledgeSearch(args.query || '');
-    case 'financialAnalysisTool':
-      return await executeFinancialAnalysis(args.amount, args.years, args.inflationRate || 0.06);
+    case 'wolframAnalysisTool':
+      return await executeWolframAnalysis(args.amount, args.years, args.inflationRate || 0.06);
     case 'documentAnalysisTool':
       return await executeDocumentAnalysis();
     case 'pdfGenerationTool':
