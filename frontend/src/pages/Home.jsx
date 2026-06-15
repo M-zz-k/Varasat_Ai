@@ -198,9 +198,13 @@ export default function Home() {
           
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center gap-2 group relative z-10">
-            {getHomeSvgIcon('scale', "w-6 h-6 text-amber-500")}
+            <img 
+              src="/images/varasat-logo.png" 
+              alt="VARASAT logo" 
+              className="w-8 h-8 object-contain rounded-md" 
+            />
             <span className="text-xl font-bold tracking-tight text-white group-hover:text-slate-200 transition-colors">
-              Varasat
+              VARASAT
             </span>
           </Link>
 
@@ -210,7 +214,7 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
             </span>
-            <span>Live Sync: ₹42.8 Cr</span>
+            <span>VARASAT INTELLIGENCE ACTIVE</span>
           </div>
 
           {/* Authentication Actions */}
@@ -266,7 +270,7 @@ export default function Home() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
                   </span>
-                  Live Sync Active
+                  VARASAT INTELLIGENCE ACTIVE
                 </div>
                 {/* Integrated Pill */}
                 <div className="bg-emerald-950 text-emerald-400 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.25)] text-xs font-bold px-4 py-2 rounded-full tracking-wider flex items-center gap-2 uppercase">

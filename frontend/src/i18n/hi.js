@@ -3,7 +3,7 @@ export const hi = {
   "nav.home": "मुख्य पृष्ठ",
   "nav.login": "लॉगिन",
   "nav.getStarted": "शुरू करें",
-  "nav.liveSync": "लाइव सिंक: ₹42.8 करोड़",
+  "nav.liveSync": "विरासत इंटेलिजेंस सक्रिय",
 
   // Steps
   "step.discover": "खोजें",

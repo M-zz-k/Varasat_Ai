@@ -3,7 +3,7 @@ export const en = {
   "nav.home": "Home",
   "nav.login": "Login",
   "nav.getStarted": "Get Started",
-  "nav.liveSync": "Live Sync: ₹42.8 Cr",
+  "nav.liveSync": "VARASAT INTELLIGENCE ACTIVE",
 
   // Steps
   "step.discover": "Discover",
@@ -16,7 +16,7 @@ export const en = {
   "home.accent": "Dormant Wealth",
   "home.desc": "Varasat uses enterprise-grade AI to discover forgotten assets, analyze inheritance claims, and securely guide Indian families through regulated legal recovery channels.",
   "home.stamp": "Trusted Digital Inheritance Companion",
-  "home.livePill": "Live Sync Active",
+  "home.livePill": "VARASAT INTELLIGENCE ACTIVE",
   "home.aadhaarPill": "Aadhaar & DigiLocker Integrated",
   "home.circularPill": "RBI Circular Compliant",
   "home.pipeline.docs": "Unclaimed Documents",
