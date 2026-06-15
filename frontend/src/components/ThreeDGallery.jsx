@@ -3,38 +3,45 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 
-// ── Curated Indian Portraits from Unsplash ──────────────────────────────────
+// ── Curated Indian Portraits from Generated Resources ─────────────────────────
+const imgMaleOld = '/images/indian_elderly_man_1781537126837.png';
+const imgFemaleOld = '/images/indian_elderly_woman_1781537142103.png';
+const imgMaleFarmer = '/images/indian_farmer_1_1781537096711.png';
+const imgFemaleAdult = '/images/indian_farmer_2_1781537111005.png';
+const imgMaleAdult = '/images/indian_man_rural_1781537155398.png';
+const imgFamily = '/images/indian_family_rural_1781537170620.png';
+
 const CARDS_DATA = [
-  { id: 1, name: 'Ramesh Kumar', role: 'Father / Deceased', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 2, name: 'Priya Sharma', role: 'Claimant / Wife', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 3, name: 'Amit Patel', role: 'Nominee / Brother', img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 4, name: 'Sunita Verma', role: 'Mother / Beneficiary', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 5, name: 'Rajesh Gupta', role: 'Co-applicant / Uncle', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 6, name: 'Ananya Nair', role: 'Daughter / Claimant', img: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 7, name: 'Vikram Singh', role: 'Grandfather', img: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 8, name: 'Kavita Reddy', role: 'Sister / Co-heir', img: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 9, name: 'Sanjay Mehta', role: 'Son / Administrator', img: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 10, name: 'Neha Joshi', role: 'Wife / Claimant', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 11, name: 'Arjun Sen', role: 'Son / Nominee', img: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 12, name: 'Aditi Rao', role: 'Daughter / Legal Heir', img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 13, name: 'Vijay Mhatre', role: 'Father / Deceased', img: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 14, name: 'Meera Deshmukh', role: 'Mother / Nominee', img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 15, name: 'Rahul Roy', role: 'Brother / Co-owner', img: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 16, name: 'Divya Iyer', role: 'Niece / Legal Representative', img: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 17, name: 'Suresh Menon', role: 'Grandson / Claimant', img: 'https://images.unsplash.com/photo-1489980508314-941910ded1f4?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 18, name: 'Swati Pillai', role: 'Daughter-in-law', img: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 19, name: 'Deepak Saxena', role: 'Cousin / Executor', img: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 20, name: 'Ritu Kapoor', role: 'Aunt / Nominee', img: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 21, name: 'Manish Pandey', role: 'Son / Legal Heir', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 22, name: 'Sonia Gandhi', role: 'Wife / Beneficiary', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 23, name: 'Karan Johar', role: 'Brother / Executor', img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 24, name: 'Alia Bhatt', role: 'Daughter / Claimant', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 25, name: 'Ranbir Singh', role: 'Husband / Nominee', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 26, name: 'Deepika P.', role: 'Wife / Nominee', img: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 27, name: 'Saif Ali', role: 'Father / Deceased', img: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 28, name: 'Kareena K.', role: 'Sister / Co-heir', img: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 29, name: 'Hrithik R.', role: 'Son / Administrator', img: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=120&h=120&q=80' },
-  { id: 30, name: 'Katrina K.', role: 'Wife / Claimant', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80' },
+  { id: 1, name: 'Ramesh Kumar', role: 'Father / Deceased', img: imgMaleOld },
+  { id: 2, name: 'Priya Sharma', role: 'Claimant / Wife', img: imgFemaleAdult },
+  { id: 3, name: 'Amit Patel', role: 'Nominee / Brother', img: imgMaleAdult },
+  { id: 4, name: 'Sunita Verma', role: 'Mother / Beneficiary', img: imgFemaleOld },
+  { id: 5, name: 'Rajesh Gupta', role: 'Co-applicant / Uncle', img: imgMaleFarmer },
+  { id: 6, name: 'Ananya Nair', role: 'Daughter / Claimant', img: imgFemaleAdult },
+  { id: 7, name: 'Vikram Singh', role: 'Grandfather', img: imgMaleOld },
+  { id: 8, name: 'Kavita Reddy', role: 'Sister / Co-heir', img: imgFemaleAdult },
+  { id: 9, name: 'Sanjay Mehta', role: 'Son / Administrator', img: imgMaleAdult },
+  { id: 10, name: 'Neha Joshi', role: 'Wife / Claimant', img: imgFemaleAdult },
+  { id: 11, name: 'Arjun Sen', role: 'Son / Nominee', img: imgMaleFarmer },
+  { id: 12, name: 'Aditi Rao', role: 'Daughter / Legal Heir', img: imgFamily },
+  { id: 13, name: 'Vijay Mhatre', role: 'Father / Deceased', img: imgMaleOld },
+  { id: 14, name: 'Meera Deshmukh', role: 'Mother / Nominee', img: imgFemaleOld },
+  { id: 15, name: 'Rahul Roy', role: 'Brother / Co-owner', img: imgMaleAdult },
+  { id: 16, name: 'Divya Iyer', role: 'Niece / Legal Representative', img: imgFemaleAdult },
+  { id: 17, name: 'Suresh Menon', role: 'Grandson / Claimant', img: imgMaleAdult },
+  { id: 18, name: 'Swati Pillai', role: 'Daughter-in-law', img: imgFemaleAdult },
+  { id: 19, name: 'Deepak Saxena', role: 'Cousin / Executor', img: imgMaleFarmer },
+  { id: 20, name: 'Ritu Kapoor', role: 'Aunt / Nominee', img: imgFemaleOld },
+  { id: 21, name: 'Manish Pandey', role: 'Son / Legal Heir', img: imgMaleAdult },
+  { id: 22, name: 'Sonia Gandhi', role: 'Wife / Beneficiary', img: imgFemaleAdult },
+  { id: 23, name: 'Karan Johar', role: 'Brother / Executor', img: imgMaleAdult },
+  { id: 24, name: 'Alia Bhatt', role: 'Daughter / Claimant', img: imgFemaleAdult },
+  { id: 25, name: 'Ranbir Singh', role: 'Husband / Nominee', img: imgFamily },
+  { id: 26, name: 'Deepika P.', role: 'Wife / Nominee', img: imgFemaleAdult },
+  { id: 27, name: 'Saif Ali', role: 'Father / Deceased', img: imgMaleOld },
+  { id: 28, name: 'Kareena K.', role: 'Sister / Co-heir', img: imgFamily },
+  { id: 29, name: 'Hrithik R.', role: 'Son / Administrator', img: imgMaleAdult },
+  { id: 30, name: 'Katrina K.', role: 'Wife / Claimant', img: imgFemaleAdult },
 ];
 
 // ── Floating Sphere Card Component ──────────────────────────────────────────

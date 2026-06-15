@@ -149,16 +149,7 @@ export default function Home() {
       <div className="absolute top-[35%] right-[5%] w-[450px] h-[450px] rounded-full bg-gradient-to-tr from-amber-400/15 to-orange-500/10 blur-[130px] pointer-events-none animate-pulse duration-[10s] z-0"></div>
       <div className="absolute bottom-[20%] left-[20%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-indigo-400/15 to-purple-500/10 blur-[150px] pointer-events-none z-0"></div>
 
-      {/* ── Base Canvas Texture Overlay (Light Marble Veins) ─────────────── */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.24] overflow-hidden select-none z-0">
-        <svg className="w-full h-full min-h-screen" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
-          {/* Marble Veins */}
-          <path d="M-100,150 Q200,80 500,350 T1200,200 T1600,750" stroke="rgba(212,160,23,0.22)" strokeWidth="1.2" />
-          <path d="M-50,600 Q400,750 750,450 T1500,550" stroke="rgba(148,163,184,0.18)" strokeWidth="1" />
-          <path d="M150,-50 Q450,250 250,550 T850,900" stroke="rgba(212,160,23,0.1)" strokeWidth="0.8" />
-          <path d="M1000,-100 Q750,350 1150,650" stroke="rgba(148,163,184,0.15)" strokeWidth="1.2" />
-        </svg>
-      </div>
+      {/* Base Canvas Texture Overlay removed as per instructions */}
 
       {/* ── Ambient Lighting & Golden Waves (Bottom Corners) ───────────────── */}
       <div className="absolute bottom-0 left-0 w-96 h-96 pointer-events-none opacity-[0.45] overflow-hidden z-0">
