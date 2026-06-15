@@ -64,6 +64,8 @@ export default function DocumentGenerator() {
     institution:   initialAssetData.institution || '',
     assetType:     initialAssetData.asset_type  || initialAssetData.assetType  || '',
     amount:        initialAssetData.amount       || '',
+    realValueToday: initialAssetData.real_value_today?.value || initialAssetData.real_value_today || '',
+    financialInsight: initialAssetData.financialInsight || ''
   });
 
   const [loading, setLoading] = useState(false);

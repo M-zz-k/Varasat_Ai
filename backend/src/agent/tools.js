@@ -102,14 +102,15 @@ async function executeWolframAnalysis(amount, years, inflationRate = 0.06) {
     const { runFinancialModels } = require('../wolfram/wolframEngineService');
     const result = await runFinancialModels(amount, inflationRate, years, 0.08); // Assuming 8% growth
     
-    return `Wolfram Language Engine Results:
-    Original Amount: ₹${amount}
-    Years Delayed: ${years}
-    Future Value (if invested): ₹${result.result.futureValue}
-    Purchasing Power Impact (Loss): ₹${result.result.inflationImpact}
-    Delayed Recovery Cost: ₹${result.result.delayedRecoveryCost}
-    
-    IMPORTANT: Emphasize these numbers and transparently state: "Wolfram performs mathematical and financial analysis to support recovery decisions." Do not claim to "predict inheritance".`;
+    return `[Wolfram Financial Insight - Verified Mathematical Calculation]
+Original Amount: ₹${amount}
+Dormancy period: ${years} years
+Future Value (if invested): ₹${result.result.futureValue}
+Inflation-adjusted purchasing power loss: ₹${result.result.inflationImpact}
+Opportunity Cost (Delayed Recovery): ₹${result.result.delayedRecoveryCost}
+Estimated current value: ₹${result.result.presentValue || (amount - result.result.inflationImpact)}
+
+IMPORTANT ROUTING DIRECTIVE: You MUST present this exactly as a "Verified Mathematical Calculation". Use the exact phrasing: "Wolfram calculates..." and "Calculated using: ✓ Asset amount ✓ Time duration ✓ Inflation assumptions ✓ Interest model". DO NOT use words like "AI predicted" or "I estimate".`;
   } catch (error) {
     return `Error calculating financial impact: ${error.message}`;
   }

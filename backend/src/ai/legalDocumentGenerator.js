@@ -50,12 +50,15 @@ Claim Details:
 - Institution:    ${claimData.institution  || '[Institution]'}
 - Asset Type:     ${claimData.assetType    || '[Asset]'}
 - Amount:         ${claimData.amount       || '[Amount]'}
+- Financial Value (Today): ${claimData.realValueToday || 'N/A'}
+- Financial Insight: ${claimData.financialInsight ? '\n' + claimData.financialInsight : 'None provided.'}
 
 Instructions:
 1. Create formal, clear wording suitable for ${documentType}.
 2. Structure with a title, main preamble paragraph, and 4-6 numbered clauses.
-3. Do NOT provide false legal guarantees.
-4. Return ONLY valid JSON — no markdown, no code fences:
+3. If Financial Insight is provided, add an explicit final section titled "Financial & Impact Calculation" that details the Wolfram financial insights to strengthen the claim.
+4. Do NOT provide false legal guarantees.
+5. Return ONLY valid JSON — no markdown, no code fences:
 {
   "title": "Document Title Here",
   "content": "Main introductory preamble text...",

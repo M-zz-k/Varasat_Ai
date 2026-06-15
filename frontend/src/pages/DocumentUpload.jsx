@@ -249,9 +249,9 @@ function AIAnalysisCard({ data, file, financialInsight, onFieldChange }) {
             <h3 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider leading-none">Varasat Mitra Insight</h3>
           </div>
           {financialInsight && (
-            <p className="text-xs text-slate-600 leading-relaxed font-semibold">
+            <div className="text-xs text-slate-600 leading-relaxed font-semibold whitespace-pre-wrap font-mono bg-slate-50 p-3 rounded-lg border border-slate-200">
               {financialInsight}
-            </p>
+            </div>
           )}
           {todayVal > 0 && (
             <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center gap-2">
@@ -293,7 +293,7 @@ function AIAnalysisCard({ data, file, financialInsight, onFieldChange }) {
         </Link>
         <Link 
           to="/claim-analysis" 
-          state={{ assetData: Object.keys(data).reduce((acc, k) => { acc[k] = data[k]?.value ?? data[k]; return acc; }, {}) }} 
+          state={{ assetData: { ...Object.keys(data).reduce((acc, k) => { acc[k] = data[k]?.value ?? data[k]; return acc; }, {}), financialInsight } }} 
           className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs h-11 transition-all duration-200 hover:-translate-y-0.5"
         >
           Analyze Claim

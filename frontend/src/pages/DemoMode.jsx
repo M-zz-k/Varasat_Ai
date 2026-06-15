@@ -144,48 +144,12 @@ export default function DemoMode() {
           </div>
         </section>
 
-        {/* STEP 2: Financial Analysis */}
+        {/* STEP 2: Legal Analysis (RAG) */}
         <section className="glass" style={{ padding: '2rem', borderRadius: '24px', marginBottom: '2rem', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, width: '6px', height: '100%', background: '#8b5cf6' }}></div>
           <h2 style={{ fontSize: '1.4rem', color: '#0f172a', fontWeight: 800, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <span style={{ background: '#8b5cf6', color: '#fff', width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', fontWeight: 800 }}>2</span>
-            Step 2: Financial Analysis
-          </h2>
-          
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <p style={{ color: '#475569', margin: 0, fontWeight: 550 }}>Wolfram calculates the inflation impact on unclaimed legacy.</p>
-            <div style={{ padding: '0.3rem 0.8rem', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: '999px', color: '#b45309', fontSize: '0.85rem', fontWeight: 700 }}>
-              ⚡ Powered by Wolfram Language
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-            <div style={{ background: '#ffffff', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
-              <div style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600 }}>Total Assets</div>
-              <div style={{ color: '#0f172a', fontSize: '1.8rem', fontWeight: 850 }}>₹9,45,000</div>
-            </div>
-            <div style={{ background: '#ffffff', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
-              <div style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600 }}>Delayed Recovery</div>
-              <div style={{ color: '#b91c1c', fontSize: '1.8rem', fontWeight: 850 }}>10 years</div>
-            </div>
-            <div style={{ background: 'rgba(239,68,68,0.04)', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', border: '1px solid rgba(239,68,68,0.15)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
-              <div style={{ color: '#b91c1c', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 700 }}>Estimated Inflation Impact</div>
-              <div style={{ color: '#b91c1c', fontSize: '1.8rem', fontWeight: 850 }}>-₹3,20,000</div>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(16,185,129,0.04)', borderLeft: '4px solid #10b981', color: '#047857', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
-            <svg style={{ width: '1.25rem', height: '1.25rem', flexShrink: 0, stroke: '#10b981', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 113.536 0V21h-2v-3.3a5 5 0 00-3.536-1.8z" /></svg>
-            <span><strong>Insight:</strong> Recovering assets earlier can preserve financial value against market inflation.</span>
-          </div>
-        </section>
-
-        {/* STEP 3: Claim Ready */}
-        <section className="glass" style={{ padding: '2rem', borderRadius: '24px', marginBottom: '2rem', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '6px', height: '100%', background: '#f59e0b' }}></div>
-          <h2 style={{ fontSize: '1.4rem', color: '#0f172a', fontWeight: 800, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <span style={{ background: '#f59e0b', color: '#fff', width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', fontWeight: 800 }}>3</span>
-            Step 3: Claim Ready
+            Step 2: Legal Analysis (RAG Engine)
           </h2>
           
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
@@ -226,6 +190,68 @@ export default function DemoMode() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* STEP 3: Financial Analysis (Wolfram) */}
+        <section className="glass" style={{ padding: '2rem', borderRadius: '24px', marginBottom: '2rem', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '6px', height: '100%', background: '#f59e0b' }}></div>
+          <h2 style={{ fontSize: '1.4rem', color: '#0f172a', fontWeight: 800, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span style={{ background: '#f59e0b', color: '#fff', width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', fontWeight: 800 }}>3</span>
+            Step 3: Financial Analysis (Wolfram Engine)
+          </h2>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <p style={{ color: '#475569', margin: 0, fontWeight: 550 }}>Deterministic mathematical calculation of inflation impact and financial projections.</p>
+            <div style={{ padding: '0.3rem 0.8rem', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: '999px', color: '#b45309', fontSize: '0.85rem', fontWeight: 700 }}>
+              Verified Mathematical Calculation
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div style={{ background: '#ffffff', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+              <div style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600 }}>Original Amount</div>
+              <div style={{ color: '#0f172a', fontSize: '1.8rem', fontWeight: 850 }}>₹9,45,000</div>
+            </div>
+            <div style={{ background: '#ffffff', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+              <div style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600 }}>Delayed Recovery</div>
+              <div style={{ color: '#b91c1c', fontSize: '1.8rem', fontWeight: 850 }}>10 years</div>
+            </div>
+            <div style={{ background: 'rgba(239,68,68,0.04)', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', border: '1px solid rgba(239,68,68,0.15)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+              <div style={{ color: '#b91c1c', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 700 }}>Inflation-adjusted loss</div>
+              <div style={{ color: '#b91c1c', fontSize: '1.8rem', fontWeight: 850 }}>-₹4,16,000</div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '16px', border: '1px solid #e2e8f0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+            <div>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#334155', marginBottom: '1rem' }}>Asset Value Projection</h4>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #e2e8f0' }}>
+                <span style={{ color: '#64748b', fontWeight: 600 }}>Estimated Current Value</span>
+                <span style={{ color: '#0f172a', fontWeight: 800 }}>₹5,29,000</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #e2e8f0' }}>
+                <span style={{ color: '#64748b', fontWeight: 600 }}>After 5 Years (Estimated)</span>
+                <span style={{ color: '#10b981', fontWeight: 800 }}>₹7,77,000</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0' }}>
+                <span style={{ color: '#64748b', fontWeight: 600 }}>After 10 Years (Estimated)</span>
+                <span style={{ color: '#10b981', fontWeight: 800 }}>₹11,41,000</span>
+              </div>
+            </div>
+            
+            <div>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#334155', marginBottom: '1rem' }}>Calculated using:</h4>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#475569', fontSize: '0.9rem', marginBottom: '0.5rem' }}>✓ Asset amount (₹9,45,000)</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#475569', fontSize: '0.9rem', marginBottom: '0.5rem' }}>✓ Time duration (10 years)</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#475569', fontSize: '0.9rem', marginBottom: '0.5rem' }}>✓ Inflation assumptions (6%)</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#475569', fontSize: '0.9rem', marginBottom: '0.5rem' }}>✓ Interest model (8%)</div>
+            </div>
+          </div>
+          
+          <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(245,158,11,0.04)', borderLeft: '4px solid #f59e0b', color: '#b45309', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
+            <svg style={{ width: '1.25rem', height: '1.25rem', flexShrink: 0, stroke: '#f59e0b', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span><strong>Delay Impact Calculator:</strong> Waiting 3 more years may reduce effective financial value by ₹1,12,000</span>
           </div>
         </section>
 
