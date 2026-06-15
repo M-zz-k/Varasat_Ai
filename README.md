@@ -1,109 +1,156 @@
-# Varasat AI 🏛️
+# VARASAT
+### AI-Powered System for Discovery, Recovery & Resolution of Unclaimed Family Assets
 
-> **Next-Generation AI-powered dormant wealth recovery for Indian families.**  
-> Automatically discover, analyze, and claim forgotten assets—including dormant savings accounts, unclaimed insurance policies (LIC), provident funds (EPFO), and mutual fund shares.
-
----
-
-## 🌟 Vision & Key Capabilities
-
-Every year, thousands of crores in Indian assets go unclaimed because heirs are unaware of their family members' historical investments or are intimidated by complex institutional bureaucracy. Varasat AI bridges this gap with an intuitive, secure, and visually stunning solution.
-
-*   **3D Fibonacci Card Gallery**: An interactive, weightless tag cloud built using **Three.js** and **React Three Fiber**. Arrange 30+ photo cards in a responsive sphere that drifts via positional wave noise, responds dynamically to cursor movements, and scales with a golden halo glow on hover.
-*   **Centered Voice Assistant Command Hub**: A direct, zero-clicks audio interaction console (powered by Groq Whisper) that answers complex legal succession queries in both **Hindi** and **English**.
-*   **HDFC/ICICI-Inspired Premium Aesthetics**: A cohesive design featuring custom dot-grid backgrounds (`.bg-grid-dots`), glassmorphic containers (`.glass-premium`), and glowing depth orbs.
-*   **Automated Document Generation**: Instantly draft legally compliant succession documents (Affidavits, Indemnity Bonds, and Claim Letters) and download them locally as PDFs.
+*"Transforming forgotten financial assets into recovered family dignity."*
 
 ---
 
-## 🗺️ The Varasat Journey
+## 🛑 Problem Statement
 
-The platform provides a step-by-step pipeline ensuring families are guided from document discovery to final recovery:
+In India, an estimated **₹1.5 Lakh Crore ($18B+)** in unclaimed deposits, insurance policies, and mutual funds is lying dormant. 
+When a family member passes away, their grieving families lose access to these hard-earned assets because:
+- **Fragmented Systems**: Every bank, insurer, and provident fund has a different, opaque recovery process.
+- **Complexity**: The intersection of rigid legal procedures, rigid financial requirements, and legacy documentation completely blocks ordinary citizens.
+- **Lack of Guidance**: There is no unified, intelligent system to guide users—forcing them to rely on expensive intermediaries.
 
-```
-Ingest Scan/PDF ➔ AI Field Extraction ➔ Inflation Loss Analytics ➔ Stage Journey Tracker ➔ Succession PDF Generator
-```
+## 💡 Proposed Solution (Varasat)
 
----
-
-## 🧭 Application Blueprint & Portals
-
-The prototype features discrete frontend routes optimized for specific phases of the recovery process:
-
-| Route | Portal / Page | Functional Scope | Aesthetic Elements |
-|---|---|---|---|
-| `/` | **Home Portal** | Main dashboard hub featuring the Three.js card gallery and centered voice command input. | Responsive 3D perspective grids, cursor tracking. |
-| `/upload` | **Document Upload** | Drag-and-drop ingestion interface for bank statements, certificates, and policies. | Glassmorphic dropzone, interactive confidence indicators, editable tables. |
-| `/chat` | **Varasat Mitra** | Conversational legal assistant detailing succession processes (Hindu Succession Act, etc.). | Pulsing chat indicators, English/Hindi language selectors. |
-| `/assets` | **Asset Discovery** | Relation graph connecting deceased relatives to claims and institutions using React Flow. | Color-coded status paths, amber glows. |
-| `/tracker` | **Claim Tracker** | Milestone roadmap tracing institutional audits and timeline logs. | Vertical milestone pipelines with custom status indicators. |
-| `/analytics` | **Analytics** | Loss calculator computing the compound impact of inflation on delayed asset releases. | Premium Recharts containers, custom math indicators. |
-| `/documents` | **Document Generator** | Selection portal for generating formal legal PDFs. | Sleek dropdown select matrices, loading spin overlays. |
-| `/demo` | **Demo Sandbox** | Simulated sandbox showing a pre-loaded claim recovery path for testing. | Layered workflow card columns. |
-| `/login` | **Bank Partner Login** | Entrance gate for financial partners to verify incoming claims. | Glass-premium login card, smooth OTP step transitions. |
+**Varasat** is an end-to-end, AI-powered multi-agent ecosystem designed to completely democratize inheritance recovery. It acts as a unified legal and financial brain that:
+1. **Extracts** structured data directly from legacy, handwritten, or scanned financial documents.
+2. **Explains** step-by-step legal claim processes using intelligent reasoning.
+3. **Computes** the true financial cost of delayed recovery using the Wolfram Language.
+4. **Generates** the exact legal documents (affidavits, indemnities) needed to claim the money.
+5. **Supports** regional voice-based interactions to ensure accessibility for all users.
 
 ---
 
-## 🛠️ Stack & Technologies
+## ✨ Key Features
 
-*   **Frontend**: React + Vite, Three.js, React Three Fiber (R3F), `@react-three/drei`, Tailwind CSS v4, React Flow, Recharts, Zustand.
-*   **Backend**: Node.js + Express, Multer, PDF-Parse.
-*   **AI Engine**:
-    *   *Structured Document Extraction*: Google Gemini 2.5 Flash Vision.
-    *   *Succession Analysis & Chat*: Groq Llama 3.3 70B.
-    *   *Voice Command Input*: Groq Whisper Large v3.
-*   **PDF Generation**: PDFKit (runs locally in Node, eliminating external print costs).
+- **🧠 AI Agent Router**: The intelligent orchestrator that accurately routes user queries and documents to the correct specialized modules.
+- **👁️ Multimodal Document Intelligence Engine**: Reads scanned legacy documents, extracts handwritten and printed text, detects institutional stamps, and proactively flags validation anomalies (e.g., blurred text, missing dates).
+- **📚 RAG Knowledge System**: A robust semantic retrieval system providing legally grounded inheritance rules, specific claim procedures, and precise document requirements.
+- **⚙️ Wolfram Financial Intelligence Engine**: The definitive core computational engine handling complex inflation-adjusted value calculations, multi-variable financial forecasting, and delay impact modeling.
+- **👨‍👩‍👧 Family Impact Loss Calculator [NEW]**: Translates abstract financial loss into tangible human impact metrics (e.g., grocery equivalents, education costs, medical expense equivalence) with a 0–100 Family Survival Impact Score.
+- **📄 OCR + Document Processing**: Parses and extracts highly structured JSON data from unpredictable PDFs and images.
+- **🖨️ Automated PDF Generator**: Automatically drafts and compiles ready-to-print legal affidavits and claim documents based on extracted data.
+- **🗣️ Voice Assistant (Bhashini)**: Full multilingual interaction support (Hindi, Kannada, English) ensuring barrier-free access.
 
 ---
 
-## 🚀 Quick Start & Development Setup
+## 🏗️ System Architecture
 
-### 1. Prerequisite Installations
-Ensure you have **Node.js** (v18+) and **npm** installed. Clone the repository and install all dependencies:
-```bash
-git clone https://github.com/M-zz-k/Varasat_Ai.git
-cd Varasat_Ai
-
-# Install backend dependencies
-cd backend
-npm install
-
-# Install frontend dependencies
-cd ../frontend
-npm install
+```mermaid
+graph TD
+    classDef core fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff;
+    classDef engine fill:#b91c1c,stroke:#f87171,stroke-width:3px,color:#fff;
+    classDef module fill:#374151,stroke:#9ca3af,stroke-width:1px,color:#fff;
+    
+    A[User Input / Voice / Upload] --> B(AI Agent Router)
+    
+    B --> C[Multimodal Document Engine]
+    B --> D[RAG Knowledge System]
+    B --> E{{WOLFRAM FINANCIAL INTELLIGENCE ENGINE}}
+    B --> F[OCR Engine]
+    B --> G[Bhashini Voice Assistant]
+    B --> H[PDF Legal Generator]
+    
+    E --> I[Output Dashboard]
+    C --> I
+    H --> I
+    
+    class B core;
+    class E engine;
+    class C,D,F,G,H module;
 ```
 
-### 2. Configure Environment Keys
-Create a `.env` file in the `/backend` folder:
-```env
-PORT=5000
-JWT_SECRET=your_secret_key_here
-GROQ_API_KEY=your_groq_api_key
-GEMINI_API_KEY=your_gemini_api_key
-```
-> **No Credit Card Required**: Free developer accounts from [Groq Console](https://console.groq.com) and [Google AI Studio](https://aistudio.google.com) provide generous rate limits that fully support the application in development and sandbox testing.
+---
 
-### 3. Run the Servers
-Launch both servers in development mode:
-```bash
-# Start backend (run from /backend directory)
-npm run dev
+## 🔄 Data Flow Pipeline
 
-# Start frontend (run from /frontend directory)
-npm run dev
+```mermaid
+flowchart LR
+    A[User Input] --> B[Multimodal Document Processing]
+    B --> C{AI Agent Router}
+    
+    C -->|Legal Reasoning| D[RAG System]
+    C -->|Document Data| E[OCR Extraction]
+    C -->|Financial Math| F[[Wolfram Engine]]
+    
+    D --> G[Response Synthesis]
+    E --> G
+    F -->|Financial + Impact Score| G
+    
+    G --> H[PDF Generation]
+    G --> I[Final Dashboard Output]
+    
+    style F fill:#991b1b,stroke:#fca5a5,stroke-width:2px,color:#fff
 ```
-By default, the backend runs on `http://localhost:5000` and the frontend on `http://localhost:5173`.
 
 ---
 
-## 🧪 Testing the Prototype
+## 🔴 The Role of Wolfram (Core Intelligence Layer)
 
-1.  **Demo Mode**: Open the dashboard and click **Try Demo Mode**. Use the preloaded dataset for **Ramesh Kumar** to experience the full claim workflow.
-2.  **Mock Document Upload**: In the upload screen, drag a sample statement or receipt. If you don't have a document, click **Load Mock Document** to test the Gemini extraction pipeline.
-3.  **Claim Tracking**: Navigate to the Journey Tracker and enter `CLM-1718091234` to view progress status logs.
+In Varasat, **Wolfram is NOT a background utility tool**. It is the central Financial Intelligence Core. 
+
+Large Language Models (LLMs) are strictly barred from performing financial mathematics to prevent hallucinations. Instead, **Wolfram exclusively handles**:
+- Inflation decay modeling and real-world purchasing power adjustments.
+- Time-based financial loss computation using compound discounting.
+- Delay impact severity scoring.
+- Future asset value projection.
+
+> *"At least 20–30% of Varasat's system intelligence is powered directly by the Wolfram Language for deterministic, infallible financial reasoning."*
 
 ---
 
-## 📜 License
+## 📉 Family Impact Loss Calculator
 
-Distributed under the MIT License. See `LICENSE` for details.
+Varasat goes beyond simple calculators by converting raw financial data into empathetic, actionable human insights.
+
+| Input Variables | Output Computations | Real-World Translation |
+| :--- | :--- | :--- |
+| • Original Asset Amount<br>• Years Unclaimed<br>• Asset Type | • Present Value (Inflation Adjusted)<br>• Total Financial Loss (₹)<br>• Family Impact Score (0–100) | • Months of family groceries lost<br>• Years of child education lost<br>• Equivalent major healthcare costs lost |
+
+### 🔍 Sample Input → Output Transformation
+
+**Input Extracted:**
+- Asset: `₹5,00,000` (Fixed Deposit)
+- Status: `10 years unclaimed`
+
+**Wolfram Computed Output:**
+- **Present Value**: `₹2,79,197` (Inflation Adjusted)
+- **Total Loss**: `₹2,20,803`
+- **Delay Impact Score**: `100/100` (Critical)
+- **Human-Readable Insight**: *"Your grandfather's fixed deposit has lost ₹2,20,803 in real purchasing power due to 10 years of inflation. To put that into perspective, that lost value is equivalent to **44 months of family groceries** or almost **a full year of school fees**. Let's recover the remaining ₹2,79,197 immediately."*
+
+---
+
+## 🌍 Social Impact
+
+Varasat is built to serve the most vulnerable segments of society:
+- **Helps Rural Families**: Regional voice integration allows users with no English proficiency to navigate complex legal webs.
+- **Supports Elderly Users**: Empathetic AI guidance reduces anxiety and confusion.
+- **Eliminates Predatory Intermediaries**: By automating legal document drafting and exact claim procedures, families no longer need to pay exorbitant agent fees.
+- **Improves Financial Inclusion**: Reintegrates billions of dormant capital back into the active economy and into the hands of rightful heirs.
+
+---
+
+## 💻 Tech Stack
+
+- **Frontend**: React, TailwindCSS, Recharts
+- **Backend**: Node.js, Express
+- **AI Orchestration**: Custom LLM-based Multi-Agent Router (Groq / Llama-3)
+- **RAG System**: TF-IDF Semantic Document Retrieval 
+- **Financial Computation**: Wolfram Language / WolframScript
+- **Multimodal Intelligence**: Gemini 2.0 Flash (OCR + Vision Validation)
+- **Voice Capabilities**: Web Speech API & Bhashini 
+- **Legal Document Engine**: PDFKit
+
+---
+
+## 🚀 Future Scope
+
+- **Government DigiLocker Integration**: Direct fetching of death certificates and legal heir documents.
+- **Banking API Partnerships**: Secure integration with banking protocols to automatically verify dormant account statuses.
+- **National Inheritance Registry**: A unified ledger for family financial tracing.
+- **Advanced Regional Expansion**: Broadening the Bhashini integration to cover all 22 scheduled Indian languages.
+- **AI Legal Advisory System**: Adding predictive models for civil court succession timelines.
