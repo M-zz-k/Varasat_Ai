@@ -44,7 +44,7 @@ const IconAlert = () => (
 function FormField({ label, children }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{label}</label>
+      <label className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{label}</label>
       {children}
     </div>
   );
@@ -106,40 +106,44 @@ export default function DocumentGenerator() {
   };
 
   const inputClass =
-    'w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-700 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-slate-600 transition-all';
+    'w-full bg-white border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-100 transition-all shadow-sm';
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans antialiased text-slate-300">
+    <div className="min-h-screen bg-[#f3f8fc] bg-grid-dots font-sans antialiased text-slate-700 flex flex-col pb-16 relative overflow-hidden">
+      {/* Background orbs */}
+      <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none animate-pulse duration-[8s]" />
+      <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none animate-pulse duration-[10s]" />
+
       {/* Header */}
-      <header className="flex items-center gap-3 px-6 py-3.5 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+      <header className="flex items-center gap-3 px-6 py-3.5 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-40 shadow-sm">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-800/50 transition-all cursor-pointer"
+          className="flex items-center gap-1.5 text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 transition-all cursor-pointer shadow-sm"
         >
           <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
           Back
         </button>
 
-        <div className="w-9 h-9 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-emerald-400">
+        <div className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-emerald-400 shadow-sm">
           <IconDoc />
         </div>
         <div>
           <div className="font-extrabold text-white text-sm leading-none">Legal Document Generator</div>
-          <div className="text-[10px] text-slate-500 mt-0.5 font-semibold">Powered by Varasat AI</div>
+          <div className="text-[10px] text-slate-400 mt-0.5 font-semibold">Powered by Varasat AI</div>
         </div>
       </header>
 
-      <main className="max-w-lg mx-auto px-6 py-10">
+      <main className="max-w-lg mx-auto px-6 py-10 relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-black text-white tracking-tight">Generate Required Documents</h1>
-          <p className="text-slate-400 text-sm mt-1.5 leading-relaxed">
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Generate Required Documents</h1>
+          <p className="text-slate-500 text-sm mt-1.5 leading-relaxed">
             Our AI will draft formal legal text based on your claim details.
           </p>
         </div>
 
         {/* Error */}
         {error && (
-          <div className="flex items-center gap-2.5 p-3.5 bg-red-950/30 border border-red-800/50 rounded-xl mb-5 text-red-400 text-xs font-semibold">
+          <div className="flex items-center gap-2.5 p-3.5 bg-red-50 border border-red-200 rounded-xl mb-5 text-red-700 text-xs font-semibold shadow-sm">
             <IconAlert />
             {error}
           </div>
@@ -147,17 +151,17 @@ export default function DocumentGenerator() {
 
         {/* Success */}
         {success && (
-          <div className="flex flex-col items-center gap-2 p-5 bg-emerald-950/20 border border-emerald-700/30 rounded-2xl mb-5 text-center">
+          <div className="flex flex-col items-center gap-2 p-5 bg-emerald-50 border border-emerald-200 rounded-2xl mb-5 text-center shadow-sm">
             <IconCheck />
-            <h3 className="text-emerald-400 font-bold text-base">Your document is ready!</h3>
-            <p className="text-slate-400 text-xs">The PDF has been downloaded to your device automatically.</p>
+            <h3 className="text-emerald-800 font-bold text-base">Your document is ready!</h3>
+            <p className="text-slate-600 text-xs">The PDF has been downloaded to your device automatically.</p>
           </div>
         )}
 
         {/* Form */}
         <form
           onSubmit={handleGenerate}
-          className="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md p-6 rounded-2xl shadow-xl space-y-4"
+          className="bg-white/80 backdrop-blur-md border border-slate-200/80 p-6 rounded-2xl shadow-3d-gold hover-glow-gold transition-all duration-300 space-y-4 relative z-10"
         >
           {/* Document Type */}
           <FormField label="Document Type">
@@ -167,7 +171,7 @@ export default function DocumentGenerator() {
               className={inputClass + ' cursor-pointer'}
             >
               {DOC_TYPES.map(dt => (
-                <option key={dt.value} value={dt.value} className="bg-slate-950">{dt.label}</option>
+                <option key={dt.value} value={dt.value} className="bg-white text-slate-900">{dt.label}</option>
               ))}
             </select>
           </FormField>
@@ -250,7 +254,7 @@ export default function DocumentGenerator() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white font-bold text-sm h-11 tracking-wide transition-all duration-200 hover:scale-[1.01] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-b from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-bold text-sm h-11 tracking-wide transition-all duration-200 hover:scale-[1.01] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-emerald-600/10"
           >
             {loading ? (
               <>

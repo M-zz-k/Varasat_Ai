@@ -15,10 +15,10 @@ import { useState } from 'react';
 
 function MetricCard({ icon, label, value, sublabel, variant = 'default' }) {
   const colors = {
-    default:  { border: 'rgba(212,160,23,0.2)',  bg: 'rgba(22,42,78,0.5)',         val: '#f0f4ff' },
-    positive: { border: 'rgba(16,185,129,0.3)',  bg: 'rgba(16,185,129,0.06)',      val: '#10b981' },
-    negative: { border: 'rgba(239,68,68,0.3)',   bg: 'rgba(239,68,68,0.06)',       val: '#f87171' },
-    gold:     { border: 'rgba(212,160,23,0.4)',  bg: 'rgba(212,160,23,0.08)',      val: '#f0c040' },
+    default:  { border: 'rgba(99,102,241,0.15)',  bg: 'rgba(248,250,252,0.95)',    val: '#1e293b' },
+    positive: { border: 'rgba(16,185,129,0.25)',  bg: 'rgba(240,253,250,0.95)',    val: '#047857' },
+    negative: { border: 'rgba(239,68,68,0.25)',   bg: 'rgba(254,242,242,0.95)',    val: '#b91c1c' },
+    gold:     { border: 'rgba(245,158,11,0.3)',   bg: 'rgba(254,243,199,0.95)',    val: '#b45309' },
   };
   const c = colors[variant] || colors.default;
 
@@ -37,7 +37,7 @@ function MetricCard({ icon, label, value, sublabel, variant = 'default' }) {
       onMouseLeave={e => e.currentTarget.style.transform = 'none'}
     >
       <div style={{ fontSize: '1.6rem', lineHeight: 1 }}>{icon}</div>
-      <div style={{ fontSize: '0.72rem', color: '#6a8aaa', fontWeight: 600,
+      <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600,
         letterSpacing: '0.5px', textTransform: 'uppercase' }}>
         {label}
       </div>
@@ -45,7 +45,7 @@ function MetricCard({ icon, label, value, sublabel, variant = 'default' }) {
         {value}
       </div>
       {sublabel && (
-        <div style={{ fontSize: '0.75rem', color: '#8fa4c8', lineHeight: 1.4 }}>
+        <div style={{ fontSize: '0.75rem', color: '#475569', lineHeight: 1.4 }}>
           {sublabel}
         </div>
       )}
@@ -59,14 +59,14 @@ function LossBar({ percent }) {
   return (
     <div style={{ marginBottom: '1rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between',
-        fontSize: '0.82rem', color: '#8fa4c8', marginBottom: '0.4rem' }}>
+        fontSize: '0.82rem', color: '#475569', marginBottom: '0.4rem' }}>
         <span>Original value</span>
-        <span style={{ color: '#f87171', fontWeight: 700 }}>
+        <span style={{ color: '#b91c1c', fontWeight: 700 }}>
           {percent}% purchasing power lost
         </span>
       </div>
       <div style={{
-        height: '12px', background: 'rgba(255,255,255,0.06)',
+        height: '12px', background: 'rgba(0,0,0,0.06)',
         borderRadius: '6px', overflow: 'hidden', position: 'relative',
       }}>
         {/* Remaining */}
@@ -86,9 +86,9 @@ function LossBar({ percent }) {
         }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between',
-        fontSize: '0.72rem', color: '#5a7a9a', marginTop: '0.3rem' }}>
-        <span style={{ color: '#10b981' }}>▩ Real value today</span>
-        <span style={{ color: '#f87171' }}>▩ Inflation erosion</span>
+        fontSize: '0.72rem', color: '#64748b', marginTop: '0.3rem' }}>
+        <span style={{ color: '#047857' }}>▩ Real value today</span>
+        <span style={{ color: '#b91c1c' }}>▩ Inflation erosion</span>
       </div>
     </div>
   );
@@ -108,37 +108,38 @@ export default function FinancialImpactCard({ data, compact = false }) {
 
   return (
     <div style={{
-      background:   'linear-gradient(160deg, rgba(15,28,55,0.9), rgba(10,22,42,0.95))',
-      border:       '1px solid rgba(212,160,23,0.2)',
+      background:   'linear-gradient(160deg, #ffffff 0%, #f8fafc 100%)',
+      border:       '1px solid rgba(245,158,11,0.25)',
       borderRadius: '20px',
       overflow:     'hidden',
       fontFamily:   "'Inter', sans-serif",
+      boxShadow:    '0 10px 30px rgba(0,0,0,0.03)',
     }}>
 
       {/* ── Header ── */}
       <div style={{
         padding:    '1.25rem 1.5rem',
-        background: 'linear-gradient(135deg, rgba(212,160,23,0.12), rgba(30,58,122,0.3))',
-        borderBottom: '1px solid rgba(212,160,23,0.15)',
+        background: 'linear-gradient(135deg, rgba(245,158,11,0.08), rgba(59,130,246,0.05))',
+        borderBottom: '1px solid rgba(245,158,11,0.15)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.3rem' }}>
           <span style={{ fontSize: '1.3rem' }}>🧮</span>
-          <span style={{ fontWeight: 800, fontSize: '1.05rem', color: '#f0f4ff' }}>
+          <span style={{ fontWeight: 800, fontSize: '1.05rem', color: '#1e293b' }}>
             Financial Impact Analysis
           </span>
           <span style={{
             marginLeft: 'auto', fontSize: '0.7rem', fontWeight: 700,
             padding: '0.2rem 0.6rem', borderRadius: '999px',
-            background: 'rgba(212,160,23,0.15)', color: '#d4a017',
-            border: '1px solid rgba(212,160,23,0.3)',
+            background: 'rgba(245,158,11,0.1)', color: '#b45309',
+            border: '1px solid rgba(245,158,11,0.2)',
           }}>
             Wolfram Powered
           </span>
         </div>
-        <div style={{ fontSize: '0.8rem', color: '#8fa4c8' }}>
-          Asset: <strong style={{ color: '#f0c040' }}>{original_amount}</strong>
-          &nbsp;·&nbsp;Delayed: <strong style={{ color: '#f87171' }}>{years_delayed} years</strong>
-          &nbsp;·&nbsp;Inflation: <strong style={{ color: '#8fa4c8' }}>{inflation_rate}</strong>
+        <div style={{ fontSize: '0.8rem', color: '#475569' }}>
+          Asset: <strong style={{ color: '#b45309' }}>{original_amount}</strong>
+          &nbsp;·&nbsp;Delayed: <strong style={{ color: '#b91c1c' }}>{years_delayed} years</strong>
+          &nbsp;·&nbsp;Inflation: <strong style={{ color: '#475569' }}>{inflation_rate}</strong>
         </div>
       </div>
 
@@ -199,14 +200,14 @@ export default function FinancialImpactCard({ data, compact = false }) {
         <div style={{
           display: 'flex', alignItems: 'center', gap: '0.5rem',
           padding: '0.6rem 1rem',
-          background: 'rgba(212,160,23,0.06)',
-          border: '1px solid rgba(212,160,23,0.12)',
+          background: 'rgba(245,158,11,0.04)',
+          border: '1px solid rgba(245,158,11,0.15)',
           borderRadius: '10px',
-          fontSize: '0.78rem', color: '#7a9abc',
+          fontSize: '0.78rem', color: '#475569',
         }}>
           <span style={{ fontSize: '1rem' }}>⚡</span>
           <span>
-            Calculated by <strong style={{ color: '#d4a017' }}>Wolfram Language</strong> —
+            Calculated by <strong style={{ color: '#b45309' }}>Wolfram Language</strong> —
             the same computational engine behind Wolfram|Alpha and Mathematica.
             Results are mathematically precise.
           </span>
@@ -215,8 +216,8 @@ export default function FinancialImpactCard({ data, compact = false }) {
         {/* Claude explanation */}
         {financial_insight && (
           <div style={{
-            background:   'rgba(22,42,78,0.4)',
-            border:       '1px solid rgba(99,140,220,0.15)',
+            background:   'rgba(248,250,252,0.95)',
+            border:       '1px solid rgba(203,213,225,0.8)',
             borderRadius: '14px',
             overflow:     'hidden',
           }}>
@@ -231,7 +232,7 @@ export default function FinancialImpactCard({ data, compact = false }) {
                 background:     'none',
                 border:         'none',
                 cursor:         'pointer',
-                color:          '#d0dcf0',
+                color:          '#1e293b',
                 fontWeight:     700,
                 fontSize:       '0.9rem',
               }}
@@ -239,7 +240,7 @@ export default function FinancialImpactCard({ data, compact = false }) {
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span>⚖️</span> Varasat Mitra Explains
               </span>
-              <span style={{ fontSize: '0.8rem', color: '#8fa4c8', fontWeight: 400 }}>
+              <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 400 }}>
                 {showInsight ? '▲ Hide' : '▼ Show'}
               </span>
             </button>
@@ -247,10 +248,10 @@ export default function FinancialImpactCard({ data, compact = false }) {
             {showInsight && (
               <div style={{
                 padding:    '0 1.1rem 1.1rem',
-                color:      '#c8d8f0',
+                color:      '#334155',
                 fontSize:   '0.95rem',
                 lineHeight: 1.75,
-                borderTop:  '1px solid rgba(99,140,220,0.1)',
+                borderTop:  '1px solid rgba(203,213,225,0.5)',
                 paddingTop: '0.85rem',
               }}>
                 {financial_insight.split('\n\n').map((para, i) => (
@@ -262,7 +263,7 @@ export default function FinancialImpactCard({ data, compact = false }) {
         )}
 
         {/* Disclaimer */}
-        <p style={{ fontSize: '0.72rem', color: '#3a5070', textAlign: 'center', margin: 0 }}>
+        <p style={{ fontSize: '0.72rem', color: '#64748b', textAlign: 'center', margin: 0 }}>
           Calculations use compound inflation formula via Wolfram Alpha API.
           For actual legal and financial advice, consult a qualified professional.
         </p>

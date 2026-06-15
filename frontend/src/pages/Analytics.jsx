@@ -109,29 +109,29 @@ function ChartTooltip({ active, payload, label }) {
   const real    = payload.find(p => p.dataKey === 'realValue');
   return (
     <div style={{
-      background: 'rgba(8,15,30,0.97)',
-      border: '1px solid rgba(245,158,11,0.35)',
+      background: '#ffffff',
+      border: '1px solid #e2e8f0',
       borderRadius: '10px',
       padding: '0.75rem 1rem',
-      boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
     }}>
-      <div style={{ fontSize: '0.7rem', color: '#fcd34d', fontWeight: 800, marginBottom: '0.4rem', letterSpacing: '0.06em' }}>
+      <div style={{ fontSize: '0.7rem', color: '#b45309', fontWeight: 800, marginBottom: '0.4rem', letterSpacing: '0.06em' }}>
         YEAR {label}
       </div>
       {nominal && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', fontSize: '0.78rem', color: '#a7f3d0', fontWeight: 700, marginBottom: '0.2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', fontSize: '0.72rem', color: '#047857', fontWeight: 700, marginBottom: '0.2rem' }}>
           <span>Nominal</span>
           <span>₹{nominal.value.toLocaleString('en-IN')}</span>
         </div>
       )}
       {real && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', fontSize: '0.78rem', color: '#93c5fd', fontWeight: 700 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', fontSize: '0.72rem', color: '#1d4ed8', fontWeight: 700 }}>
           <span>Real</span>
           <span>₹{real.value.toLocaleString('en-IN')}</span>
         </div>
       )}
       {nominal && real && (
-        <div style={{ marginTop: '0.4rem', paddingTop: '0.4rem', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', gap: '1.5rem', fontSize: '0.72rem', color: '#f87171', fontWeight: 700 }}>
+        <div style={{ marginTop: '0.4rem', paddingTop: '0.4rem', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', gap: '1.5rem', fontSize: '0.72rem', color: '#b91c1c', fontWeight: 700 }}>
           <span>Purchasing loss</span>
           <span>₹{(nominal.value - real.value).toLocaleString('en-IN')}</span>
         </div>
@@ -145,11 +145,11 @@ function ChartTooltip({ active, payload, label }) {
 function Field({ label, children, hint }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+      <label className="text-slate-505 text-[10px] font-bold uppercase tracking-widest">
         {label}
       </label>
       {children}
-      {hint && <span className="text-[10px] text-slate-600 leading-tight">{hint}</span>}
+      {hint && <span className="text-[10px] text-slate-500 leading-tight">{hint}</span>}
     </div>
   );
 }
@@ -216,23 +216,23 @@ export default function Analytics() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans antialiased text-slate-300 pb-16 relative overflow-hidden">
+    <div className="min-h-screen bg-[#f3f8fc] bg-grid-dots font-sans antialiased text-slate-700 pb-16 flex flex-col relative overflow-hidden">
 
       {/* Background orbs */}
-      <div className="absolute w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none" />
-      <div className="absolute w-[500px] h-[500px] bg-indigo-500/4 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none" />
+      <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none animate-pulse duration-[8s]" />
+      <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none animate-pulse duration-[10s]" />
 
       {/* ── Header ── */}
-      <header className="flex items-center justify-between px-6 py-3.5 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+      <header className="flex items-center justify-between px-6 py-3.5 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-3">
           <Link
             to="/"
-            className="flex items-center gap-1.5 text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-800/50 transition-all mr-1"
+            className="flex items-center gap-1.5 text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 rounded-lg hover:bg-slate-800/80 transition-all mr-1 bg-slate-900/60 shadow-sm"
           >
             <IconArrowLeft /> Home
           </Link>
 
-          <div className="w-9 h-9 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-amber-400">
+          <div className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-sm">
             <IconLightning />
           </div>
 
@@ -240,7 +240,7 @@ export default function Analytics() {
             <h1 className="font-extrabold text-white text-sm leading-none">
               Valuation &amp; Financial Analysis
             </h1>
-            <p className="text-[10px] text-slate-500 mt-0.5 font-semibold">
+            <p className="text-[10px] text-slate-400 mt-0.5 font-semibold">
               Powered by Wolfram Language Engine
             </p>
           </div>
@@ -252,21 +252,21 @@ export default function Analytics() {
 
         {/* Intro */}
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-black text-white tracking-tight">Valuation Audit</h2>
-          <p className="text-slate-400 text-sm mt-1.5 max-w-lg mx-auto leading-relaxed">
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Valuation Audit</h2>
+          <p className="text-slate-500 text-sm mt-1.5 max-w-lg mx-auto leading-relaxed">
             Estimate compounding loss on dormant family assets and evaluate the return on claims recovery.
           </p>
         </div>
 
         {/* ── Input Card ── */}
-        <div className="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md p-6 rounded-2xl shadow-xl mb-5">
+        <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 p-6 rounded-2xl shadow-3d-gold hover-glow-gold transition-all duration-300 mb-5 relative z-10">
           <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-5 flex items-center gap-1.5">
             <IconChart /> Ingestion Parameters
           </h3>
 
           {/* Presets */}
           <div className="mb-5">
-            <span className="block text-slate-600 text-[10px] font-bold uppercase tracking-wider mb-2">
+            <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-2">
               Quick Presets
             </span>
             <div className="flex flex-wrap gap-2">
@@ -274,7 +274,7 @@ export default function Analytics() {
                 <button
                   key={p.label}
                   onClick={() => applyPreset(p)}
-                  className="px-3 py-1.5 bg-slate-950 border border-slate-800 hover:border-amber-500/40 hover:text-amber-400 text-slate-400 text-[11px] font-bold rounded-lg transition-all cursor-pointer"
+                  className="px-3 py-1.5 bg-slate-50 border border-slate-200 hover:border-amber-500 hover:text-amber-700 text-slate-655 text-[11px] font-bold rounded-lg transition-all cursor-pointer shadow-sm"
                 >
                   {p.label}
                 </button>
@@ -291,7 +291,7 @@ export default function Analytics() {
                 onChange={e => setAmount(e.target.value)}
                 placeholder="e.g. 500000"
                 min="1"
-                className="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-700 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-amber-500/70 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 text-slate-850 placeholder-slate-400 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:bg-white focus:border-amber-500/70 transition-all"
               />
             </Field>
 
@@ -303,7 +303,7 @@ export default function Analytics() {
                 placeholder="e.g. 10"
                 min="1"
                 max="100"
-                className="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-700 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-amber-500/70 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 text-slate-850 placeholder-slate-400 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:bg-white focus:border-amber-500/70 transition-all"
               />
             </Field>
 
@@ -311,10 +311,10 @@ export default function Analytics() {
               <select
                 value={inflationRate}
                 onChange={e => setInflationRate(parseFloat(e.target.value))}
-                className="w-full bg-slate-950 border border-slate-800 text-white text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-amber-500/70 transition-all cursor-pointer"
+                className="w-full bg-slate-50 border border-slate-200 text-slate-850 text-sm font-semibold rounded-lg px-4 py-2.5 outline-none focus:border-amber-500/70 transition-all cursor-pointer"
               >
                 {INFLATION_OPTIONS.map(o => (
-                  <option key={o.value} value={o.value} className="bg-slate-950">{o.label}</option>
+                  <option key={o.value} value={o.value} className="bg-white">{o.label}</option>
                 ))}
               </select>
             </Field>
@@ -322,12 +322,12 @@ export default function Analytics() {
 
           {/* Error banner */}
           {error && (
-            <div className="mt-4 p-3 bg-red-950/40 border border-red-800/60 rounded-xl text-red-400 text-xs font-semibold flex items-center justify-between">
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-750 text-xs font-semibold flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <IconAlert />
                 {error}
               </span>
-              <button onClick={() => setError('')} className="text-red-400 hover:text-red-200 cursor-pointer">
+              <button onClick={() => setError('')} className="text-red-750 hover:text-red-900 cursor-pointer">
                 <IconClose />
               </button>
             </div>
@@ -337,11 +337,11 @@ export default function Analytics() {
           <button
             onClick={handleAnalyze}
             disabled={loading}
-            className="w-full mt-5 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-sm h-11 tracking-wide transition-all duration-200 hover:scale-[1.01] hover:shadow-[0_4px_20px_rgba(245,158,11,0.3)] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-5 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm h-11 tracking-wide transition-all duration-200 hover:scale-[1.01] hover:shadow-[0_4px_20px_rgba(245,158,11,0.15)] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
-                <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Wolfram engine calculating…
               </>
             ) : (
@@ -355,19 +355,19 @@ export default function Analytics() {
 
         {/* ── Live Projection Chart ── */}
         {chartData.length > 1 && (
-          <div className="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md p-6 rounded-2xl shadow-xl mb-5">
+          <div className="bg-white/85 backdrop-blur-md border border-slate-200/80 p-6 rounded-2xl shadow-3d-blue hover-glow-blue transition-all duration-300 mb-5 relative z-10">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">
+                <h3 className="text-[10px] font-bold text-amber-755 uppercase tracking-widest">
                   Compounding Projection
                 </h3>
-                <p className="text-slate-500 text-[10px] mt-0.5">
+                <p className="text-slate-550 text-[10px] mt-0.5">
                   Nominal growth vs real purchasing power over {years} years
                 </p>
               </div>
               <button
                 onClick={() => exportCSV(chartData, amount, years, inflationRate)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-950 border border-slate-800 hover:border-emerald-500/40 text-slate-400 hover:text-emerald-400 text-[11px] font-bold rounded-lg transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 hover:border-emerald-600 text-slate-655 hover:text-emerald-700 text-[11px] font-bold rounded-lg transition-all cursor-pointer shadow-sm"
               >
                 <IconDownload />
                 Export CSV
@@ -378,16 +378,16 @@ export default function Analytics() {
               <AreaChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="gradNominal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#f59e0b" stopOpacity={0.25} />
+                    <stop offset="5%"  stopColor="#f59e0b" stopOpacity={0.15} />
                     <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="gradReal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.18} />
+                    <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.1} />
                     <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
 
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" vertical={false} />
 
                 <XAxis
                   dataKey="year"
@@ -409,7 +409,7 @@ export default function Analytics() {
                 {/* Reference line at year 0 value */}
                 <ReferenceLine
                   y={parseFloat(amount)}
-                  stroke="rgba(255,255,255,0.12)"
+                  stroke="rgba(0,0,0,0.12)"
                   strokeDasharray="4 4"
                 />
 
@@ -421,7 +421,7 @@ export default function Analytics() {
                   strokeWidth={2}
                   fill="url(#gradNominal)"
                   dot={false}
-                  activeDot={{ r: 5, fill: '#f59e0b', stroke: '#0f172a', strokeWidth: 2 }}
+                  activeDot={{ r: 5, fill: '#f59e0b', stroke: '#ffffff', strokeWidth: 2 }}
                 />
                 <Area
                   type="monotone"
@@ -431,7 +431,7 @@ export default function Analytics() {
                   strokeWidth={2}
                   fill="url(#gradReal)"
                   dot={false}
-                  activeDot={{ r: 5, fill: '#3b82f6', stroke: '#0f172a', strokeWidth: 2 }}
+                  activeDot={{ r: 5, fill: '#3b82f6', stroke: '#ffffff', strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -448,38 +448,38 @@ export default function Analytics() {
         {advancedResult && advancedResult.success && advancedResult.data && (
           <div className="mt-8 space-y-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-amber-700">
                 <IconLightning />
-                <h2 className="text-xl font-black text-amber-500 tracking-tight">Computational Intelligence Engine</h2>
+                <h2 className="text-xl font-black tracking-tight">Computational Intelligence Engine</h2>
               </div>
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest border border-slate-800 px-2.5 py-1 rounded-full">
+              <span className="text-[10px] text-slate-555 font-bold uppercase tracking-widest border border-slate-200 px-2.5 py-1 rounded-full bg-white shadow-sm">
                 Computed using Wolfram Language
               </span>
             </div>
 
             {/* Tabs Navigation */}
-            <div className="flex gap-2 border-b border-slate-800/80 pb-3 mb-6 overflow-x-auto no-scrollbar">
+            <div className="flex gap-2 border-b border-slate-200 pb-3 mb-6 overflow-x-auto no-scrollbar">
               <button 
                 onClick={() => setActiveTab('financial')} 
-                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'financial' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'financial' ? 'bg-amber-50 text-amber-700 border border-amber-250' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 Financial Intelligence
               </button>
               <button 
                 onClick={() => setActiveTab('simulation')} 
-                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'simulation' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'simulation' ? 'bg-amber-50 text-amber-700 border border-amber-250' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 Scenario Simulation
               </button>
               <button 
                 onClick={() => setActiveTab('portfolio')} 
-                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'portfolio' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'portfolio' ? 'bg-amber-50 text-amber-700 border border-amber-250' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 Asset Portfolio
               </button>
               <button 
                 onClick={() => setActiveTab('readiness')} 
-                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'readiness' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'readiness' ? 'bg-amber-50 text-amber-700 border border-amber-250' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 Recovery Readiness
               </button>
@@ -487,136 +487,136 @@ export default function Analytics() {
 
             {/* 1. Financial Intelligence */}
             {activeTab === 'financial' && (
-              <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl animate-fade-in">
-                <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
+              <div className="bg-white/85 backdrop-blur-md border border-slate-200/80 p-6 rounded-2xl shadow-3d-gold hover-glow-gold transition-all duration-300 animate-fade-in relative z-10">
+                <h3 className="text-[10px] font-bold text-amber-750 uppercase tracking-widest mb-4">
                   1. Advanced Financial Modelling
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                     <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Future Value (Nominal)</span>
-                    <span className="text-lg font-black text-emerald-400 mt-1 block">₹{advancedResult.data.financialModel.result?.futureValue?.toLocaleString('en-IN') || 0}</span>
+                    <span className="text-lg font-black text-emerald-750 mt-1 block">₹{advancedResult.data.financialModel.result?.futureValue?.toLocaleString('en-IN') || 0}</span>
                   </div>
-                  <div className="bg-red-950/20 p-4 rounded-xl border border-red-800/30">
-                    <span className="text-[10px] text-red-400/70 font-bold uppercase tracking-wider block">Purchasing Power Loss</span>
-                    <span className="text-lg font-black text-red-400 mt-1 block">-₹{advancedResult.data.financialModel.result?.inflationImpact?.toLocaleString('en-IN') || 0}</span>
+                  <div className="bg-red-50/50 p-4 rounded-xl border border-red-150">
+                    <span className="text-[10px] text-red-750/70 font-bold uppercase tracking-wider block">Purchasing Power Loss</span>
+                    <span className="text-lg font-black text-red-700 mt-1 block">-₹{advancedResult.data.financialModel.result?.inflationImpact?.toLocaleString('en-IN') || 0}</span>
                   </div>
                 </div>
-                <div className="mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800">
+                <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
                   <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Cost of Delayed Recovery</span>
-                  <div className="text-lg font-black text-amber-400">₹{advancedResult.data.financialModel.result?.delayedRecoveryCost?.toLocaleString('en-IN') || 0}</div>
+                  <div className="text-lg font-black text-amber-700">₹{advancedResult.data.financialModel.result?.delayedRecoveryCost?.toLocaleString('en-IN') || 0}</div>
                 </div>
-                <p className="text-xs text-slate-400 mt-4 leading-relaxed font-mono bg-slate-950 p-3 rounded border border-slate-800">
-                  <span className="text-amber-500">Wolfram Math:</span> {advancedResult.data.financialModel.calculation}
-                  <br/><span className="text-slate-500 mt-1 block">{advancedResult.data.financialModel.explanation}</span>
+                <p className="text-xs text-slate-655 mt-4 leading-relaxed font-mono bg-slate-50 p-3 rounded border border-slate-100 font-medium">
+                  <span className="text-amber-755 font-bold">Wolfram Math:</span> {advancedResult.data.financialModel.calculation}
+                  <br/><span className="text-slate-550 mt-1 block font-semibold">{advancedResult.data.financialModel.explanation}</span>
                 </p>
               </div>
             )}
 
             {/* 2. Scenario Simulation */}
             {activeTab === 'simulation' && (
-              <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl animate-fade-in">
+              <div className="bg-white/85 backdrop-blur-md border border-slate-200/80 p-6 rounded-2xl shadow-3d-gold hover-glow-gold transition-all duration-300 animate-fade-in relative z-10">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">
+                  <h3 className="text-[10px] font-bold text-amber-755 uppercase tracking-widest">
                     2. Recovery Scenario Simulation
                   </h3>
-                  <span className="text-[10px] text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded font-bold">
+                  <span className="text-[10px] text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded font-bold">
                     Simulation based on provided assumptions
                   </span>
                 </div>
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-emerald-900/30 text-center">
-                    <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider block mb-1">Fast Recovery</span>
-                    <span className="text-xl font-black text-white">{advancedResult.data.recoverySimulation.result?.fastScenario?.days || 0}</span>
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                    <span className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider block mb-1">Fast Recovery</span>
+                    <span className="text-xl font-black text-slate-800">{advancedResult.data.recoverySimulation.result?.fastScenario?.days || 0}</span>
                     <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
                   </div>
-                  <div className="bg-slate-950 p-4 rounded-xl border border-blue-900/30 text-center">
-                    <span className="text-[10px] text-blue-500 font-bold uppercase tracking-wider block mb-1">Normal Recovery</span>
-                    <span className="text-xl font-black text-white">{advancedResult.data.recoverySimulation.result?.normalScenario?.days || 0}</span>
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                    <span className="text-[10px] text-blue-700 font-bold uppercase tracking-wider block mb-1">Normal Recovery</span>
+                    <span className="text-xl font-black text-slate-800">{advancedResult.data.recoverySimulation.result?.normalScenario?.days || 0}</span>
                     <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
                   </div>
-                  <div className="bg-slate-950 p-4 rounded-xl border border-amber-900/30 text-center">
-                    <span className="text-[10px] text-amber-500 font-bold uppercase tracking-wider block mb-1">Delayed Recovery</span>
-                    <span className="text-xl font-black text-white">{advancedResult.data.recoverySimulation.result?.delayedScenario?.days || 0}</span>
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                    <span className="text-[10px] text-amber-700 font-bold uppercase tracking-wider block mb-1">Delayed Recovery</span>
+                    <span className="text-xl font-black text-slate-800">{advancedResult.data.recoverySimulation.result?.delayedScenario?.days || 0}</span>
                     <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
                   </div>
                 </div>
-                <p className="text-xs text-slate-400 mt-4 leading-relaxed font-mono bg-slate-950 p-3 rounded border border-slate-800">
-                  <span className="text-amber-500">Wolfram Method:</span> {advancedResult.data.recoverySimulation.method}
-                  <br/><span className="text-slate-500 mt-1 block">{advancedResult.data.recoverySimulation.explanation}</span>
+                <p className="text-xs text-slate-655 mt-4 leading-relaxed font-mono bg-slate-50 p-3 rounded border border-slate-100 font-medium">
+                  <span className="text-amber-755 font-bold">Wolfram Method:</span> {advancedResult.data.recoverySimulation.method}
+                  <br/><span className="text-slate-550 mt-1 block font-semibold">{advancedResult.data.recoverySimulation.explanation}</span>
                 </p>
               </div>
             )}
 
             {/* 3. Asset Portfolio */}
             {activeTab === 'portfolio' && (
-              <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl animate-fade-in">
-                <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
+              <div className="bg-white/85 backdrop-blur-md border border-slate-200/80 p-6 rounded-2xl shadow-3d-gold hover-glow-gold transition-all duration-300 animate-fade-in relative z-10">
+                <h3 className="text-[10px] font-bold text-amber-755 uppercase tracking-widest mb-4">
                   3. Asset Portfolio Distribution
                 </h3>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                   <div className="flex justify-between items-end mb-4">
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Total Value</span>
-                    <span className="text-lg font-black text-white">₹{advancedResult.data.portfolioAnalysis.result?.totalAssets?.toLocaleString('en-IN') || 0}</span>
+                    <span className="text-[10px] text-slate-550 font-bold uppercase tracking-wider">Total Value</span>
+                    <span className="text-lg font-black text-slate-800">₹{advancedResult.data.portfolioAnalysis.result?.totalAssets?.toLocaleString('en-IN') || 0}</span>
                   </div>
                   {advancedResult.data.portfolioAnalysis.result?.distribution?.map((item, idx) => (
                     <div key={idx} className="mb-3 last:mb-0">
                       <div className="flex justify-between text-xs font-semibold mb-1">
-                        <span className="text-slate-300">{item.type}</span>
-                        <span className="text-slate-400">{item.percentage}%</span>
+                        <span className="text-slate-700">{item.type}</span>
+                        <span className="text-slate-555">{item.percentage}%</span>
                       </div>
-                      <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-amber-500 h-full rounded-full" style={{ width: `${item.percentage}%` }}></div>
+                      <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-amber-600 h-full rounded-full" style={{ width: `${item.percentage}%` }}></div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-slate-400 mt-4 leading-relaxed font-mono bg-slate-950 p-3 rounded border border-slate-800">
-                  <span className="text-amber-500">Calculation:</span> {advancedResult.data.portfolioAnalysis.calculation}
+                <p className="text-xs text-slate-655 mt-4 leading-relaxed font-mono bg-slate-50 p-3 rounded border border-slate-100 font-medium">
+                  <span className="text-amber-755 font-bold">Calculation:</span> {advancedResult.data.portfolioAnalysis.calculation}
                 </p>
               </div>
             )}
 
             {/* 4. Recovery Readiness */}
             {activeTab === 'readiness' && (
-              <div className="bg-slate-900/60 border border-slate-800/80 p-6 rounded-2xl shadow-xl animate-fade-in">
-                <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
+              <div className="bg-white/85 backdrop-blur-md border border-slate-200/80 p-6 rounded-2xl shadow-3d-gold hover-glow-gold transition-all duration-300 animate-fade-in relative z-10">
+                <h3 className="text-[10px] font-bold text-amber-755 uppercase tracking-widest mb-4">
                   4. Document Completeness Analysis
                 </h3>
                 <div className="flex items-center gap-6 mb-6">
-                  <div className="w-24 h-24 rounded-full border-4 border-slate-800 flex items-center justify-center flex-col shrink-0">
-                    <span className="text-2xl font-black text-white">{advancedResult.data.documentReadiness.result?.readinessScore || 0}</span>
+                  <div className="w-24 h-24 rounded-full border-4 border-slate-200 bg-slate-50 flex items-center justify-center flex-col shrink-0">
+                    <span className="text-2xl font-black text-slate-800">{advancedResult.data.documentReadiness.result?.readinessScore || 0}</span>
                     <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Score</span>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-200 leading-relaxed mb-2">
+                    <p className="text-sm font-bold text-slate-800 leading-relaxed mb-2">
                       {advancedResult.data.documentReadiness.result?.recommendation}
                     </p>
                     {advancedResult.data.documentReadiness.result?.missingItems?.length > 0 && (
-                      <div className="text-xs text-red-400 font-semibold">
+                      <div className="text-xs text-red-750 font-bold">
                         Missing: {advancedResult.data.documentReadiness.result.missingItems.join(', ')}
                       </div>
                     )}
                   </div>
                 </div>
                 
-                <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4 border-t border-slate-800/80 pt-4">
+                <h3 className="text-[10px] font-bold text-amber-755 uppercase tracking-widest mb-4 border-t border-slate-200 pt-4">
                   Asset Priority Ranking
                 </h3>
                 <div className="space-y-3">
                   {advancedResult.data.priorityOptimization.result?.ranking?.map((r, i) => (
-                    <div key={i} className="flex justify-between items-center bg-slate-950 p-3 rounded-lg border border-slate-800">
+                    <div key={i} className="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-100">
                       <div>
-                        <div className="text-sm font-bold text-slate-200">{r.type}</div>
-                        <div className="text-[10px] text-slate-500">{r.reason}</div>
+                        <div className="text-sm font-bold text-slate-850">{r.type}</div>
+                        <div className="text-[10px] text-slate-555">{r.reason}</div>
                       </div>
-                      <div className="text-amber-500 font-mono text-sm">Score: {r.score}</div>
+                      <div className="text-amber-700 font-mono text-sm font-bold">Score: {r.score}</div>
                     </div>
                   ))}
                 </div>
                 
-                <p className="text-xs text-slate-400 mt-4 leading-relaxed font-mono bg-slate-950 p-3 rounded border border-slate-800">
-                  <span className="text-amber-500">Wolfram Method:</span> {advancedResult.data.priorityOptimization.method}
-                  <br/><span className="text-slate-500 mt-1 block">{advancedResult.data.documentReadiness.explanation}</span>
+                <p className="text-xs text-slate-655 mt-4 leading-relaxed font-mono bg-slate-50 p-3 rounded border border-slate-100 font-medium">
+                  <span className="text-amber-755 font-bold">Wolfram Method:</span> {advancedResult.data.priorityOptimization.method}
+                  <br/><span className="text-slate-550 mt-1 block font-semibold">{advancedResult.data.documentReadiness.explanation}</span>
                 </p>
               </div>
             )}
@@ -625,13 +625,13 @@ export default function Analytics() {
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <Link
                 to="/chat"
-                className="flex-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-xs h-11 tracking-wide transition-all duration-200 hover:scale-[1.01]"
+                className="flex-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-xs h-11 tracking-wide transition-all duration-200 hover:scale-[1.01] shadow-md shadow-amber-500/10"
               >
                 Ask Varasat Mitra
               </Link>
               <Link
                 to="/analyze"
-                className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-800 bg-transparent hover:bg-slate-800/40 text-slate-300 font-semibold text-xs h-11 transition-all duration-200"
+                className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs h-11 transition-all duration-200 shadow-sm"
               >
                 Ingest New Documents
               </Link>
@@ -641,8 +641,8 @@ export default function Analytics() {
 
         {/* ── Empty state instructions ── */}
         {!result && (
-          <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl">
-            <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+            <h3 className="text-[10px] font-bold text-amber-755 uppercase tracking-widest mb-4">
               Calculation Procedure
             </h3>
             <div className="space-y-4">
@@ -653,12 +653,12 @@ export default function Analytics() {
                 { step: '4', title: 'Loss Mapping',      text: 'Review visual metrics showing inflation degradation and recovery returns.' },
               ].map(item => (
                 <div key={item.step} className="flex gap-3 items-start">
-                  <span className="w-6 h-6 rounded-full bg-slate-950 text-amber-500 border border-amber-500/20 flex-shrink-0 flex items-center justify-center text-[10px] font-bold mt-0.5">
+                  <span className="w-6 h-6 rounded-full bg-amber-50 text-amber-700 border border-amber-200 flex-shrink-0 flex items-center justify-center text-[10px] font-bold mt-0.5 shadow-sm">
                     {item.step}
                   </span>
                   <div>
-                    <span className="text-white text-xs font-bold block">{item.title}</span>
-                    <span className="text-slate-500 text-xs mt-0.5 block leading-relaxed">{item.text}</span>
+                    <span className="text-slate-800 text-xs font-bold block">{item.title}</span>
+                    <span className="text-slate-555 text-xs mt-0.5 block leading-relaxed">{item.text}</span>
                   </div>
                 </div>
               ))}

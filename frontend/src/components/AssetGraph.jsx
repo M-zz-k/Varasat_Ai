@@ -89,31 +89,32 @@ function PersonNode({ data, selected }) {
     <>
       <NodeToolbar isVisible={selected} position={Position.Top}>
         <div style={{
-          background: 'rgba(10,22,40,0.95)',
+          background: 'rgba(255,255,255,0.98)',
           border: '1px solid #3b82f6',
           borderRadius: '8px',
           padding: '6px 12px',
-          color: '#93c5fd',
+          color: '#1e3a8a',
           fontSize: '11px',
           fontWeight: 700,
           letterSpacing: '0.05em',
           whiteSpace: 'nowrap',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
         }}>
           {data.role || 'Family Member'}
         </div>
       </NodeToolbar>
 
       <div style={{
-        background: 'linear-gradient(145deg, #0f1f3d 0%, #1a3560 100%)',
-        border: selected ? '2px solid #60a5fa' : '1.5px solid #3b82f6',
+        background: 'linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%)',
+        border: selected ? '2px solid #3b82f6' : '1.5px solid #cbd5e1',
         borderRadius: '14px',
         padding: '0.9rem 1.1rem',
-        color: '#f0f4ff',
+        color: '#0f172a',
         minWidth: '170px',
         textAlign: 'center',
         boxShadow: selected
-          ? '0 0 0 3px rgba(59,130,246,0.25), 0 4px 20px rgba(59,130,246,0.4)'
-          : '0 4px 14px rgba(59,130,246,0.2)',
+          ? '0 0 0 3px rgba(59,130,246,0.15), 0 4px 20px rgba(59,130,246,0.15)'
+          : '0 4px 14px rgba(0,0,0,0.03)',
         transition: 'all 0.2s',
       }}>
         <Handle type="target" position={Position.Top} style={{ background: '#3b82f6', width: 8, height: 8 }} />
@@ -122,8 +123,8 @@ function PersonNode({ data, selected }) {
           <div style={{
             width: 40, height: 40,
             borderRadius: '50%',
-            background: 'rgba(59,130,246,0.15)',
-            border: '1.5px solid rgba(59,130,246,0.4)',
+            background: 'rgba(59,130,246,0.1)',
+            border: '1.5px solid rgba(59,130,246,0.25)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             <IconPerson />
@@ -133,7 +134,7 @@ function PersonNode({ data, selected }) {
         <div style={{ fontWeight: 800, fontSize: '0.95rem', letterSpacing: '-0.01em' }}>
           {data.name}
         </div>
-        <div style={{ fontSize: '0.7rem', color: '#8fa4c8', marginTop: '0.2rem', fontWeight: 600 }}>
+        <div style={{ fontSize: '0.7rem', color: '#475569', marginTop: '0.2rem', fontWeight: 600 }}>
           {data.role || 'Family Member'}
         </div>
 
@@ -152,15 +153,16 @@ function AssetNode({ data, selected }) {
     <>
       <NodeToolbar isVisible={selected} position={Position.Top}>
         <div style={{
-          background: 'rgba(5,30,20,0.95)',
+          background: 'rgba(255,255,255,0.98)',
           border: '1px solid #10b981',
           borderRadius: '8px',
           padding: '6px 12px',
-          color: '#6ee7b7',
+          color: '#065f46',
           fontSize: '11px',
           fontWeight: 700,
           letterSpacing: '0.05em',
           whiteSpace: 'nowrap',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
         }}>
           {assetType}
           {data.account_number && ` · Acct: ${data.account_number}`}
@@ -169,16 +171,16 @@ function AssetNode({ data, selected }) {
 
       <div
         style={{
-          background: 'linear-gradient(145deg, #064e3b 0%, #065f46 100%)',
-          border: selected ? '2px solid #34d399' : '1.5px solid #059669',
+          background: 'linear-gradient(145deg, #f0fdf4 0%, #d1fae5 100%)',
+          border: selected ? '2px solid #34d399' : '1.5px solid #a7f3d0',
           borderRadius: '14px',
           padding: '0.9rem 1rem',
-          color: '#ffffff',
+          color: '#065f46',
           minWidth: '195px',
           textAlign: 'left',
           boxShadow: selected
-            ? '0 0 0 3px rgba(16,185,129,0.25), 0 4px 20px rgba(16,185,129,0.35)'
-            : '0 4px 14px rgba(16,185,129,0.2)',
+            ? '0 0 0 3px rgba(16,185,129,0.15), 0 4px 20px rgba(16,185,129,0.15)'
+            : '0 4px 14px rgba(0,0,0,0.03)',
           cursor: 'pointer',
           transition: 'all 0.2s',
         }}
@@ -188,10 +190,10 @@ function AssetNode({ data, selected }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
           <div style={{
             width: 36, height: 36, borderRadius: '8px',
-            background: 'rgba(16,185,129,0.15)',
-            border: '1px solid rgba(16,185,129,0.35)',
+            background: 'rgba(16,185,129,0.1)',
+            border: '1px solid rgba(16,185,129,0.25)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#6ee7b7', flexShrink: 0,
+            color: '#059669', flexShrink: 0,
           }}>
             {getAssetIcon(assetType)}
           </div>
@@ -199,7 +201,7 @@ function AssetNode({ data, selected }) {
             <div style={{ fontWeight: 800, fontSize: '0.9rem', lineHeight: 1.2 }}>
               {data.institution}
             </div>
-            <div style={{ fontSize: '0.68rem', color: '#6ee7b7', marginTop: '0.15rem', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.68rem', color: '#047857', marginTop: '0.15rem', fontWeight: 600 }}>
               {assetType}
             </div>
           </div>
@@ -209,12 +211,13 @@ function AssetNode({ data, selected }) {
           <div style={{
             marginTop: '0.4rem',
             padding: '0.35rem 0.6rem',
-            background: 'rgba(0,0,0,0.25)',
+            background: 'rgba(255,255,255,0.6)',
+            border: '1px solid rgba(16,185,129,0.2)',
             borderRadius: '8px',
             fontWeight: 800,
             fontSize: '0.88rem',
             textAlign: 'center',
-            color: '#a7f3d0',
+            color: '#047857',
             letterSpacing: '-0.01em',
           }}>
             ₹{Number(data.amount).toLocaleString('en-IN')}
@@ -234,25 +237,25 @@ function GroupNode({ data }) {
 
   return (
     <div style={{
-      background: collapsed ? 'rgba(30,58,138,0.35)' : 'rgba(30,58,138,0.12)',
-      border: '1.5px dashed rgba(99,132,245,0.45)',
+      background: collapsed ? 'rgba(219,234,254,0.4)' : 'rgba(219,234,254,0.15)',
+      border: '1.5px dashed rgba(59,130,246,0.35)',
       borderRadius: '16px',
       padding: collapsed ? '0.6rem 1rem' : '0.75rem 1rem',
       minWidth: '220px',
-      color: '#93c5fd',
+      color: '#1e40af',
       transition: 'all 0.25s',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyBetween: 'space-between' }}>
         <span style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
           {data.label || 'Group'}
         </span>
         <button
           onClick={() => setCollapsed(c => !c)}
           style={{
-            background: 'rgba(99,132,245,0.15)',
-            border: '1px solid rgba(99,132,245,0.3)',
+            background: 'rgba(59,130,246,0.08)',
+            border: '1px solid rgba(59,130,246,0.2)',
             borderRadius: '6px',
-            color: '#93c5fd',
+            color: '#1e40af',
             cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             width: 22, height: 22, padding: 0,
@@ -263,7 +266,7 @@ function GroupNode({ data }) {
         </button>
       </div>
       {!collapsed && data.description && (
-        <div style={{ fontSize: '0.68rem', color: '#8fa4c8', marginTop: '0.35rem' }}>
+        <div style={{ fontSize: '0.68rem', color: '#4b5563', marginTop: '0.35rem' }}>
           {data.description}
         </div>
       )}
@@ -305,8 +308,8 @@ export default function AssetGraph({ graphData }) {
         height: '400px',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexDirection: 'column', gap: '0.75rem',
-        color: '#8fa4c8', background: 'linear-gradient(145deg, #080f1e, #0f1f3d)',
-        borderRadius: '16px', border: '1px solid rgba(59,130,246,0.15)',
+        color: '#64748b', background: 'linear-gradient(145deg, #f8fafc, #f1f5f9)',
+        borderRadius: '16px', border: '1px solid #cbd5e1',
       }}>
         <IconAsset />
         <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>No asset data available to map.</span>
@@ -318,8 +321,8 @@ export default function AssetGraph({ graphData }) {
     <div style={{
       height: '620px', width: '100%',
       borderRadius: '16px', overflow: 'hidden',
-      border: '1px solid rgba(59,130,246,0.25)',
-      background: '#080f1e',
+      border: '1px solid #cbd5e1',
+      background: '#f8fafc',
       position: 'relative',
       display: 'flex', flexDirection: 'column',
     }}>
@@ -342,40 +345,40 @@ export default function AssetGraph({ graphData }) {
         >
           <Controls
             style={{
-              background: 'rgba(10,22,40,0.9)',
-              border: '1px solid rgba(59,130,246,0.25)',
+              background: 'rgba(255,255,255,0.95)',
+              border: '1px solid rgba(203,213,225,0.8)',
               borderRadius: '10px',
             }}
           />
           <MiniMap
             nodeStrokeColor={n => n.type === 'person' ? '#3b82f6' : '#10b981'}
-            nodeColor={n => n.type === 'person' ? '#0f1f3d' : '#064e3b'}
-            maskColor="rgba(8,15,30,0.75)"
+            nodeColor={n => n.type === 'person' ? '#dbeafe' : '#d1fae5'}
+            maskColor="rgba(255,255,255,0.75)"
             style={{
-              background: 'rgba(10,22,40,0.85)',
-              border: '1px solid rgba(59,130,246,0.2)',
+              background: 'rgba(255,255,255,0.85)',
+              border: '1px solid rgba(203,213,225,0.5)',
               borderRadius: '10px',
             }}
           />
-          <Background color="#1e3a8a" gap={28} size={1.5} style={{ opacity: 0.4 }} />
+          <Background color="#94a3b8" gap={28} size={1.5} style={{ opacity: 0.25 }} />
 
           {/* Summary Panel */}
           <Panel position="top-left">
             <div style={{
-              background: 'rgba(10,22,40,0.85)',
+              background: 'rgba(255,255,255,0.85)',
               backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(59,130,246,0.2)',
+              border: '1px solid rgba(203,213,225,0.8)',
               borderRadius: '10px',
               padding: '0.6rem 0.9rem',
               display: 'flex', gap: '1.2rem',
             }}>
-              <Stat label="Heirs" value={personNodes.length} color="#93c5fd" />
-              <Stat label="Assets" value={assetNodes.length} color="#6ee7b7" />
+              <Stat label="Heirs" value={personNodes.length} color="#1e40af" />
+              <Stat label="Assets" value={assetNodes.length} color="#065f46" />
               {totalValue > 0 && (
                 <Stat
                   label="Total"
                   value={`₹${(totalValue / 100000).toFixed(1)}L`}
-                  color="#fcd34d"
+                  color="#b45309"
                 />
               )}
             </div>
@@ -387,17 +390,17 @@ export default function AssetGraph({ graphData }) {
       {selectedAsset && (
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0,
-          background: 'rgba(8,15,30,0.97)',
+          background: 'rgba(255,255,255,0.98)',
           backdropFilter: 'blur(12px)',
           borderTop: '1px solid #10b981',
           padding: '1rem 1.25rem',
-          color: '#f0f4ff',
+          color: '#0f172a',
           zIndex: 10,
           animation: 'slideUp 0.25s ease',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
             <div>
-              <div style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              <div style={{ fontSize: '0.65rem', color: '#047857', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 Asset Details
               </div>
               <div style={{ fontSize: '1.1rem', fontWeight: 800, marginTop: '0.15rem' }}>
@@ -407,8 +410,8 @@ export default function AssetGraph({ graphData }) {
             <button
               onClick={() => setSelectedAsset(null)}
               style={{
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '8px', color: '#8fa4c8', cursor: 'pointer',
+                background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.08)',
+                borderRadius: '8px', color: '#475569', cursor: 'pointer',
                 padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
@@ -421,7 +424,7 @@ export default function AssetGraph({ graphData }) {
             <DetailCell
               label="Estimated Value"
               value={selectedAsset.amount ? `₹${Number(selectedAsset.amount).toLocaleString('en-IN')}` : 'Unknown'}
-              valueColor="#34d399"
+              valueColor="#047857"
             />
             {selectedAsset.account_number && (
               <DetailCell label="Account" value={selectedAsset.account_number} mono />
@@ -446,7 +449,7 @@ function Stat({ label, value, color }) {
   return (
     <div style={{ textAlign: 'center' }}>
       <div style={{ fontSize: '0.95rem', fontWeight: 800, color }}>{value}</div>
-      <div style={{ fontSize: '0.6rem', color: '#8fa4c8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ fontSize: '0.6rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
         {label}
       </div>
     </div>
@@ -456,18 +459,18 @@ function Stat({ label, value, color }) {
 function DetailCell({ label, value, valueColor, mono }) {
   return (
     <div style={{
-      background: 'rgba(255,255,255,0.04)',
-      border: '1px solid rgba(255,255,255,0.06)',
+      background: 'rgba(0,0,0,0.02)',
+      border: '1px solid rgba(0,0,0,0.05)',
       borderRadius: '8px',
       padding: '0.5rem 0.75rem',
     }}>
-      <div style={{ fontSize: '0.6rem', color: '#8fa4c8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ fontSize: '0.6rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
         {label}
       </div>
       <div style={{
         fontWeight: 700,
         fontSize: '0.82rem',
-        color: valueColor || '#f0f4ff',
+        color: valueColor || '#0f172a',
         marginTop: '0.2rem',
         fontFamily: mono ? 'monospace' : 'inherit',
       }}>

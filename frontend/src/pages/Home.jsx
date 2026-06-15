@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import VoiceAssistant from '../components/VoiceAssistant';
 import HowVarasatWorks from '../components/HowVarasatWorks';
+import ThreeDGallery from '../components/ThreeDGallery';
 
 const features = [
   { iconKey: 'bank', title: 'Bank Accounts', desc: 'Find unclaimed savings, FDs, and PPF accounts.' },
@@ -116,7 +117,7 @@ function getHomeSvgIcon(name, classes = "w-5 h-5 text-slate-700") {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-slate-50 via-white to-slate-100/60 text-slate-600 font-sans antialiased flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-[#f3f8fc] bg-grid-dots text-slate-600 font-sans antialiased flex flex-col relative overflow-hidden">
       
       {/* ── CSS Animations & Styles ────────────────────────────────────────── */}
       <style>{`
@@ -142,6 +143,11 @@ export default function Home() {
           50% { opacity: .5; transform: scale(1.1); }
         }
       `}</style>
+
+      {/* ── Glowing 3D Orbs / Ambient Light Blobs ───────────────────────── */}
+      <div className="absolute top-[10%] left-[5%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-cyan-400/20 to-blue-500/15 blur-[120px] pointer-events-none animate-pulse duration-[8s] z-0"></div>
+      <div className="absolute top-[35%] right-[5%] w-[450px] h-[450px] rounded-full bg-gradient-to-tr from-amber-400/15 to-orange-500/10 blur-[130px] pointer-events-none animate-pulse duration-[10s] z-0"></div>
+      <div className="absolute bottom-[20%] left-[20%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-indigo-400/15 to-purple-500/10 blur-[150px] pointer-events-none z-0"></div>
 
       {/* ── Base Canvas Texture Overlay (Light Marble Veins) ─────────────── */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.24] overflow-hidden select-none z-0">
@@ -176,14 +182,6 @@ export default function Home() {
       {/* ── Floating Document & Asset Nodes (Depth-of-Field Blur) ─────────── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-10">
         
-        {/* Node 1: Bond Certificate (Left) */}
-        <div className="absolute left-8 top-1/4 hidden lg:flex items-center gap-2.5 bg-white/75 backdrop-blur-md border border-amber-500/20 px-3.5 py-2.5 rounded-lg shadow-md animate-float blur-[0.4px]">
-          {getHomeSvgIcon('file', "w-5 h-5 text-slate-500")}
-          <div>
-            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">Bond Certificate</div>
-            <div className="text-xs font-extrabold text-slate-800 mt-1 leading-none">unclaimed_equity_401</div>
-          </div>
-        </div>
 
         {/* Node 2: Succession Ledger (Right) */}
         <div className="absolute right-12 top-1/3 hidden lg:flex items-center gap-2.5 bg-white/75 backdrop-blur-md border border-amber-500/20 px-3.5 py-2.5 rounded-lg shadow-md animate-float-delayed blur-[0.6px]">
@@ -204,21 +202,19 @@ export default function Home() {
         </div>
 
       </div>
-
-      {/* ── Header / Navbar ────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 w-full bg-white/85 backdrop-blur-md border-b border-slate-200/50">
+      <header className="sticky top-0 z-40 w-full bg-[#0b1329] border-b border-slate-800 backdrop-blur-md">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center gap-2 group relative z-10">
-            {getHomeSvgIcon('scale', "w-6 h-6 text-slate-900")}
-            <span className="text-xl font-bold tracking-tight text-slate-900 group-hover:text-slate-800 transition-colors">
+            {getHomeSvgIcon('scale', "w-6 h-6 text-amber-500")}
+            <span className="text-xl font-bold tracking-tight text-white group-hover:text-slate-200 transition-colors">
               Varasat
             </span>
           </Link>
 
           {/* Live Pill in Navbar */}
-          <div className="hidden md:flex items-center gap-2 bg-slate-950 text-cyan-400 border border-cyan-500/40 shadow-[0_0_12px_rgba(34,211,238,0.22)] px-3.5 py-1.5 rounded-full text-xs font-extrabold tracking-wider uppercase">
+          <div className="hidden md:flex items-center gap-2 bg-slate-950/65 text-cyan-400 border border-cyan-500/30 shadow-[0_0_12px_rgba(34,211,238,0.15)] px-3.5 py-1.5 rounded-full text-xs font-extrabold tracking-wider uppercase">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
@@ -230,13 +226,13 @@ export default function Home() {
           <div className="flex items-center gap-3 relative z-10">
             <Link 
               to="/login" 
-              className="text-sm font-bold text-slate-600 hover:text-slate-900 px-3 py-2 transition-colors"
+              className="text-sm font-bold text-slate-300 hover:text-white px-3 py-2 transition-colors"
             >
               Login
             </Link>
             <Link 
               to="/analyze" 
-              className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-xs hover:bg-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+              className="inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-4 py-2 text-sm font-bold shadow-xs hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200"
             >
               Get Started
             </Link>
@@ -249,91 +245,101 @@ export default function Home() {
 
         {/* ── Hero Section ────────────────────────────────────────────────── */}
         <section className="relative py-16 md:py-24">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
-            {/* Trusted Stamp */}
-            <div className="inline-flex items-center gap-1.5 bg-slate-100 text-slate-850 border border-slate-200 text-xs font-bold px-3.5 py-1.5 rounded-full tracking-wider uppercase mb-6">
-              {getHomeSvgIcon('bank', "w-4 h-4 text-slate-700")} Trusted Digital Inheritance Companion
+            {/* Left Column: Hero Copy & Actions */}
+            <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+              {/* Trusted Stamp */}
+              <div className="inline-flex items-center gap-1.5 bg-slate-100 text-slate-850 border border-slate-200 text-xs font-bold px-3.5 py-1.5 rounded-full tracking-wider uppercase mb-6">
+                {getHomeSvgIcon('bank', "w-4 h-4 text-slate-700")} Trusted Digital Inheritance Companion
+              </div>
+
+              {/* Hero Heading */}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-800 leading-tight mb-6">
+                Recover Your Family's{' '}
+                <span className="bg-gradient-to-b from-amber-500 via-amber-700 to-amber-900 bg-clip-text text-transparent drop-shadow-md">
+                  Dormant Wealth
+                </span>.
+              </h1>
+
+              {/* Hero Description */}
+              <p className="text-lg sm:text-xl text-slate-600 leading-relaxed mb-8 max-w-2xl">
+                Varasat uses enterprise-grade AI to discover forgotten assets, analyze inheritance claims, and securely guide Indian families through regulated legal recovery channels.
+              </p>
+
+              {/* Premium Glowing Status Pills */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-10">
+                {/* Live Pill */}
+                <div className="bg-slate-950 text-cyan-400 border border-cyan-500/40 shadow-[0_0_15px_rgba(34,211,238,0.25)] text-xs font-bold px-4 py-2 rounded-full tracking-wider flex items-center gap-2 uppercase">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
+                  </span>
+                  Live Sync Active
+                </div>
+                {/* Integrated Pill */}
+                <div className="bg-emerald-950 text-emerald-400 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.25)] text-xs font-bold px-4 py-2 rounded-full tracking-wider flex items-center gap-2 uppercase">
+                  {getHomeSvgIcon('compliance', "w-4 h-4 text-emerald-400")}
+                  Aadhaar & DigiLocker Integrated
+                </div>
+                {/* Verified Pill */}
+                <div className="bg-amber-950/90 text-amber-400 border border-amber-600/40 shadow-[0_0_15px_rgba(245,158,11,0.25)] text-xs font-bold px-4 py-2 rounded-full tracking-wider flex items-center gap-2 uppercase">
+                  {getHomeSvgIcon('check_shield', "w-4 h-4 text-amber-400")}
+                  RBI Circular Compliant
+                </div>
+              </div>
+
+              {/* Visual Storytelling Pipeline */}
+              <div className="flex flex-wrap justify-center lg:justify-start items-center gap-3 mb-10 text-xs sm:text-sm font-semibold text-slate-800">
+                <div className="bg-white/85 border border-slate-200/80 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
+                  {getHomeSvgIcon('file', "w-4 h-4 text-slate-600")} Unclaimed Documents
+                </div>
+                <span className="text-slate-300 font-bold hidden sm:inline">➔</span>
+                <div className="bg-white/85 border border-slate-200/80 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
+                  {getHomeSvgIcon('ai', "w-4 h-4 text-slate-600")} Secure AI Discovery
+                </div>
+                <span className="text-slate-300 font-bold hidden sm:inline">➔</span>
+                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
+                  {getHomeSvgIcon('money', "w-4 h-4 text-emerald-700")} Discovered Wealth
+                </div>
+                <span className="text-slate-300 font-bold hidden sm:inline">➔</span>
+                <div className="bg-white/85 border border-slate-200/80 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
+                  {getHomeSvgIcon('scale', "w-4 h-4 text-slate-600")} Regulated Recovery
+                </div>
+              </div>
+
+              {/* CTA Hero Buttons */}
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+                <Link 
+                  to="/analyze" 
+                  className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-3.5 text-base font-bold text-white shadow-xs hover:bg-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+                >
+                  Start Finding Assets
+                </Link>
+                <Link 
+                  to="/demo" 
+                  className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-6 py-3.5 text-base font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+                >
+                  Try Demo Mode
+                </Link>
+              </div>
             </div>
 
-            {/* Hero Heading */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-800 max-w-4xl leading-tight mb-6">
-              Recover Your Family's{' '}
-              <span className="bg-gradient-to-b from-amber-500 via-amber-700 to-amber-900 bg-clip-text text-transparent drop-shadow-md">
-                Dormant Wealth
-              </span>.
-            </h1>
-
-            {/* Hero Description */}
-            <p className="text-lg sm:text-xl text-slate-600 max-w-3xl leading-relaxed mb-8">
-              Varasat uses enterprise-grade AI to discover forgotten assets, analyze inheritance claims, and securely guide Indian families through regulated legal recovery channels.
-            </p>
-
-            {/* Premium Glowing Status Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
-              {/* Live Pill */}
-              <div className="bg-slate-950 text-cyan-400 border border-cyan-500/40 shadow-[0_0_15px_rgba(34,211,238,0.25)] text-xs font-bold px-4 py-2 rounded-full tracking-wider flex items-center gap-2 uppercase">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
-                </span>
-                Live Sync Active
-              </div>
-              {/* Integrated Pill */}
-              <div className="bg-emerald-950 text-emerald-400 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.25)] text-xs font-bold px-4 py-2 rounded-full tracking-wider flex items-center gap-2 uppercase">
-                {getHomeSvgIcon('compliance', "w-4 h-4 text-emerald-400")}
-                Aadhaar & DigiLocker Integrated
-              </div>
-              {/* Verified Pill */}
-              <div className="bg-amber-950/90 text-amber-400 border border-amber-600/40 shadow-[0_0_15px_rgba(245,158,11,0.25)] text-xs font-bold px-4 py-2 rounded-full tracking-wider flex items-center gap-2 uppercase">
-                {getHomeSvgIcon('check_shield', "w-4 h-4 text-amber-400")}
-                RBI Circular Compliant
-              </div>
+            {/* Right Column: 3D Spherical Card Gallery */}
+            <div className="lg:col-span-5 w-full h-[550px] flex items-center justify-center relative select-none">
+              <ThreeDGallery />
             </div>
 
-            {/* Visual Storytelling Pipeline */}
-            <div className="flex flex-wrap justify-center items-center gap-3 mb-10 text-xs sm:text-sm font-semibold text-slate-800">
-              <div className="bg-white/85 border border-slate-200/80 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
-                {getHomeSvgIcon('file', "w-4 h-4 text-slate-600")} Unclaimed Documents
-              </div>
-              <span className="text-slate-300 font-bold hidden sm:inline">➔</span>
-              <div className="bg-white/85 border border-slate-200/80 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
-                {getHomeSvgIcon('ai', "w-4 h-4 text-slate-600")} Secure AI Discovery
-              </div>
-              <span className="text-slate-300 font-bold hidden sm:inline">➔</span>
-              <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
-                {getHomeSvgIcon('money', "w-4 h-4 text-emerald-700")} Discovered Wealth
-              </div>
-              <span className="text-slate-300 font-bold hidden sm:inline">➔</span>
-              <div className="bg-white/85 border border-slate-200/80 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
-                {getHomeSvgIcon('scale', "w-4 h-4 text-slate-600")} Regulated Recovery
-              </div>
-            </div>
+          </div>
 
-            {/* CTA Hero Buttons */}
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link 
-                to="/analyze" 
-                className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-3.5 text-base font-bold text-white shadow-xs hover:bg-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
-              >
-                Start Finding Assets
-              </Link>
-              <Link 
-                to="/demo" 
-                className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-6 py-3.5 text-base font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
-              >
-                Try Demo Mode
-              </Link>
-            </div>
-
-            {/* Voice Assistant Section */}
-            <div className="mt-16 w-full max-w-xl">
-              <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
+          {/* Voice Assistant Section (centered below the grid columns) */}
+          <div className="mt-16 flex flex-col items-center justify-center text-center px-4 w-full relative z-20">
+            <div className="w-full max-w-xl bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-2xl p-6 shadow-3d-gold hover-glow-gold transition-all duration-300">
+              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">
                 Prefer speaking? Talk to Varasat AI
               </h2>
               <VoiceAssistant />
             </div>
-
           </div>
         </section>
 
@@ -364,10 +370,10 @@ export default function Home() {
             </div>
 
             {/* Symmetry Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch relative z-10 perspective-1000 preserve-3d">
               
               {/* Card 1: Varasat Mitra (AI recovery) */}
-              <article className="bg-slate-950/98 backdrop-blur-md border border-slate-800 rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-slate-700 hover:shadow-2xl">
+              <article className="bg-[#0b1329]/96 backdrop-blur-md border border-slate-800/60 rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 hover-tilt shadow-3d-gold hover-glow-gold">
                 <div className="space-y-5">
                   <div className="flex items-center gap-3">
                     {getHomeSvgIcon('chat', "w-8 h-8 text-amber-500")}
@@ -397,8 +403,11 @@ export default function Home() {
               </article>
 
               {/* Card 2: Claimant Dashboard (Center) */}
-              <article className="bg-slate-950/98 backdrop-blur-md border-2 border-slate-700 shadow-xl rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-slate-500 hover:shadow-2xl relative">
+              <article className="bg-[#0f172a] backdrop-blur-md border-2 border-amber-500/35 rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 hover-tilt shadow-2xl hover-glow-gold relative overflow-hidden">
                 
+                {/* Visual Accent: Glowing gradient top border */}
+                <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600"></div>
+
                 {/* Visual Accent: Glowing node sync graphic */}
                 <div className="w-full h-16 mb-4 bg-slate-900/60 border border-slate-800 rounded-lg flex items-center justify-center relative overflow-hidden">
                   <svg className="w-full h-full text-teal-400" viewBox="0 0 240 80" fill="none">
@@ -439,7 +448,7 @@ export default function Home() {
               </article>
 
               {/* Card 3: Bank Partner Portal */}
-              <article className="bg-slate-950/98 backdrop-blur-md border border-slate-800 rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-slate-700 hover:shadow-2xl">
+              <article className="bg-[#0b1329]/96 backdrop-blur-md border border-slate-800/60 rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 hover-tilt shadow-3d-gold hover-glow-gold">
                 <div className="space-y-5">
                   <div className="flex items-center gap-3">
                     {getHomeSvgIcon('scale', "w-8 h-8 text-amber-500")}
@@ -478,28 +487,28 @@ export default function Home() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               
-              <div className="bg-white/80 border border-slate-200/80 p-6 rounded-xl hover:border-slate-350 transition-all duration-200 shadow-2xs">
-                <div className="mb-4">{getHomeSvgIcon('search', "w-8 h-8 text-slate-800")}</div>
-                <h3 className="font-bold text-slate-900 text-lg mb-2">Discover</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">Find possible forgotten assets scattered across banks, LIC, and mutual funds.</p>
+              <div className="bg-white/90 border-2 border-[#0b1329]/70 p-6 rounded-xl hover:border-[#0b1329] hover:scale-[1.02] hover-glow-blue shadow-3d-blue transition-all duration-300">
+                <div className="mb-4">{getHomeSvgIcon('search', "w-8 h-8 text-[#0b1329]")}</div>
+                <h3 className="font-extrabold text-[#0b1329] text-lg mb-2">Discover</h3>
+                <p className="text-slate-650 text-sm leading-relaxed font-semibold">Find possible forgotten assets scattered across banks, LIC, and mutual funds.</p>
               </div>
 
-              <div className="bg-white/80 border border-slate-200/80 p-6 rounded-xl hover:border-slate-350 transition-all duration-200 shadow-2xs">
-                <div className="mb-4">{getHomeSvgIcon('brain', "w-8 h-8 text-slate-800")}</div>
-                <h3 className="font-bold text-slate-900 text-lg mb-2">Analyze</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">Our AI safely understands complex documents and legally evaluates your claim eligibility.</p>
+              <div className="bg-white/90 border-2 border-[#0b1329]/70 p-6 rounded-xl hover:border-[#0b1329] hover:scale-[1.02] hover-glow-blue shadow-3d-blue transition-all duration-300">
+                <div className="mb-4">{getHomeSvgIcon('brain', "w-8 h-8 text-[#0b1329]")}</div>
+                <h3 className="font-extrabold text-[#0b1329] text-lg mb-2">Analyze</h3>
+                <p className="text-slate-650 text-sm leading-relaxed font-semibold">Our AI safely understands complex documents and legally evaluates your claim eligibility.</p>
               </div>
 
-              <div className="bg-white/80 border border-slate-200/80 p-6 rounded-xl hover:border-slate-350 transition-all duration-200 shadow-2xs">
-                <div className="mb-4">{getHomeSvgIcon('file', "w-8 h-8 text-slate-800")}</div>
-                <h3 className="font-bold text-slate-900 text-lg mb-2">Prepare</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">Instantly generate required legal documents like Affidavits and Indemnity Bonds.</p>
+              <div className="bg-white/90 border-2 border-[#0b1329]/70 p-6 rounded-xl hover:border-[#0b1329] hover:scale-[1.02] hover-glow-blue shadow-3d-blue transition-all duration-300">
+                <div className="mb-4">{getHomeSvgIcon('file', "w-8 h-8 text-[#0b1329]")}</div>
+                <h3 className="font-extrabold text-[#0b1329] text-lg mb-2">Prepare</h3>
+                <p className="text-slate-650 text-sm leading-relaxed font-semibold">Instantly generate required legal documents like Affidavits and Indemnity Bonds.</p>
               </div>
 
-              <div className="bg-white/80 border border-slate-200/80 p-6 rounded-xl hover:border-slate-350 transition-all duration-200 shadow-2xs">
-                <div className="mb-4">{getHomeSvgIcon('scale', "w-8 h-8 text-slate-800")}</div>
-                <h3 className="font-bold text-slate-900 text-lg mb-2">Recover</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">Track the entire claim journey step-by-step until the family legacy is fully recovered.</p>
+              <div className="bg-white/90 border-2 border-[#0b1329]/70 p-6 rounded-xl hover:border-[#0b1329] hover:scale-[1.02] hover-glow-blue shadow-3d-blue transition-all duration-300">
+                <div className="mb-4">{getHomeSvgIcon('scale', "w-8 h-8 text-[#0b1329]")}</div>
+                <h3 className="font-extrabold text-[#0b1329] text-lg mb-2">Recover</h3>
+                <p className="text-slate-650 text-sm leading-relaxed font-semibold">Track the entire claim journey step-by-step until the family legacy is fully recovered.</p>
               </div>
 
             </div>

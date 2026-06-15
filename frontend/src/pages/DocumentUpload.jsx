@@ -223,7 +223,7 @@ function AIAnalysisCard({ data, file, financialInsight, onFieldChange }) {
       </div>
 
       {/* Extracted Fields */}
-      <div className="bg-white border border-slate-200/80 rounded-xl p-5 shadow-2xs">
+      <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-xl p-5 shadow-3d-gold hover-glow-gold transition-all duration-300 relative z-10">
         <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-3 flex items-center gap-1.5">
           {getSvgIcon('search', "w-4 h-4 text-slate-800")} Extracted Claims Ledger
         </h3>
@@ -243,7 +243,7 @@ function AIAnalysisCard({ data, file, financialInsight, onFieldChange }) {
 
       {/* Financial Valuation */}
       {(financialInsight || todayVal > 0) && (
-        <div className="bg-white border border-slate-200/80 rounded-xl p-5 shadow-2xs space-y-4">
+        <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-xl p-5 shadow-3d-blue hover-glow-blue transition-all duration-300 relative z-10 space-y-4">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
             {getSvgIcon('info', "w-4 h-4 text-slate-800")}
             <h3 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider leading-none">Varasat Mitra Insight</h3>
@@ -265,7 +265,7 @@ function AIAnalysisCard({ data, file, financialInsight, onFieldChange }) {
       )}
 
       {/* Confidence score */}
-      <div className="bg-white border border-slate-200/80 rounded-xl p-5 shadow-2xs">
+      <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-xl p-5 shadow-3d-gold hover-glow-gold transition-all duration-300 relative z-10">
         <ConfidenceMeter score={score} />
         {score < 60 && (
           <p className="text-2xs text-amber-700 font-semibold mt-2.5 leading-relaxed">
@@ -534,33 +534,37 @@ export default function DocumentUpload() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans antialiased text-slate-600 pb-16 flex flex-col relative">
+    <div className="min-h-screen bg-[#f3f8fc] bg-grid-dots font-sans antialiased text-slate-600 pb-16 flex flex-col relative overflow-hidden">
       
+      {/* Visual Ambient Depth Orbs */}
+      <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none animate-pulse duration-[8s]" />
+      <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none animate-pulse duration-[10s]" />
+
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-100 sticky top-0 z-50">
+      <header className="flex items-center justify-between px-6 py-4 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-50">
         <div className="flex items-center gap-3">
           <Link 
             to="/" 
-            className="text-slate-500 hover:text-slate-800 text-xs font-bold px-2.5 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition-all mr-2"
+            className="text-slate-200 hover:text-white text-xs font-bold px-2.5 py-1.5 border border-slate-700 rounded-lg bg-slate-900/60 hover:bg-slate-800/85 transition-all mr-2"
           >
             ← Home
           </Link>
           
-          <div className="w-10 h-10 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
-            <svg className="w-5 h-5 text-slate-800" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-blue-400">
+            <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.637 10.637z" />
             </svg>
           </div>
 
           <div>
-            <h1 className="font-extrabold text-slate-900 text-sm leading-none">{t('upload.title')}</h1>
+            <h1 className="font-extrabold text-white text-sm leading-none">{t('upload.title')}</h1>
             <p className="text-[10px] text-slate-400 mt-1 font-semibold">{t('upload.subtitle')}</p>
           </div>
         </div>
 
         <button
           onClick={toggleLanguage}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:text-slate-900 transition-all cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer"
         >
           <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
@@ -591,14 +595,14 @@ export default function DocumentUpload() {
           <>
             <div
               {...getRootProps()}
-              className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 cursor-pointer ${
+              className={`border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-300 cursor-pointer shadow-3d-gold hover-glow-gold relative z-10 ${
                 uploading || pollingActive
-                  ? 'cursor-not-allowed border-slate-200 bg-slate-50' 
+                  ? 'cursor-not-allowed border-slate-250 bg-slate-50/50' 
                   : isDragActive 
-                    ? 'border-amber-500 bg-amber-50/20' 
+                    ? 'border-amber-500 bg-amber-50/25' 
                     : file 
-                      ? 'border-emerald-500 bg-emerald-50/10' 
-                      : 'border-slate-200 bg-white hover:border-slate-300'
+                      ? 'border-emerald-500 bg-emerald-50/15' 
+                      : 'border-slate-200/80 bg-white/85 backdrop-blur-md hover:border-slate-350 shadow-3d-gold hover-glow-gold'
               }`}
             >
               <input {...getInputProps()} />

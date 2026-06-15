@@ -41,13 +41,13 @@ function SuggestionIcon({ name }) {
 }
 
 const MitraIcon = () => (
-  <svg className="w-5 h-5 text-slate-950" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
     <circle cx="12" cy="12" r="3"/><path strokeLinecap="round" strokeLinejoin="round" d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
   </svg>
 );
 
 const UserIcon = () => (
-  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/>
   </svg>
 );
@@ -65,7 +65,7 @@ const CopyIcon = () => (
 );
 
 const CheckIcon = () => (
-  <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+  <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
     <polyline points="20 6 9 17 4 12"/>
   </svg>
 );
@@ -85,7 +85,7 @@ function FormattedText({ text }) {
         const parts = line.split(/\*\*(.*?)\*\*/g);
         const rendered = parts.map((part, j) =>
           j % 2 === 1
-            ? <strong key={j} className="text-amber-400 font-extrabold">{part}</strong>
+            ? <strong key={j} className="text-amber-700 font-extrabold">{part}</strong>
             : part
         );
 
@@ -95,7 +95,7 @@ function FormattedText({ text }) {
         if (isBullet) {
           return (
             <div key={i} className="flex items-start gap-2 pl-1">
-              <span className="text-amber-500 mt-0.5 flex-shrink-0">•</span>
+              <span className="text-amber-600 mt-0.5 flex-shrink-0">•</span>
               <span>{rendered}</span>
             </div>
           );
@@ -103,7 +103,7 @@ function FormattedText({ text }) {
         if (isNumList) {
           return (
             <div key={i} className="flex items-start gap-2 pl-1">
-              <span className="text-slate-400 font-bold flex-shrink-0 min-w-[18px]">
+              <span className="text-slate-500 font-bold flex-shrink-0 min-w-[18px]">
                 {line.trim().match(/^\d+/)?.[0]}.
               </span>
               <span>{rendered}</span>
@@ -139,8 +139,8 @@ function MessageBubble({ msg }) {
       {/* Avatar */}
       <div className={`w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center ${
         isUser
-          ? 'bg-slate-800 border border-slate-700'
-          : 'bg-gradient-to-b from-amber-400 to-amber-600 shadow-md shadow-amber-500/10'
+          ? 'bg-slate-100 border border-slate-200 shadow-sm'
+          : 'bg-gradient-to-b from-amber-500 to-amber-600 shadow-md shadow-amber-500/10'
       }`}>
         {isUser ? <UserIcon /> : <MitraIcon />}
       </div>
@@ -148,15 +148,15 @@ function MessageBubble({ msg }) {
       {/* Bubble */}
       <div className={`group relative p-4 rounded-2xl text-sm leading-relaxed break-words shadow-sm transition-all ${
         isUser
-          ? 'bg-slate-900 border border-slate-800 text-white rounded-tr-none'
-          : 'bg-slate-900/60 border border-slate-800/80 text-slate-200 rounded-tl-none'
+          ? 'bg-slate-800 text-white rounded-tr-none'
+          : 'bg-white border border-slate-200/80 text-slate-800 rounded-tl-none'
       }`}>
 
         {/* Copy button (AI messages only) */}
         {!isUser && (
           <button
             onClick={handleCopy}
-            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
+            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer"
             title="Copy"
           >
             {copied ? <CheckIcon /> : <CopyIcon />}
@@ -169,14 +169,14 @@ function MessageBubble({ msg }) {
 
         {/* Diagnostic / Tool usage badge */}
         {!isUser && msg.toolUsed && msg.toolUsed !== 'none' && (
-          <div className="mt-3 inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-800/50 border border-slate-700/50 text-[9px] font-bold tracking-widest uppercase text-amber-500/80">
+          <div className="mt-3 inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-amber-50 border border-amber-200 text-[9px] font-bold tracking-widest uppercase text-amber-800">
             <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
             Varasat AI used: {msg.toolUsed.replace(/Tool/g, '')}
           </div>
         )}
 
         {/* Timestamp */}
-        <div className="text-[10px] text-slate-500 mt-2 text-right font-mono">{time}</div>
+        <div className="text-[10px] text-slate-400 mt-2 text-right font-mono">{time}</div>
       </div>
     </div>
   );
@@ -185,10 +185,10 @@ function MessageBubble({ msg }) {
 function TypingIndicator() {
   return (
     <div className="flex items-end gap-3 mb-4 self-start">
-      <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center bg-gradient-to-b from-amber-400 to-amber-600 shadow-md shadow-amber-500/10">
+      <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center bg-gradient-to-b from-amber-500 to-amber-600 shadow-md shadow-amber-500/10">
         <MitraIcon />
       </div>
-      <div className="bg-slate-900/60 border border-slate-800 px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-1.5">
+      <div className="bg-white border border-slate-200 px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-1.5 shadow-sm">
         {[0, 1, 2].map(i => (
           <span
             key={i}
@@ -361,41 +361,46 @@ export default function Chat() {
         body:    JSON.stringify({ sessionId: 'default' }),
       });
     } catch (_) {}
-    setMessages([INITIAL_MESSAGE]);
+    setMessages([{
+      role:      'assistant',
+      content:   getInitialMessage(),
+      timestamp: new Date().toISOString(),
+      id:        'welcome',
+    }]);
     setError('');
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans antialiased text-slate-300 flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-[#f3f8fc] bg-grid-dots font-sans antialiased text-slate-700 flex flex-col relative overflow-hidden">
 
       {/* Ambient orbs */}
-      <div className="absolute w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[140px] -top-40 -left-40 pointer-events-none" />
-      <div className="absolute w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[140px] -bottom-40 -right-40 pointer-events-none" />
+      <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-40 -left-40 pointer-events-none animate-pulse duration-[8s]" />
+      <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-40 -right-40 pointer-events-none animate-pulse duration-[10s]" />
 
       {/* ── Header ── */}
-      <header className="flex items-center justify-between px-6 py-3.5 bg-slate-900/70 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+      <header className="flex items-center justify-between px-6 py-3.5 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-3">
           <Link
             to="/"
-            className="text-slate-400 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-800/50 transition-all mr-1"
+            className="text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 rounded-lg hover:bg-slate-800/80 transition-all mr-1 bg-slate-900/60"
           >
             ← Home
           </Link>
 
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 flex items-center justify-center shadow-sm shadow-amber-500/20">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 flex items-center justify-center shadow-sm shadow-amber-500/20">
             <MitraIcon />
           </div>
 
           <div>
             <h1 className="font-extrabold text-white text-sm leading-none">{t('chat.title')}</h1>
-            <p className="text-[10px] text-slate-500 mt-0.5 font-semibold">{t('chat.subtitle')}</p>
+            <p className="text-[10px] text-slate-400 mt-0.5 font-semibold">{t('chat.subtitle')}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={toggleLanguage}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-950 hover:bg-slate-900 border border-slate-800 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer shadow-sm"
           >
             <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
@@ -406,7 +411,7 @@ export default function Chat() {
           <button
             onClick={handleClear}
             disabled={loading}
-            className="text-xs font-bold text-slate-400 hover:text-white px-2.5 py-1.5 border border-slate-800 rounded-lg hover:bg-slate-800/50 cursor-pointer disabled:opacity-40 transition-all"
+            className="text-xs font-bold text-slate-200 hover:text-white px-2.5 py-1.5 border border-slate-700 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer disabled:opacity-40 transition-all shadow-sm"
           >
             {t('chat.clear')}
           </button>
@@ -414,13 +419,13 @@ export default function Chat() {
       </header>
 
       {/* ── Chat area ── */}
-      <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-6 flex flex-col overflow-y-auto pb-36">
+      <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-6 flex flex-col overflow-y-auto pb-36 relative z-10">
 
         {/* Error banner */}
         {error && (
-          <div className="flex items-center justify-between mb-4 p-3 bg-red-950/40 border border-red-900/50 rounded-xl text-red-400 text-xs font-semibold">
+          <div className="flex items-center justify-between mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-semibold">
             <span>{error}</span>
-            <button onClick={() => setError('')} className="ml-3 text-red-400 hover:text-red-200 cursor-pointer font-bold">✕</button>
+            <button onClick={() => setError('')} className="ml-3 text-red-700 hover:text-red-900 cursor-pointer font-bold">✕</button>
           </div>
         )}
 
@@ -442,7 +447,7 @@ export default function Chat() {
               <button
                 key={i}
                 onClick={() => handleSend(p.text)}
-                className="flex items-start gap-2.5 p-3.5 bg-slate-900/80 border border-slate-800 hover:border-amber-500/40 rounded-xl text-left text-xs font-semibold text-slate-400 hover:text-white transition-all cursor-pointer backdrop-blur-sm"
+                className="flex items-start gap-2.5 p-3.5 bg-white/85 backdrop-blur-md border border-slate-200/80 hover:border-amber-500 hover:shadow-sm rounded-xl text-left text-xs font-semibold text-slate-650 hover:text-slate-900 transition-all cursor-pointer shadow-3d-gold hover-glow-gold"
               >
                 <SuggestionIcon name={p.icon} />
                 <span className="mt-0.5">{p.text}</span>
@@ -453,11 +458,11 @@ export default function Chat() {
       )}
 
       {/* ── Input footer ── */}
-      <footer className="fixed bottom-0 inset-x-0 bg-slate-950/90 backdrop-blur-md border-t border-slate-900 py-3 px-4 sm:px-6 z-40">
+      <footer className="fixed bottom-0 inset-x-0 bg-[#f3f8fc]/80 backdrop-blur-md border-t border-slate-200/60 py-3 px-4 sm:px-6 z-40">
         <div className="max-w-3xl mx-auto w-full">
           <form
             onSubmit={e => { e.preventDefault(); handleSend(); }}
-            className="flex gap-2 bg-slate-900 border border-slate-800 rounded-xl p-2 items-center"
+            className="flex gap-2 bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-xl p-2 items-center shadow-3d-blue hover-glow-blue focus-within:border-amber-500/60 transition-all"
           >
             <input
               ref={inputRef}
@@ -465,16 +470,16 @@ export default function Chat() {
               onChange={e => setInput(e.target.value)}
               placeholder={t('chat.placeholder')}
               disabled={loading}
-              className="flex-1 bg-transparent text-white placeholder-slate-600 text-sm font-semibold outline-none border-none px-3 py-1"
+              className="flex-1 bg-transparent text-slate-800 placeholder-slate-400 text-sm font-semibold outline-none border-none px-3 py-1"
             />
 
             <button
               type="submit"
               disabled={!input.trim() || loading}
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-extrabold text-xs h-9 px-4 tracking-wider transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold text-xs h-9 px-4 tracking-wider transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
                   <SendIcon />
@@ -484,7 +489,7 @@ export default function Chat() {
             </button>
           </form>
 
-          <p className="text-center text-[10px] text-slate-600 mt-1.5 font-medium">
+          <p className="text-center text-[10px] text-slate-550 mt-1.5 font-medium">
             Varasat Mitra is an AI assistant. Always verify legal advice with a qualified professional.
           </p>
         </div>
