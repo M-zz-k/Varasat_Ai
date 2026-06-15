@@ -1,62 +1,65 @@
 # Varasat AI 🏛️
+
 > **Next-Generation AI-powered dormant wealth recovery for Indian families.**  
-> Effortlessly discover and claim forgotten family assets—including dormant bank accounts, unclaimed LIC policies, provident funds, and mutual fund shares.
+> Automatically discover, analyze, and claim forgotten assets—including dormant savings accounts, unclaimed insurance policies (LIC), provident funds (EPFO), and mutual fund shares.
 
 ---
 
-## ✨ Interface Modernization & Current Prototype Status
+## 🌟 Vision & Key Capabilities
 
-Varasat AI has been upgraded from a basic interface to a high-fidelity, premium light-mode design matching professional financial systems. Key elements of the current prototype include:
+Every year, thousands of crores in Indian assets go unclaimed because heirs are unaware of their family members' historical investments or are intimidated by complex institutional bureaucracy. Varasat AI bridges this gap with an intuitive, secure, and visually stunning solution.
 
-### 1. 3D Spherical Card Gallery
-- **Fibonacci Spiral Cloud**: Arranges portrait photo cards of Indian individuals evenly in a 3D spherical structure.
-- **Anti-Gravity Float**: Realized using independent positional wave noise on each card, making them drift weightlessly in space.
-- **Dynamic Mouse Interaction**: The entire sphere tilts and rotates in response to cursor movements, and cards scale up with a golden halo glow on hover.
-
-### 2. Centered Voice Assistant Hub
-- Positioned directly in the center of the homepage.
-- Supports real-time spoken commands and queries in both **Hindi** and **English** (powered by Groq Whisper).
-
-### 3. Glassmorphic Surface Styling
-- Encapsulated in translucent cards (`.glass-premium`) utilizing custom dot-grid backgrounds (`.bg-grid-dots`).
-- Includes smooth keyframe pulsing background depth orbs (amber and indigo) and physical shadow systems (`.shadow-3d-gold` / `.shadow-3d-blue`).
+*   **3D Fibonacci Card Gallery**: An interactive, weightless tag cloud built using **Three.js** and **React Three Fiber**. Arrange 30+ photo cards in a responsive sphere that drifts via positional wave noise, responds dynamically to cursor movements, and scales with a golden halo glow on hover.
+*   **Centered Voice Assistant Command Hub**: A direct, zero-clicks audio interaction console (powered by Groq Whisper) that answers complex legal succession queries in both **Hindi** and **English**.
+*   **HDFC/ICICI-Inspired Premium Aesthetics**: A cohesive design featuring custom dot-grid backgrounds (`.bg-grid-dots`), glassmorphic containers (`.glass-premium`), and glowing depth orbs.
+*   **Automated Document Generation**: Instantly draft legally compliant succession documents (Affidavits, Indemnity Bonds, and Claim Letters) and download them locally as PDFs.
 
 ---
 
-## 🧭 Application Blueprint & User Journey
+## 🗺️ The Varasat Journey
+
+The platform provides a step-by-step pipeline ensuring families are guided from document discovery to final recovery:
 
 ```
-Ingest Scan/PDF ➔ AI Field Extraction ➔ Inflation Impact Analysis ➔ Journey Tracker Checklist ➔ Succession PDF Generator
+Ingest Scan/PDF ➔ AI Field Extraction ➔ Inflation Loss Analytics ➔ Stage Journey Tracker ➔ Succession PDF Generator
 ```
 
-### Pages & Sub-systems
+---
 
-| Route | Page | Description | Special Aesthetics |
+## 🧭 Application Blueprint & Portals
+
+The prototype features discrete frontend routes optimized for specific phases of the recovery process:
+
+| Route | Portal / Page | Functional Scope | Aesthetic Elements |
 |---|---|---|---|
-| `/` | **Home** | Landing portal with 3D Spherical Gallery, centered Voice command hub, and Ecosystem cards. | 3D Perspective preserves, interactive hover tilt. |
-| `/upload` | **Document Upload** | Drag-and-drop ingestion for scans, bank statements, or policies with Gemini extraction. | Advanced upload dropzone, confidence indicators, raw JSON edits. |
-| `/chat` | **Varasat Mitra** | Multi-lingual guide assisting users with Indian legal succession rules. | Glassmorphic floating prompts, clean message bubbles. |
-| `/assets` | **Asset Discovery** | Family-to-institution relationship graph using interactive node networks. | Custom React Flow nodes with amber status glows. |
-| `/tracker` | **Claim Tracker** | Milestone roadmap tracing operational claims timelines. | Step timelines, ledger checkboxes, and action shortcuts. |
-| `/analytics` | **Analytics** | Compound loss inflation impact simulator powered by Wolfram Language math. | Premium interactive chart panels, custom Recharts graphs. |
-| `/documents` | **Document Generator** | Automated generation of required legal text and affidavits. | Glass-premium forms, automated local PDF downloads. |
-| `/demo` | **Demo Sandbox** | Simulated prototype walkthrough with mock family claims. | Stage card panels, preloaded demo scenarios. |
+| `/` | **Home Portal** | Main dashboard hub featuring the Three.js card gallery and centered voice command input. | Responsive 3D perspective grids, cursor tracking. |
+| `/upload` | **Document Upload** | Drag-and-drop ingestion interface for bank statements, certificates, and policies. | Glassmorphic dropzone, interactive confidence indicators, editable tables. |
+| `/chat` | **Varasat Mitra** | Conversational legal assistant detailing succession processes (Hindu Succession Act, etc.). | Pulsing chat indicators, English/Hindi language selectors. |
+| `/assets` | **Asset Discovery** | Relation graph connecting deceased relatives to claims and institutions using React Flow. | Color-coded status paths, amber glows. |
+| `/tracker` | **Claim Tracker** | Milestone roadmap tracing institutional audits and timeline logs. | Vertical milestone pipelines with custom status indicators. |
+| `/analytics` | **Analytics** | Loss calculator computing the compound impact of inflation on delayed asset releases. | Premium Recharts containers, custom math indicators. |
+| `/documents` | **Document Generator** | Selection portal for generating formal legal PDFs. | Sleek dropdown select matrices, loading spin overlays. |
+| `/demo` | **Demo Sandbox** | Simulated sandbox showing a pre-loaded claim recovery path for testing. | Layered workflow card columns. |
+| `/login` | **Bank Partner Login** | Entrance gate for financial partners to verify incoming claims. | Glass-premium login card, smooth OTP step transitions. |
 
 ---
 
 ## 🛠️ Stack & Technologies
 
-- **Frontend**: React + Vite, Three.js, React Three Fiber (R3F), `@react-three/drei`, Tailwind CSS v4, React Flow, Recharts, Zustand.
-- **Backend**: Node.js + Express, Multer, PDF-Parse.
-- **AI Core**: Google Gemini 2.5 Flash Vision (structured document extraction), Groq Llama 3.3 70B (succession query & claim scoring), Groq Whisper Large v3 (voice recognition).
-- **PDF Core**: PDFKit (local generation, no external APIs needed).
+*   **Frontend**: React + Vite, Three.js, React Three Fiber (R3F), `@react-three/drei`, Tailwind CSS v4, React Flow, Recharts, Zustand.
+*   **Backend**: Node.js + Express, Multer, PDF-Parse.
+*   **AI Engine**:
+    *   *Structured Document Extraction*: Google Gemini 2.5 Flash Vision.
+    *   *Succession Analysis & Chat*: Groq Llama 3.3 70B.
+    *   *Voice Command Input*: Groq Whisper Large v3.
+*   **PDF Generation**: PDFKit (runs locally in Node, eliminating external print costs).
 
 ---
 
 ## 🚀 Quick Start & Development Setup
 
-### 1. Installation
-Clone the repository, install dependencies, and set up your local environment file:
+### 1. Prerequisite Installations
+Ensure you have **Node.js** (v18+) and **npm** installed. Clone the repository and install all dependencies:
 ```bash
 git clone https://github.com/M-zz-k/Varasat_Ai.git
 cd Varasat_Ai
@@ -70,28 +73,37 @@ cd ../frontend
 npm install
 ```
 
-### 2. Environment Variables
-Create a `.env` file inside the `backend` folder:
+### 2. Configure Environment Keys
+Create a `.env` file in the `/backend` folder:
 ```env
 PORT=5000
-JWT_SECRET=your_jwt_secret_here
+JWT_SECRET=your_secret_key_here
 GROQ_API_KEY=your_groq_api_key
 GEMINI_API_KEY=your_gemini_api_key
 ```
-> **Note**: Free-tier developer keys work perfectly. No paid accounts or credit cards are required.
+> **No Credit Card Required**: Free developer accounts from [Groq Console](https://console.groq.com) and [Google AI Studio](https://aistudio.google.com) provide generous rate limits that fully support the application in development and sandbox testing.
 
-### 3. Execution
-Start the services in development mode:
+### 3. Run the Servers
+Launch both servers in development mode:
 ```bash
-# Start backend (from backend directory)
+# Start backend (run from /backend directory)
 npm run dev
 
-# Start frontend (from frontend directory)
+# Start frontend (run from /frontend directory)
 npm run dev
 ```
+By default, the backend runs on `http://localhost:5000` and the frontend on `http://localhost:5173`.
+
+---
+
+## 🧪 Testing the Prototype
+
+1.  **Demo Mode**: Open the dashboard and click **Try Demo Mode**. Use the preloaded dataset for **Ramesh Kumar** to experience the full claim workflow.
+2.  **Mock Document Upload**: In the upload screen, drag a sample statement or receipt. If you don't have a document, click **Load Mock Document** to test the Gemini extraction pipeline.
+3.  **Claim Tracking**: Navigate to the Journey Tracker and enter `CLM-1718091234` to view progress status logs.
 
 ---
 
 ## 📜 License
 
-MIT License.
+Distributed under the MIT License. See `LICENSE` for details.
