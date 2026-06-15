@@ -46,11 +46,12 @@ export default function Login() {
         {/* Header Branding */}
         <div className="text-center mb-6">
           <div className="flex justify-center mb-3">
-            <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-amber-600 shadow-sm animate-none">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17M4.5 9h15M6 9a6 6 0 0012 0M6 9a6 6 0 0112 0" />
-              </svg>
-            </div>
+            <img
+              src="/images/varasat-logo.png"
+              alt="VARASAT logo"
+              loading="eager"
+              style={{ width: '64px', height: '64px', objectFit: 'contain', borderRadius: '12px' }}
+            />
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">{t('login.title')}</h1>
           <p className="text-slate-500 text-xs mt-1.5 leading-relaxed">

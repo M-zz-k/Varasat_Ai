@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AssetGraph from '../components/AssetGraph';
+import Navbar from '../components/Navbar';
 
 export default function DemoMode() {
   const [loadingPdf, setLoadingPdf] = useState(false);
@@ -64,23 +65,17 @@ export default function DemoMode() {
       <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none animate-pulse duration-[8s]" />
       <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none animate-pulse duration-[10s]" />
 
-      {/* Header */}
-      <header style={{ padding: '1rem 2rem', background: '#0b1329', borderBottom: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Link to="/" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 600 }}>← Home</Link>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <svg style={{ width: '1.5rem', height: '1.5rem', stroke: '#fbbf24', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17M3 12h18M6 12l2 6h8l2-6" /></svg>
-            <div>
-              <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#ffffff' }}>Judge Demo Mode</div>
-              <div style={{ fontSize: '0.72rem', color: '#fbbf24', fontWeight: 600 }}>Prototype Simulation</div>
-            </div>
+      <Navbar
+        backTo="/"
+        backLabel="← Home"
+        subtitle="Judge Demo Mode — Prototype Simulation"
+        rightSlot={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.3rem 0.8rem', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: '999px', color: '#fbbf24', fontSize: '0.8rem', fontWeight: 700 }}>
+            <svg style={{ width: '0.95rem', height: '0.95rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            DEMO DATA
           </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.3rem 0.8rem', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: '999px', color: '#fbbf24', fontSize: '0.8rem', fontWeight: 700 }}>
-          <svg style={{ width: '0.95rem', height: '0.95rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-          DEMO DATA
-        </div>
-      </header>
+        }
+      />
 
       <main style={{ maxWidth: '900px', margin: '2rem auto', padding: '0 1.25rem' }}>
         

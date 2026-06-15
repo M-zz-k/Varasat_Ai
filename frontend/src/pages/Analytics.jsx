@@ -7,6 +7,7 @@ import {
 import { analyzeFinancialImpact, analyzeWithWolframEngine } from '../services/analyticsApi';
 import FinancialImpactCard from '../components/FinancialImpactCard';
 import WolframAnalysisCard from '../components/WolframAnalysisCard';
+import Navbar from '../components/Navbar';
 
 // ─── SVG Icons ─────────────────────────────────────────────────────────────────
 
@@ -222,30 +223,7 @@ export default function Analytics() {
       <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none animate-pulse duration-[8s]" />
       <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none animate-pulse duration-[10s]" />
 
-      {/* ── Header ── */}
-      <header className="flex items-center justify-between px-6 py-3.5 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-40 shadow-sm">
-        <div className="flex items-center gap-3">
-          <Link
-            to="/"
-            className="flex items-center gap-1.5 text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 rounded-lg hover:bg-slate-800/80 transition-all mr-1 bg-slate-900/60 shadow-sm"
-          >
-            <IconArrowLeft /> Home
-          </Link>
-
-          <div className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-sm">
-            <IconLightning />
-          </div>
-
-          <div>
-            <h1 className="font-extrabold text-white text-sm leading-none">
-              Valuation &amp; Financial Analysis
-            </h1>
-            <p className="text-[10px] text-slate-400 mt-0.5 font-semibold">
-              Powered by Wolfram Language Engine
-            </p>
-          </div>
-        </div>
-      </header>
+      <Navbar backTo="/" backLabel="← Home" subtitle="Valuation & Financial Analysis — Wolfram Language Engine" />
 
       {/* ── Main ── */}
       <main className="max-w-3xl mx-auto px-6 py-10 relative z-10">

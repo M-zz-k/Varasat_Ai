@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 const DOC_TYPES = [
   { value: 'Affidavit',       label: 'Affidavit' },
@@ -116,24 +117,19 @@ export default function DocumentGenerator() {
       <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none animate-pulse duration-[8s]" />
       <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none animate-pulse duration-[10s]" />
 
-      {/* Header */}
-      <header className="flex items-center gap-3 px-6 py-3.5 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-40 shadow-sm">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 transition-all cursor-pointer shadow-sm"
-        >
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
-          Back
-        </button>
-
-        <div className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-emerald-400 shadow-sm">
-          <IconDoc />
-        </div>
-        <div>
-          <div className="font-extrabold text-white text-sm leading-none">Legal Document Generator</div>
-          <div className="text-[10px] text-slate-400 mt-0.5 font-semibold">Powered by Varasat AI</div>
-        </div>
-      </header>
+      <Navbar
+        backTo={null}
+        rightSlot={
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1.5 text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 transition-all cursor-pointer shadow-sm"
+          >
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+            Back
+          </button>
+        }
+        subtitle="Legal Document Generator — Powered by Varasat AI"
+      />
 
       <main className="max-w-lg mx-auto px-6 py-10 relative z-10">
         <div className="text-center mb-8">

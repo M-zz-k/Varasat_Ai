@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import { useDocumentStore } from '../stores/useDocumentStore';
+import Navbar from '../components/Navbar';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -377,46 +378,31 @@ export default function Chat() {
       <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-40 -left-40 pointer-events-none animate-pulse duration-[8s]" />
       <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-40 -right-40 pointer-events-none animate-pulse duration-[10s]" />
 
-      {/* ── Header ── */}
-      <header className="flex items-center justify-between px-6 py-3.5 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-40 shadow-sm">
-        <div className="flex items-center gap-3">
-          <Link
-            to="/"
-            className="text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 rounded-lg hover:bg-slate-800/80 transition-all mr-1 bg-slate-900/60"
-          >
-            ← Home
-          </Link>
-
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 flex items-center justify-center shadow-sm shadow-amber-500/20">
-            <MitraIcon />
-          </div>
-
-          <div>
-            <h1 className="font-extrabold text-white text-sm leading-none">{t('chat.title')}</h1>
-            <p className="text-[10px] text-slate-400 mt-0.5 font-semibold">{t('chat.subtitle')}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleLanguage}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer shadow-sm"
-          >
-            <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
-            </svg>
-            <span>{lang === 'en' ? 'हिंदी' : 'English'}</span>
-          </button>
-
-          <button
-            onClick={handleClear}
-            disabled={loading}
-            className="text-xs font-bold text-slate-200 hover:text-white px-2.5 py-1.5 border border-slate-700 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer disabled:opacity-40 transition-all shadow-sm"
-          >
-            {t('chat.clear')}
-          </button>
-        </div>
-      </header>
+      <Navbar
+        backTo="/"
+        backLabel="← Home"
+        subtitle="Varasat Mitra — AI Inheritance Guide"
+        rightSlot={
+          <>
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer shadow-sm"
+            >
+              <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
+              </svg>
+              <span>{lang === 'en' ? 'हिंदी' : 'English'}</span>
+            </button>
+            <button
+              onClick={handleClear}
+              disabled={loading}
+              className="text-xs font-bold text-slate-200 hover:text-white px-2.5 py-1.5 border border-slate-700 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer disabled:opacity-40 transition-all shadow-sm"
+            >
+              {t('chat.clear')}
+            </button>
+          </>
+        }
+      />
 
       {/* ── Chat area ── */}
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-6 flex flex-col overflow-y-auto pb-36 relative z-10">

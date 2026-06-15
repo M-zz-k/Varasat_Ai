@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import JourneyHeader from '../components/JourneyHeader';
 import Skeleton from '../components/Skeleton';
+import Navbar from '../components/Navbar';
 import { useTranslation } from '../hooks/useTranslation';
 import { useDocumentAnalyzeMutation, useDocumentStatusQuery } from '../hooks/useClaimQueries';
 import { useDocumentStore } from '../stores/useDocumentStore';
@@ -540,38 +541,22 @@ export default function DocumentUpload() {
       <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none animate-pulse duration-[8s]" />
       <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none animate-pulse duration-[10s]" />
 
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <Link 
-            to="/" 
-            className="text-slate-200 hover:text-white text-xs font-bold px-2.5 py-1.5 border border-slate-700 rounded-lg bg-slate-900/60 hover:bg-slate-800/85 transition-all mr-2"
+      <Navbar
+        backTo="/"
+        backLabel="← Home"
+        subtitle="Document Intelligence Engine"
+        rightSlot={
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer"
           >
-            ← Home
-          </Link>
-          
-          <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-blue-400">
-            <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.637 10.637z" />
+            <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
             </svg>
-          </div>
-
-          <div>
-            <h1 className="font-extrabold text-white text-sm leading-none">{t('upload.title')}</h1>
-            <p className="text-[10px] text-slate-400 mt-1 font-semibold">{t('upload.subtitle')}</p>
-          </div>
-        </div>
-
-        <button
-          onClick={toggleLanguage}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer"
-        >
-          <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
-          </svg>
-          <span>{lang === 'en' ? 'हिंदी' : 'English'}</span>
-        </button>
-      </header>
+            <span>{lang === 'en' ? 'हिंदी' : 'English'}</span>
+          </button>
+        }
+      />
 
       {/* Steps checklist bar */}
       <JourneyHeader currentStep={1} />

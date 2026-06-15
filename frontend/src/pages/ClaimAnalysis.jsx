@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 export default function ClaimAnalysis() {
   const location = useLocation();
@@ -83,25 +84,19 @@ export default function ClaimAnalysis() {
       <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none animate-pulse duration-[8s]" />
       <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none animate-pulse duration-[10s]" />
 
-      {/* Header */}
-      <header className="flex items-center gap-3 px-6 py-3.5 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-40 shadow-sm">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 rounded-lg hover:bg-slate-800/80 transition-all cursor-pointer shadow-sm bg-slate-900/60"
-        >
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
-          Back
-        </button>
-        <div className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-indigo-400 shadow-sm">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2L3 7v5c0 5 4 9.3 9 10.7C17 20.3 21 16 21 12V7z" />
-          </svg>
-        </div>
-        <div>
-          <div className="font-extrabold text-white text-sm leading-none">Claim Intelligence</div>
-          <div className="text-[10px] text-slate-400 mt-0.5 font-semibold">Powered by Wolfram &amp; Claude</div>
-        </div>
-      </header>
+      <Navbar
+        backTo={null}
+        rightSlot={
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1.5 text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 rounded-lg hover:bg-slate-800/80 transition-all cursor-pointer shadow-sm bg-slate-900/60"
+          >
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+            Back
+          </button>
+        }
+        subtitle="Claim Intelligence — Wolfram Risk Analysis"
+      />
 
       <main className="max-w-3xl mx-auto px-6 py-10 relative z-10">
         <h1 className="text-2xl font-black text-slate-900 text-center mb-8 tracking-tight">

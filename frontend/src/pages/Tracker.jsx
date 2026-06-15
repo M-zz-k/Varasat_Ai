@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 const MILESTONES = [
   { id: '1', title: 'Documents Received',   desc: 'Document intelligence has successfully extracted the asset details.' },
@@ -98,28 +99,7 @@ export default function Tracker() {
       <div className="absolute w-[400px] h-[400px] bg-blue-400/10 rounded-full blur-[120px] -top-20 -left-20 pointer-events-none animate-pulse duration-[8s]"></div>
       <div className="absolute w-[400px] h-[400px] bg-amber-400/10 rounded-full blur-[120px] -bottom-20 -right-20 pointer-events-none animate-pulse duration-[10s]"></div>
 
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-[#0b1329] border-b border-slate-800 sticky top-0 z-40 shadow-sm">
-        <div className="flex items-center gap-3">
-          <Link 
-            to="/" 
-            className="text-slate-200 hover:text-white font-bold text-xs px-2.5 py-1.5 border border-slate-700 bg-slate-900/60 hover:bg-slate-800/85 rounded-lg shadow-sm transition-all mr-2"
-          >
-            ← Home
-          </Link>
-          
-          <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-sm">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
-            </svg>
-          </div>
-
-          <div>
-            <h1 className="font-extrabold text-white text-sm leading-none">Claim Journey Tracker</h1>
-            <p className="text-[10px] text-slate-400 mt-1 font-bold">Secure operational timeline audits</p>
-          </div>
-        </div>
-      </header>
+      <Navbar backTo="/" backLabel="← Home" subtitle="Claim Journey Tracker — Secure Operational Timeline" />
 
       {/* Main Body */}
       <main className="max-w-xl mx-auto px-6 py-12 relative z-10">
