@@ -337,18 +337,7 @@ export default function Home() {
         {/* ── Central Component Grid: Deep Slate-Navy hardware vaults ─────── */}
         <section className="py-16 border-t border-slate-200/40 relative">
           
-          {/* Interactive Gold Data Flow Trail */}
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-1 pointer-events-none hidden md:block overflow-visible z-20">
-            <svg className="w-full h-20 absolute -top-10 left-0 text-amber-500" viewBox="0 0 1000 80" fill="none">
-              <path id="data-trail" d="M150,45 Q300,15 480,45" stroke="rgba(245,158,11,0.22)" strokeWidth="2" strokeDasharray="6 6" />
-              <circle r="4" fill="#f59e0b">
-                <animateMotion dur="3s" repeatCount="indefinite" path="M150,45 Q300,15 480,45" />
-              </circle>
-              <circle r="3.5" fill="#fbbf24">
-                <animateMotion dur="3s" begin="1.5s" repeatCount="indefinite" path="M150,45 Q300,15 480,45" />
-              </circle>
-            </svg>
-          </div>
+          {/* Background data flow trail removed as per user request */}
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-12">
