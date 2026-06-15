@@ -52,29 +52,39 @@ async function handleChat(req, res) {
 
   try {
     const history = getSession(sessionId);
+    // Store the original user message (in their language) for context
     history.push({ role: 'user', content: queryForAgent });
 
     if (history.length > MAX_SESSION_MESSAGES) {
       history.splice(0, history.length - MAX_SESSION_MESSAGES);
     }
 
-    console.log(`[Chat] Routing message to Agent... sessionId=${sessionId}`);
+    console.log(`[Chat] Routing message to Agent... sessionId=${sessionId}, language=${language}`);
 
-    // Call Agent instead of direct LLM
-    const agentResponse = await runAgent(history);
+    // Pass language so the agent responds natively in the right language
+    const agentResponse = await runAgent(history, language);
 
-    // Save assistant reply in English internally
+    // Save assistant reply internally
     history.push({ role: 'assistant', content: agentResponse.finalResponse });
 
-    let finalTranslatedResponse = agentResponse.finalResponse;
+    // The LLM already responded in the correct language — no translation needed
+    // Only attempt Bhashini translation if it's configured (optional enhancement)
+    let finalResponse = agentResponse.finalResponse;
     if (language !== 'English') {
-      finalTranslatedResponse = await translateText(finalTranslatedResponse, 'English', language);
+      try {
+        const translated = await translateText(finalResponse, 'English', language);
+        // Only use translation if it returned something different (Bhashini was active)
+        if (translated && translated !== finalResponse) {
+          finalResponse = translated;
+        }
+      } catch (_) {
+        // Bhashini not configured — LLM native response is already in correct language
+      }
     }
 
-    // Send complete diagnostic packet
     return res.json({ 
       success: true, 
-      reply: finalTranslatedResponse,
+      reply: finalResponse,
       intent: agentResponse.intent,
       toolUsed: agentResponse.toolUsed,
       retrievedContext: agentResponse.retrievedContext,
@@ -85,10 +95,7 @@ async function handleChat(req, res) {
   } catch (err) {
     console.error('[ChatController] Error:', err.message);
     let reply = getOfflineReply(queryForAgent);
-    if (language !== 'English') {
-      reply = await translateText(reply, 'English', language);
-    }
-    return res.json({ success: true, reply, sessionId, mode: 'offline' });
+    return res.json({ success: true, reply, sessionId, mode: 'error_fallback' });
   }
 }
 

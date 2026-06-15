@@ -24,6 +24,7 @@ const claimRoutes     = require('./src/routes/claimRoutes');
 const analyticsRoutes = require('./src/routes/analyticsRoutes');
 const assetsRoutes    = require('./src/routes/assetsRoutes');
 const wolframRoutes   = require('./src/routes/wolframRoutes');
+const ttsRoutes       = require('./src/routes/ttsRoutes');
 
 app.use('/api/chat',      chatRoutes);
 app.use('/api/document',  documentRoutes);
@@ -31,6 +32,7 @@ app.use('/api/claim',     claimRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/assets',    assetsRoutes);
 app.use('/api/wolfram',   wolframRoutes);
+app.use('/api/tts',       ttsRoutes);
 
 // ─── Health check ─────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
@@ -44,6 +46,19 @@ app.use((err, req, res, next) => {
 });
 
 // ─── Start ────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`✅ Varasat backend running on http://localhost:${PORT}`);
+  console.log(`🔑 Groq API: ${process.env.GROQ_API_KEY && process.env.GROQ_API_KEY !== 'your_groq_api_key_here' ? '✅ Configured' : '❌ NOT SET — running in offline mode'}`);
+  console.log(`🔑 Gemini API: ${process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here' ? '✅ Configured' : '⚠️  Not set — document OCR will use mock data'}`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n❌ Port ${PORT} is already in use!`);
+    console.error(`   Run this to fix it: npx kill-port ${PORT}`);
+    console.error(`   Or close the other terminal running the backend.\n`);
+    process.exit(1);
+  } else {
+    throw err;
+  }
 });
