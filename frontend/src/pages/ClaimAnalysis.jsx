@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import JourneyHeader from '../components/JourneyHeader';
 
 export default function ClaimAnalysis() {
   const location = useLocation();
@@ -98,6 +99,8 @@ export default function ClaimAnalysis() {
         subtitle="Claim Intelligence — Wolfram Risk Analysis"
       />
 
+      <JourneyHeader currentStep={2} />
+
       <main className="max-w-3xl mx-auto px-6 py-10 relative z-10">
         <h1 className="text-2xl font-black text-slate-900 text-center mb-8 tracking-tight">
           Claim Eligibility Assessment
@@ -169,17 +172,17 @@ export default function ClaimAnalysis() {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 relative z-10">
           <Link
-            to="/chat"
+            to="/upload"
             className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm h-11 transition-all shadow-sm"
           >
-            Talk to Varasat Mitra
+            Back
           </Link>
           <Link
-            to="/generate-document"
+            to="/asset-discovery"
             state={{ assetData: initialAssetData }}
             className="flex-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm h-11 transition-all shadow-md shadow-amber-500/10"
           >
-            Generate Legal Documents
+            Next Step: Asset Discovery
           </Link>
         </div>
       </main>

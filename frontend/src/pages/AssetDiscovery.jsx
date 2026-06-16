@@ -4,14 +4,15 @@ import { fetchAssetGraph } from '../services/assetApi';
 import AssetGraph from '../components/AssetGraph';
 import { useTranslation } from '../hooks/useTranslation';
 import Navbar from '../components/Navbar';
+import JourneyHeader from '../components/JourneyHeader';
 
 // Fallback demo graph shown when no documents have been uploaded yet
 const DEMO_GRAPH = {
   nodes: [
-    { id: 'p1', type: 'person', position: { x: 270, y: 60 },  data: { name: 'Ramesh Kumar', role: 'Deceased — Father' } },
-    { id: 'a1', type: 'asset',  position: { x: 60,  y: 220 }, data: { institution: 'SBI', asset_type: 'Savings Account', amount: 245000 } },
-    { id: 'a2', type: 'asset',  position: { x: 270, y: 220 }, data: { institution: 'LIC', asset_type: 'Life Insurance Policy', amount: 500000 } },
-    { id: 'a3', type: 'asset',  position: { x: 480, y: 220 }, data: { institution: 'HDFC AMC', asset_type: 'Mutual Fund — Equity', amount: 200000 } },
+    { id: 'p1', type: 'person', position: { x: 270, y: 60 }, data: { name: 'Ramesh Kumar', role: 'Deceased — Father' } },
+    { id: 'a1', type: 'asset', position: { x: 60, y: 220 }, data: { institution: 'SBI', asset_type: 'Savings Account', amount: 245000 } },
+    { id: 'a2', type: 'asset', position: { x: 270, y: 220 }, data: { institution: 'LIC', asset_type: 'Life Insurance Policy', amount: 500000 } },
+    { id: 'a3', type: 'asset', position: { x: 480, y: 220 }, data: { institution: 'HDFC AMC', asset_type: 'Mutual Fund — Equity', amount: 200000 } },
   ],
   edges: [
     { id: 'e1', source: 'p1', target: 'a1', animated: true },
@@ -23,10 +24,10 @@ const DEMO_GRAPH = {
 export default function AssetDiscovery() {
   const navigate = useNavigate();
   const { lang, toggleLanguage } = useTranslation();
-  const [loading, setLoading]             = useState(true);
-  const [error, setError]                 = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [graphResponse, setGraphResponse] = useState(null);
-  const [isDemo, setIsDemo]               = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -110,6 +111,8 @@ export default function AssetDiscovery() {
         }
       />
 
+      <JourneyHeader currentStep={3} />
+
       <main className="max-w-5xl mx-auto px-6 py-8 relative z-10 w-full flex-1">
 
         {/* Title + Summary */}
@@ -149,16 +152,16 @@ export default function AssetDiscovery() {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
-            to="/upload"
+            to="/claim-analysis"
             className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm h-11 transition-all shadow-sm"
           >
-            + Add Another Document
+            Back
           </Link>
           <Link
-            to="/claim-analysis"
+            to="/generate-document"
             className="flex-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm h-11 transition-all shadow-md shadow-amber-500/10"
           >
-            Analyze Claim Eligibility
+            Next Step: Generate Legal Documents
           </Link>
         </div>
       </main>

@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import VoiceAssistant from '../components/VoiceAssistant';
 import HowVarasatWorks from '../components/HowVarasatWorks';
 import ThreeDGallery from '../components/ThreeDGallery';
@@ -116,6 +117,25 @@ function getHomeSvgIcon(name, classes = "w-5 h-5 text-slate-700") {
 }
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('varasat_user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('varasat_user');
+    setUser(null);
+  };
+
   return (
     <div className="min-h-screen bg-[#f3f8fc] bg-grid-dots text-slate-600 font-sans antialiased flex flex-col relative overflow-hidden">
       
@@ -219,14 +239,28 @@ export default function Home() {
 
           {/* Authentication Actions */}
           <div className="flex items-center gap-3 relative z-10">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-bold text-slate-300">
+                  Welcome, {user.name.split(' ')[0]}
+                </span>
+                <button 
+                  onClick={handleLogout}
+                  className="text-sm font-bold text-slate-400 hover:text-white px-3 py-2 transition-colors cursor-pointer"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link 
+                to="/login" 
+                className="text-sm font-bold text-slate-300 hover:text-white px-3 py-2 transition-colors"
+              >
+                Login
+              </Link>
+            )}
             <Link 
-              to="/login" 
-              className="text-sm font-bold text-slate-300 hover:text-white px-3 py-2 transition-colors"
-            >
-              Login
-            </Link>
-            <Link 
-              to="/analyze" 
+              to="/upload" 
               className="inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-4 py-2 text-sm font-bold shadow-xs hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200"
             >
               Get Started
@@ -306,7 +340,7 @@ export default function Home() {
               {/* CTA Hero Buttons */}
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                 <Link 
-                  to="/analyze" 
+                  to="/upload" 
                   className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-3.5 text-base font-bold text-white shadow-xs hover:bg-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
                 >
                   Start Finding Assets

@@ -297,7 +297,7 @@ function AIAnalysisCard({ data, file, financialInsight, onFieldChange }) {
           state={{ assetData: { ...Object.keys(data).reduce((acc, k) => { acc[k] = data[k]?.value ?? data[k]; return acc; }, {}), financialInsight } }} 
           className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs h-11 transition-all duration-200 hover:-translate-y-0.5"
         >
-          Analyze Claim
+          Next Step: Analyze
         </Link>
       </div>
 

@@ -23,7 +23,7 @@ export default function Login() {
     e.preventDefault();
     if (otp === '123456' || otp === '123') { // Support 123456 or 123 for local testing convenience
       localStorage.setItem('varasat_user', JSON.stringify(formData));
-      navigate('/analyze');
+      navigate('/upload');
     } else {
       setOtpError(t('login.otpError'));
     }
@@ -31,7 +31,7 @@ export default function Login() {
 
   const handleGuest = () => {
     localStorage.setItem('varasat_user', JSON.stringify({ name: 'Guest User' }));
-    navigate('/analyze');
+    navigate('/upload');
   };
 
   return (

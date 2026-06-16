@@ -28,7 +28,6 @@ export default function App() {
             <Route path="/chat"      element={<ErrorBoundary><Chat           /></ErrorBoundary>} />
             <Route path="/login"     element={<ErrorBoundary><Login          /></ErrorBoundary>} />
             <Route path="/upload"    element={<ErrorBoundary><DocumentUpload /></ErrorBoundary>} />
-            <Route path="/analyze"   element={<ErrorBoundary><DocumentUpload /></ErrorBoundary>} />
             <Route path="/tracker"   element={<ErrorBoundary><Tracker        /></ErrorBoundary>} />
             <Route path="/analytics" element={<ErrorBoundary><Analytics      /></ErrorBoundary>} />
             <Route path="/claim-analysis" element={<ErrorBoundary><ClaimAnalysis /></ErrorBoundary>} />

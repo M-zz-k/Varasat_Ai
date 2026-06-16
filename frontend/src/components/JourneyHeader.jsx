@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 
 export default function JourneyHeader({ currentStep }) {
   const steps = [
-    { id: 1, name: 'Discover', path: '/analyze' },
-    { id: 2, name: 'Analyze', path: '/asset-discovery' },
-    { id: 3, name: 'Recover', path: '/claim-analysis' },
+    { id: 1, name: 'Upload', path: '/upload' },
+    { id: 2, name: 'Analyze', path: '/claim-analysis' },
+    { id: 3, name: 'Recover', path: '/asset-discovery' },
     { id: 4, name: 'Complete', path: '/generate-document' },
   ];
 

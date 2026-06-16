@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import JourneyHeader from '../components/JourneyHeader';
 
 const DOC_TYPES = [
   { value: 'Affidavit',       label: 'Affidavit' },
@@ -130,6 +131,8 @@ export default function DocumentGenerator() {
         }
         subtitle="Legal Document Generator — Powered by Varasat AI"
       />
+
+      <JourneyHeader currentStep={4} />
 
       <main className="max-w-lg mx-auto px-6 py-10 relative z-10">
         <div className="text-center mb-8">
@@ -267,6 +270,21 @@ export default function DocumentGenerator() {
             )}
           </button>
         </form>
+
+        <div className="flex flex-col sm:flex-row gap-3 mt-6">
+          <Link
+            to="/asset-discovery"
+            className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm h-11 transition-all shadow-sm"
+          >
+            Back
+          </Link>
+          <Link
+            to="/tracker"
+            className="flex-1 inline-flex items-center justify-center rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm h-11 transition-all shadow-md"
+          >
+            Finish: View Tracker
+          </Link>
+        </div>
       </main>
     </div>
   );
