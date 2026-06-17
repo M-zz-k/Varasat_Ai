@@ -7,10 +7,7 @@
 </div>
 <br/>
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
-![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react&logoColor=black)
-![Node](https://img.shields.io/badge/Backend-Node.js-339933?logo=nodedotjs&logoColor=white)
-![Wolfram](https://img.shields.io/badge/Computation-Wolfram-DD1100?logo=wolfram&logoColor=white)
+
 
 VARASAT is an open-source inheritance discovery platform. It processes fragmented, legacy financial documents using optical character recognition (OCR), maps the relationships into a structured knowledge graph, and provides localized audio explanations to assist families in identifying unclaimed assets.
 
