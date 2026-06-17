@@ -2,8 +2,8 @@ import axios from 'axios';
 
 // ── Axios instance pointing to the backend ─────────────────────────────────
 const api = axios.create({
-  baseURL: '/api',        // Vite proxy forwards /api → http://localhost:5000/api
-  timeout: 30000,         // 30 s — Claude can take a few seconds
+  baseURL: import.meta.env.VITE_API_URL || '/api',        // Vite proxy forwards /api → http://localhost:5000/api
+  timeout: 60000,         // 60s to handle Render free-tier cold starts
   headers: { 'Content-Type': 'application/json' },
 });
 

@@ -14,8 +14,11 @@ app.use(cors({
     if (!origin || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
       return callback(null, true);
     }
-    // Allow production frontend URL
-    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
+    // Allow production frontend URL (strip trailing slash for safety)
+    const configuredUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : null;
+    const requestOrigin = origin.replace(/\/$/, '');
+    
+    if (configuredUrl && requestOrigin === configuredUrl) {
       return callback(null, true);
     }
     callback(new Error('Not allowed by CORS'));
@@ -25,8 +28,10 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+// Serve static uploaded files only in development mode for debugging
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+}
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 const chatRoutes      = require('./src/routes/chatRoutes');
@@ -48,6 +53,13 @@ app.use('/api/tts',       ttsRoutes);
 // ─── Health check ─────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Varasat AI Backend' });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'alive',
+    service: 'VARASAT backend'
+  });
 });
 
 // ─── Global error handler ─────────────────────────────────────────────────────
