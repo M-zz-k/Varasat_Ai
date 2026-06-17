@@ -28,7 +28,7 @@ export default function Login() {
       if (isBank) {
         navigate('/bank-portal');
       } else {
-        navigate('/upload');
+        navigate('/');
       }
     } else {
       setOtpError(t('login.otpError'));
@@ -40,7 +40,7 @@ export default function Login() {
     if (isBank) {
       navigate('/bank-portal');
     } else {
-      navigate('/upload');
+      navigate('/');
     }
   };
 

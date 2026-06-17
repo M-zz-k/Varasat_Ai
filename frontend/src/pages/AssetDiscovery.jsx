@@ -172,7 +172,7 @@ export default function AssetDiscovery() {
 
   return (
     <div className="min-h-screen bg-[#f3f8fc] font-sans antialiased text-slate-700 flex flex-col pb-16">
-      <Navbar backTo={`/claim/${familyId}`} backLabel="← Back" subtitle="Family Asset Knowledge Graph" />
+      <Navbar backTo={familyId ? `/claim/${familyId}` : "/upload"} backLabel="← Back" subtitle="Family Asset Knowledge Graph" />
       <JourneyHeader currentStep={3} />
 
       <main className="max-w-5xl mx-auto px-6 py-8 relative z-10 w-full flex-1">
