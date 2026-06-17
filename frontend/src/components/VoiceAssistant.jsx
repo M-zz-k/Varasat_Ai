@@ -56,10 +56,11 @@ export default function VoiceAssistant() {
   const [isSpeaking, setIsSpeaking]       = useState(false);
   const [availableVoices, setAvailableVoices] = useState([]);
 
-  const recognitionRef = useRef(null);
-  const stateRef       = useRef('idle');
-  const sessionId      = useRef('voice-' + Math.random().toString(36).slice(2));
-  const utteranceRef   = useRef(null);
+  const recognitionRef   = useRef(null);
+  const stateRef         = useRef('idle');
+  const sessionId        = useRef('voice-' + Math.random().toString(36).slice(2));
+  const utteranceRef     = useRef(null);
+  const stoppedManually  = useRef(false); // prevents onerror fallback when user stops speech
 
   const updateState = useCallback((s) => {
     stateRef.current = s;
@@ -129,8 +130,13 @@ export default function VoiceAssistant() {
   const speakText = useCallback(async (text) => {
     if (!text) return;
 
+    // Cancel any existing speech — mark as manual stop so onerror won't re-trigger backend
+    stoppedManually.current = true;
     window.speechSynthesis?.cancel();
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+    // Small delay to let the cancel event flush before we start a new utterance
+    await new Promise(r => setTimeout(r, 80));
+    stoppedManually.current = false;
 
     const langEntry  = LANGUAGES.find(l => l.value === language);
     const targetLang = langEntry?.lang        || 'en-IN'; // e.g. kn-IN
@@ -148,9 +154,16 @@ export default function VoiceAssistant() {
       utterance.voice  = voice;
       utterance.rate   = speechRate;
       utterance.pitch  = 1;
-      utterance.onstart = () => { setIsSpeaking(true);  updateState('speaking'); };
+      utterance.onstart = () => { stoppedManually.current = false; setIsSpeaking(true);  updateState('speaking'); };
       utterance.onend   = () => { setIsSpeaking(false); updateState('idle'); };
       utterance.onerror = (e) => {
+        // 'interrupted' / 'canceled' means the user stopped it — do NOT fall back to backend
+        if (e.error === 'interrupted' || e.error === 'canceled' || stoppedManually.current) {
+          console.log('[TTS] Speech stopped by user, skipping backend fallback.');
+          setIsSpeaking(false);
+          updateState('idle');
+          return;
+        }
         console.warn('[TTS] Native voice error, falling back to backend:', e.error);
         speakWithBackend(text, shortLang);
       };
@@ -163,6 +176,7 @@ export default function VoiceAssistant() {
   }, [language, speechRate, speakWithBackend, updateState]);
 
   const stopSpeaking = useCallback(() => {
+    stoppedManually.current = true;   // guard against onerror triggering backend fallback
     window.speechSynthesis?.cancel();
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     setIsSpeaking(false);
