@@ -109,7 +109,21 @@ async function explainAssetMapInteractive(graphData, language = 'English') {
     `- Person: ${p.data?.name || p.label} (${p.data?.role || 'Family Member'})`
   ).join('\\n');
 
-  const fallback = `A. What is shown in the map?
+  const isHindi = language === 'Hindi' || language === 'hi' || language === 'hi-IN';
+  
+  const fallback = isHindi 
+    ? `A. नक्शे में क्या दिखाया गया है?
+यह नक्शा आपके परिवार के सदस्यों और उनसे जुड़ी संपत्तियों को दर्शाता है, जो आपके द्वारा दिए गए दस्तावेज़ों पर आधारित है।
+
+B. महत्वपूर्ण जानकारी:
+हमें आपके परिवार से जुड़ी ${assets.length} संभावित संपत्ति(यां) मिली हैं।
+
+C. जांच करने योग्य महत्वपूर्ण बातें:
+कृपया इन रिकॉर्ड्स को वास्तविक बैंकों या संस्थानों से सत्यापित करें। सिस्टम कानूनी स्वामित्व की गारंटी नहीं दे सकता।
+
+D. आगे क्या करें:
+आपका अगला कदम इन संपत्तियों के मूल दस्तावेज़ एकत्र करना और दावा (Claim) फॉर्म तैयार करना है।`
+    : `A. What is shown in the map?
 This map shows your family members and the assets connected to them based on the documents you provided.
 
 B. Important connections:
