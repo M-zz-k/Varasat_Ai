@@ -83,7 +83,7 @@ function FloatingCard({ position, name, role, imageUrl, index }) {
         <div
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
-          className={`w-24 h-24 rounded-xl bg-slate-900/90 border transition-all duration-350 p-2 flex flex-col items-center justify-between shadow-lg select-none cursor-pointer ${
+          className={`w-24 h-24 rounded-xl bg-slate-900/90 border transition-all duration-500 p-2 flex flex-col items-center justify-between shadow-lg select-none cursor-pointer ${
             hovered
               ? 'border-amber-400 scale-115 shadow-[0_0_15px_rgba(245,158,11,0.6)] bg-slate-950 z-50'
               : 'border-slate-800/80 hover:border-slate-700/80'
@@ -119,8 +119,8 @@ function SphereController({ children }) {
     const targetX = state.pointer.x * 0.28;
     const targetY = -state.pointer.y * 0.28;
 
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetY, 0.08);
-    groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, targetX, 0.08);
+    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetY, 0.02);
+    groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, targetX, 0.02);
   });
 
   return <group ref={groupRef}>{children}</group>;
