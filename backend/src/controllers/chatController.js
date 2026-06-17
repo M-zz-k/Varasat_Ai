@@ -15,12 +15,31 @@ function clearSession(sessionId) {
   sessions.delete(sessionId);
 }
 
-// Very basic offline fallback logic
-function getOfflineReply(message) {
+// Offline fallback replies per language
+const OFFLINE_REPLIES = {
+  English: {
+    bank:      "To claim a bank account, submit the Death Certificate and Account Passbook to the branch. Varasat AI retrieves relevant guidance and assists users.",
+    insurance: "Submit the Original Policy Bond, Death Certificate, and LIC Claim Form 3783. Varasat AI retrieves relevant guidance and assists users.",
+    default:   "Namaste! I am Varasat Mitra. I help Indian families recover dormant inherited assets. (Running in offline mode)",
+  },
+  Hindi: {
+    bank:      "बैंक खाते का दावा करने के लिए, शाखा में मृत्यु प्रमाण पत्र और खाता पासबुक जमा करें। वरासत AI प्रासंगिक मार्गदर्शन प्राप्त करता है और उपयोगकर्ताओं की सहायता करता है।",
+    insurance: "मूल पॉलिसी बॉन्ड, मृत्यु प्रमाण पत्र और LIC दावा फॉर्म 3783 जमा करें। वरासत AI प्रासंगिक मार्गदर्शन प्राप्त करता है।",
+    default:   "नमस्ते! मैं वरासत मित्र हूँ। मैं भारतीय परिवारों को निष्क्रिय विरासत संपत्ति वापस करने में सहायता करता हूँ। (ऑफ़लाइन मोड में चल रहा है)",
+  },
+  Kannada: {
+    bank:      "ಬ್ಯಾಂಕ್ ಖಾತೆಯನ್ನು ಕ್ಲೇಮ್ ಮಾಡಲು, ಶಾಖೆಯಲ್ಲಿ ಮರಣ ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು ಖಾತೆ ಪಾಸ್ಬುಕ್ ಸಲ್ಲಿಸಿರಿ. ವರಾಸತ್ AI ಸಂಬಂಧಿತ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯುತ್ತದೆ ಮತ್ತು ಬಳಕೆದಾರರಿಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
+    insurance: "ಮೂಲ ಪಾಲಿಸಿ ಬಾಂಡ್, ಮರಣ ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು LIC ಕ್ಲೇಮ್ ಫಾರ್ಮ್ 3783 ಸಲ್ಲಿಸಿರಿ. ವರಾಸತ್ AI ಸಂಬಂಧಿತ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯುತ್ತದೆ.",
+    default:   "ನಮಸ್ಕಾರ! ನಾನು ವರಾಸತ್ ಮಿತ್ರ. ನಾನು ಭಾರತೀಯ ಕುಟುಂಬಗಳಿಗೆ ನಿಷ್ಕ್ರಿಯ ವಾರಸು (ಉತ್ತರಾಧಿಕಾರ) ಆಸ್ತಿ ವಾಪಸ್ ಪಡೆಯಲು ಸಹಾಯ ಮಾಡುತ್ತೇನೆ. (ಆಫ್ಲೈನ್ ಮೋಡ್ನಲ್ಲಿ ಚಲಿಸುತ್ತಿದೆ)",
+  },
+};
+
+function getOfflineReply(message, language = 'English') {
   const lower = message.toLowerCase();
-  if (lower.includes('bank')) return "To claim a bank account, submit the Death Certificate and Account Passbook to the branch. Varasat AI retrieves relevant guidance and assists users.";
-  if (lower.includes('lic') || lower.includes('insurance')) return "Submit the Original Policy Bond, Death Certificate, and LIC Claim Form 3783. Varasat AI retrieves relevant guidance and assists users.";
-  return "Namaste! I am Varasat Mitra. I help Indian families recover dormant inherited assets. (Running in offline mode)";
+  const replies = OFFLINE_REPLIES[language] || OFFLINE_REPLIES.English;
+  if (lower.includes('bank')) return replies.bank;
+  if (lower.includes('lic') || lower.includes('insurance')) return replies.insurance;
+  return replies.default;
 }
 
 /**
@@ -43,10 +62,7 @@ async function handleChat(req, res) {
 
   if (!isGroqConfigured()) {
     console.log('[Chat] Offline mode.');
-    let reply = getOfflineReply(queryForAgent);
-    if (language !== 'English') {
-      reply = await translateText(reply, 'English', language);
-    }
+    let reply = getOfflineReply(queryForAgent, language);
     return res.json({ success: true, reply, sessionId, mode: 'offline' });
   }
 
@@ -94,7 +110,7 @@ async function handleChat(req, res) {
 
   } catch (err) {
     console.error('[ChatController] Error:', err.message);
-    let reply = getOfflineReply(queryForAgent);
+    let reply = getOfflineReply(queryForAgent, language);
     return res.json({ success: true, reply, sessionId, mode: 'error_fallback' });
   }
 }
