@@ -30,16 +30,15 @@ function getGroq() {
 }
 
 // ─── Gemini client (document OCR) ─────────────────────────────────────────────
-let genAI = null;
+// NOTE: Do NOT cache genAI — re-read env each call so hot-reloads pick up key changes
 function getGenAI() {
-  if (!genAI) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
-      console.warn('[AI] GEMINI_API_KEY not configured — Gemini OCR will use mock data.');
-    }
-    genAI = new GoogleGenerativeAI(apiKey || '');
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    console.warn('[AI] GEMINI_API_KEY not configured — Gemini OCR will use mock data.');
+  } else if (!apiKey.startsWith('AIza') && !apiKey.startsWith('AQ.')) {
+    console.warn('[AI] GEMINI_API_KEY looks invalid (should start with "AIza" or "AQ."). Get a free key at https://aistudio.google.com/app/apikey');
   }
-  return genAI;
+  return new GoogleGenerativeAI(apiKey || '');
 }
 
 // ─── Check helpers ─────────────────────────────────────────────────────────────
@@ -50,7 +49,8 @@ function isGroqConfigured() {
 
 function isGeminiConfigured() {
   const k = process.env.GEMINI_API_KEY;
-  return !!(k && k !== 'your_gemini_api_key_here' && k.length > 10);
+  // Must be present, non-placeholder, and a proper Google AI Studio key (starts with AIza or AQ.)
+  return !!(k && k !== 'your_groq_api_key_here' && k !== 'your_gemini_api_key_here' && k.length > 10 && (k.startsWith('AIza') || k.startsWith('AQ.')));
 }
 
 // ─── Error classifier ─────────────────────────────────────────────────────────
