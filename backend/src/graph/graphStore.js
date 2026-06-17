@@ -241,6 +241,91 @@ function buildGraphFromExtraction(familyId, deceasedName, extractedData) {
   return graphs[familyId];
 }
 
+function buildComplexGraphFromExtraction(familyId, complexData) {
+  let graph = graphs[familyId] || JSON.parse(JSON.stringify(DEMO_GRAPH));
+
+  // 1. Add People
+  (complexData.people || []).forEach(p => {
+    const id = `person-${p.name.replace(/\s+/g, '-').toLowerCase()}`;
+    if (!graph.nodes.find(n => n.id === id)) {
+      graph.nodes.push({
+        id, type: 'person', label: p.name,
+        data: { name: p.name, relation: p.role, status: 'claimant' }
+      });
+    }
+  });
+
+  // 2. Add Assets
+  (complexData.assets || []).forEach(a => {
+    const id = `asset-${Date.now()}-${Math.floor(Math.random()*1000)}`;
+    graph.nodes.push({
+      id, type: 'asset', label: a.type,
+      data: {
+        institution: a.institution, assetType: a.type,
+        amount: parseAmount(a.value), status: 'unclaimed',
+        claimPath: 'legal_heir'
+      }
+    });
+    // Temporary link to whoever is deceased or first person if relation is missing
+    const firstPerson = graph.nodes.find(n => n.type === 'person');
+    if (firstPerson) {
+      graph.edges.push({ id: `e-${Date.now()}-${Math.random()}`, from: firstPerson.id, to: id, relation: 'owns', label: 'Owner' });
+    }
+  });
+
+  graph.meta.lastUpdated = new Date().toISOString();
+  graphs[familyId] = graph;
+  return graph;
+}
+
+const { resolveEntities } = require('../ai/entityResolver');
+
+async function resolveGraphEntities(familyId) {
+  let graph = graphs[familyId];
+  if (!graph) return null;
+
+  const persons = graph.nodes.filter(n => n.type === 'person');
+  if (persons.length < 2) return graph;
+
+  // For the demo, compare the last person added to the first person
+  const targetPerson = persons[persons.length - 1];
+  const existingPeople = persons.slice(0, persons.length - 1);
+
+  const resolution = await resolveEntities({ id: targetPerson.id, name: targetPerson.data.name, role: targetPerson.data.relation }, existingPeople.map(p => ({ id: p.id, name: p.data.name, role: p.data.relation })));
+
+  if (resolution.matchFound) {
+    // Merge targetPerson into matchedEntityId
+    const targetId = targetPerson.id;
+    const matchId = resolution.matchedEntityId;
+
+    // Update edges: any edge pointing to/from targetId now points to matchId
+    graph.edges.forEach(e => {
+      if (e.from === targetId) e.from = matchId;
+      if (e.to === targetId) e.to = matchId;
+      if (e.source === targetId) e.source = matchId;
+      if (e.target === targetId) e.target = matchId;
+    });
+
+    // Remove targetPerson
+    graph.nodes = graph.nodes.filter(n => n.id !== targetId);
+
+    // Add match data to the matched person node for the UI to display the badge
+    const matchedNode = graph.nodes.find(n => n.id === matchId);
+    if (matchedNode) {
+      matchedNode.data.matchData = {
+        confidenceScore: resolution.confidenceScore,
+        matchingReasons: resolution.matchingReasons,
+        originalName: targetPerson.data.name
+      };
+    }
+
+    graph.meta.lastUpdated = new Date().toISOString();
+    graphs[familyId] = graph;
+  }
+
+  return graph;
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function parseAmount(str) {
@@ -255,5 +340,7 @@ module.exports = {
   setGraph,
   addAssetNode,
   buildGraphFromExtraction,
+  buildComplexGraphFromExtraction,
+  resolveGraphEntities,
   DEMO_GRAPH,
 };

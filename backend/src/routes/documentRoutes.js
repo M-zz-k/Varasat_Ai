@@ -5,7 +5,7 @@ const multer   = require('multer');
 const path     = require('path');
 const router   = express.Router();
 
-const { handleUpload, handleAnalyze, handleGeneratePDF } = require('../controllers/documentController');
+const { handleUpload, handleAnalyze, handleGeneratePDF, handleAnalyzeComplex } = require('../controllers/documentController');
 
 // ─── Shared Multer config ─────────────────────────────────────────────────────
 const UPLOAD_DIR = path.join(__dirname, '../../src/uploads');
@@ -43,6 +43,9 @@ router.post('/upload', upload.single('document'), handleUpload);
 // POST /api/document/analyze  — upload + Claude Vision AI extraction
 //   Field name expected: "file"
 router.post('/analyze', upload.single('file'), handleAnalyze);
+
+// POST /api/document/analyze-complex
+router.post('/analyze-complex', upload.single('file'), handleAnalyzeComplex);
 
 // POST /api/document/generate-pdf — AI Document Generation + PDF streaming
 router.post('/generate-pdf', express.json(), handleGeneratePDF);

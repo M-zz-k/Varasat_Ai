@@ -13,6 +13,7 @@ const { analyzeDocument, generateDocumentInsight } = require('../ai/documentExtr
 const { calculateConfidence, analyzeAssetValue }   = require('../wolfram/assetAnalyzer');
 const { generateLegalDocument }                    = require('../ai/legalDocumentGenerator');
 const { createPDF }                                = require('../utils/pdfGenerator');
+const fs = require('fs').promises;
 
 // ─── POST /api/document/upload ────────────────────────────────────────────────
 async function handleUpload(req, res) {
@@ -136,6 +137,15 @@ Calculated using:
       assetFound: false,
       error: { code: 'AI_SERVICE_ERROR', message: 'AI analysis failed. Please try again or use a clearer image.', retryable: true },
     });
+  } finally {
+    if (req.file && req.file.path) {
+      try {
+        await fs.unlink(req.file.path);
+        console.log(`[Security] Automatically deleted extracted file: ${req.file.path}`);
+      } catch (err) {
+        console.error(`[Security] Failed to delete extracted file: ${req.file.path}`, err.message);
+      }
+    }
   }
 }
 

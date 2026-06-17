@@ -35,17 +35,19 @@ api.interceptors.response.use(
  */
 export async function analyzeDocument(file, onProgress) {
   const formData = new FormData();
-  formData.append('file', file);   // backend expects field name "file"
-
+  formData.append('file', file);
   const response = await api.post('/document/analyze', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-    onUploadProgress: (e) => {
-      if (onProgress && e.total) {
-        onProgress(Math.round((e.loaded * 100) / e.total));
-      }
-    },
+    onUploadProgress: (e) => { if (e.total && onProgress) onProgress(Math.round((e.loaded * 100) / e.total)); }
   });
+  return response.data;
+}
 
+export async function analyzeComplexDocument(file, onProgress) {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await api.post('/document/analyze-complex', formData, {
+    onUploadProgress: (e) => { if (e.total && onProgress) onProgress(Math.round((e.loaded * 100) / e.total)); }
+  });
   return response.data;
 }
 
