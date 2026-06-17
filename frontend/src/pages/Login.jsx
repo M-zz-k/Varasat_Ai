@@ -25,15 +25,23 @@ export default function Login() {
     e.preventDefault();
     if (otp === '123456' || otp === '123') { // Support 123456 or 123 for local testing convenience
       localStorage.setItem('varasat_user', JSON.stringify(formData));
-      navigate('/upload');
+      if (isBank) {
+        navigate('/bank-portal');
+      } else {
+        navigate('/upload');
+      }
     } else {
       setOtpError(t('login.otpError'));
     }
   };
 
   const handleGuest = () => {
-    localStorage.setItem('varasat_user', JSON.stringify({ name: 'Guest User' }));
-    navigate('/upload');
+    localStorage.setItem('varasat_user', JSON.stringify({ name: isBank ? 'Bank Officer' : 'Guest User' }));
+    if (isBank) {
+      navigate('/bank-portal');
+    } else {
+      navigate('/upload');
+    }
   };
 
   return (

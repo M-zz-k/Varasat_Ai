@@ -13,6 +13,7 @@ import AssetDiscovery from './pages/AssetDiscovery';
 import DocumentGenerator from './pages/DocumentGenerator';
 import Login          from './pages/Login';
 import DemoMode       from './pages/DemoMode';
+import BankPortal     from './pages/BankPortal';
 
 import './index.css';
 
@@ -35,6 +36,7 @@ export default function App() {
             <Route path="/asset-discovery" element={<ErrorBoundary><AssetDiscovery /></ErrorBoundary>} />
             <Route path="/generate-document" element={<ErrorBoundary><DocumentGenerator /></ErrorBoundary>} />
             <Route path="/demo"      element={<ErrorBoundary><DemoMode       /></ErrorBoundary>} />
+            <Route path="/bank-portal" element={<ErrorBoundary><BankPortal     /></ErrorBoundary>} />
           </Routes>
         </BrowserRouter>
       </LanguageProvider>
