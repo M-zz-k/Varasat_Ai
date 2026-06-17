@@ -120,7 +120,7 @@ export default function AssetDiscovery() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           text: interactiveExplanation, 
-          language: lang === 'en' ? 'en-IN' : 'hi-IN' 
+          lang: lang === 'en' ? 'en' : 'hi' 
         })
       });
       if (!res.ok) throw new Error('TTS failed');
