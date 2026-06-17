@@ -236,7 +236,7 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
             </span>
-            <span>VARASAT INTELLIGENCE ACTIVE</span>
+            <span>{t('home.livePill')}</span>
           </div>
 
           {/* Authentication Actions */}
@@ -274,7 +274,7 @@ export default function Home() {
               to="/upload" 
               className="inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-4 py-2 text-sm font-bold shadow-xs hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200"
             >
-              Get Started
+              {t('nav.getStarted')}
             </Link>
           </div>
         </div>
@@ -291,20 +291,20 @@ export default function Home() {
             <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
               {/* Trusted Stamp */}
               <div className="inline-flex items-center gap-1.5 bg-slate-100 text-slate-850 border border-slate-200 text-xs font-bold px-3.5 py-1.5 rounded-full tracking-wider uppercase mb-6">
-                {getHomeSvgIcon('bank', "w-4 h-4 text-slate-700")} Trusted Digital Inheritance Companion
+                {getHomeSvgIcon('bank', "w-4 h-4 text-slate-700")} {t('home.stamp')}
               </div>
 
               {/* Hero Heading */}
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-800 leading-tight mb-6">
-                Recover Your Family's{' '}
+                {t('home.title')}{' '}
                 <span className="bg-gradient-to-b from-amber-500 via-amber-700 to-amber-900 bg-clip-text text-transparent drop-shadow-md">
-                  Dormant Wealth
+                  {t('home.accent')}
                 </span>.
               </h1>
 
               {/* Hero Description */}
               <p className="text-lg sm:text-xl text-slate-600 leading-relaxed mb-8 max-w-2xl">
-                Varasat uses enterprise-grade AI to discover forgotten assets, analyze inheritance claims, and securely guide Indian families through regulated legal recovery channels.
+                {t('home.desc')}
               </p>
 
               {/* Premium Glowing Status Pills */}
@@ -320,31 +320,31 @@ export default function Home() {
                 {/* Integrated Pill */}
                 <div className="bg-emerald-950 text-emerald-400 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.25)] text-xs font-bold px-4 py-2 rounded-full tracking-wider flex items-center gap-2 uppercase">
                   {getHomeSvgIcon('compliance', "w-4 h-4 text-emerald-400")}
-                  Aadhaar & DigiLocker Integrated
+                  {t('home.aadhaarPill')}
                 </div>
                 {/* Verified Pill */}
                 <div className="bg-amber-950/90 text-amber-400 border border-amber-600/40 shadow-[0_0_15px_rgba(245,158,11,0.25)] text-xs font-bold px-4 py-2 rounded-full tracking-wider flex items-center gap-2 uppercase">
                   {getHomeSvgIcon('check_shield', "w-4 h-4 text-amber-400")}
-                  RBI Circular Compliant
+                  {t('home.circularPill')}
                 </div>
               </div>
 
               {/* Visual Storytelling Pipeline */}
               <div className="flex flex-wrap justify-center lg:justify-start items-center gap-3 mb-10 text-xs sm:text-sm font-semibold text-slate-800">
                 <div className="bg-white/85 border border-slate-200/80 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
-                  {getHomeSvgIcon('file', "w-4 h-4 text-slate-600")} Unclaimed Documents
+                  {getHomeSvgIcon('file', "w-4 h-4 text-slate-600")} {t('home.pipeline.docs')}
                 </div>
                 <span className="text-slate-300 font-bold hidden sm:inline">➔</span>
                 <div className="bg-white/85 border border-slate-200/80 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
-                  {getHomeSvgIcon('ai', "w-4 h-4 text-slate-600")} Secure AI Discovery
+                  {getHomeSvgIcon('ai', "w-4 h-4 text-slate-600")} {t('home.pipeline.discovery')}
                 </div>
                 <span className="text-slate-300 font-bold hidden sm:inline">➔</span>
                 <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
-                  {getHomeSvgIcon('money', "w-4 h-4 text-emerald-700")} Discovered Wealth
+                  {getHomeSvgIcon('money', "w-4 h-4 text-emerald-700")} {t('home.pipeline.wealth')}
                 </div>
                 <span className="text-slate-300 font-bold hidden sm:inline">➔</span>
                 <div className="bg-white/85 border border-slate-200/80 px-4 py-2 rounded-lg shadow-2xs flex items-center gap-1.5">
-                  {getHomeSvgIcon('scale', "w-4 h-4 text-slate-600")} Regulated Recovery
+                  {getHomeSvgIcon('scale', "w-4 h-4 text-slate-600")} {t('home.pipeline.recovery')}
                 </div>
               </div>
 
@@ -354,13 +354,13 @@ export default function Home() {
                   to="/upload" 
                   className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-3.5 text-base font-bold text-white shadow-xs hover:bg-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
                 >
-                  Start Finding Assets
+                  {t('home.cta.find')}
                 </Link>
                 <Link 
                   to="/demo" 
                   className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-6 py-3.5 text-base font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
                 >
-                  Try Demo Mode
+                  {t('home.cta.demo')}
                 </Link>
               </div>
             </div>
@@ -376,7 +376,7 @@ export default function Home() {
           <div className="mt-16 flex flex-col items-center justify-center text-center px-4 w-full relative z-20">
             <div className="w-full max-w-xl bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-2xl p-6 shadow-3d-gold hover-glow-gold transition-all duration-300">
               <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">
-                Prefer speaking? Talk to Varasat AI
+                {t('home.voice.header')}
               </h2>
               <VoiceAssistant />
             </div>
@@ -391,10 +391,10 @@ export default function Home() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-12">
               <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight sm:text-4xl mb-4">
-                Access the Varasat Ecosystem
+                {t('home.ecosystem.title')}
               </h2>
               <p className="text-lg text-slate-600 leading-relaxed">
-                Select the secure portal matching your role to query unclaimed assets, track family recovery progress, or verify claims.
+                {t('home.ecosystem.desc')}
               </p>
             </div>
 

@@ -12,7 +12,7 @@ const translations = {
 };
 
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('en');
+  const [lang, setLang] = useState(() => localStorage.getItem('varasat_lang') || 'en');
 
   useEffect(() => {
     localStorage.setItem('varasat_lang', lang);

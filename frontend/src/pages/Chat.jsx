@@ -272,7 +272,7 @@ export default function Chat() {
       const res = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/chat`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ message: text, language, sessionId: 'default' }),
+        body:    JSON.stringify({ message: text, language, sessionId: 'default', documentContext: ocrResults }),
       });
 
       if (!res.ok) {

@@ -47,7 +47,7 @@ function getOfflineReply(message, language = 'English') {
  * Body: { message: string, language?: string, sessionId?: string }
  */
 async function handleChat(req, res) {
-  const { message, language = 'English', sessionId = 'default' } = req.body;
+  const { message, language = 'English', sessionId = 'default', documentContext } = req.body;
 
   if (!message || typeof message !== 'string' || !message.trim()) {
     return res.status(400).json({ success: false, error: 'Message is required.' });
@@ -68,6 +68,15 @@ async function handleChat(req, res) {
 
   try {
     const history = getSession(sessionId);
+
+    // If fresh session and we have document context, inject it
+    if (history.length === 0 && documentContext) {
+      history.push({
+        role: 'system',
+        content: `The user has just uploaded and analyzed an inheritance document with the following details. Use this context to answer their questions: ${JSON.stringify(documentContext)}`
+      });
+    }
+
     // Store the original user message (in their language) for context
     history.push({ role: 'user', content: queryForAgent });
 
