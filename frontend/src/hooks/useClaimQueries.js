@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { analyzeDocument, analyzeComplexDocument } from '../services/documentApi';
 
 // Create isolated axios instance for React Query
 const apiClient = axios.create({
@@ -34,17 +35,23 @@ export function useClearChatMutation() {
 
 // 2. Document Analyze Mutation (Triggers Async Job, returns jobId)
 export function useDocumentAnalyzeMutation() {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (file) => {
-      const formData = new FormData();
-      formData.append('file', file);
-      const response = await apiClient.post('/document/analyze', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      return response.data; // { success: true, jobId: "..." }
-    }
+    mutationFn: (file) => analyzeDocument(file),
+    onSuccess: (data) => {
+      // Optional: invalidate graph queries if the graph was updated
+      queryClient.invalidateQueries({ queryKey: ['assetGraph'] });
+    },
+  });
+}
+
+export function useComplexDocumentAnalyzeMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (file) => analyzeComplexDocument(file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['assetGraph'] });
+    },
   });
 }
 
@@ -101,5 +108,31 @@ export function useGeneratePdfMutation() {
       });
       return response.data; // binary array buffer
     }
+  });
+}
+
+// 7. Resolve Entities Mutation
+export function useResolveEntitiesMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (familyId) => {
+      const response = await apiClient.post('/assets/resolve-entities', { familyId });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['assetGraph'] });
+    },
+  });
+}
+
+// 8. Final Enhancement Query (Wolfram Reasoning + Legal Guidance)
+export function useFinalEnhancementQuery(familyId) {
+  return useQuery({
+    queryKey: ['finalEnhancement', familyId],
+    queryFn: async () => {
+      const response = await apiClient.get(`/assets/final-enhancement/${familyId}`);
+      return response.data;
+    },
+    enabled: !!familyId,
   });
 }

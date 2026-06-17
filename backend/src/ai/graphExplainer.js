@@ -21,7 +21,8 @@ Rules:
 - Summarise total assets and value clearly.
 - Mention which assets seem easiest to claim first (those with nominees registered).
 - End with one encouraging sentence.
-- Keep it to 3-4 short paragraphs.`;
+- Keep it to 3-4 short paragraphs.
+- AI SAFETY RULE: NEVER use absolute statements like "You own this property" or "This is yours". Instead, use phrases like "Available records suggest...", "This information indicates...", or "Further verification may be required."`;
 
 /**
  * explainGraph
@@ -83,13 +84,14 @@ Your job is to explain a family asset map to someone with low digital and financ
 STRICT RULES:
 1. Write in simple, conversational, everyday language. Do NOT use legal, technical, or complex financial jargon.
 2. Short sentences. Voice-friendly.
-3. NEVER claim ownership is legally confirmed. Use phrases like "According to available records," "This suggests," "You may need to verify."
+3. NEVER claim ownership is legally confirmed. Do NOT say "You own this". Use phrases like "According to available records," "This suggests," "You may need to verify."
 4. Structure your response EXACTLY with these 4 sections (use these exact headings):
    A. What is shown in the map?
    B. Important connections:
    C. Important things to check:
    D. Simple action guidance:
-5. Output must be in the requested language, translated naturally.`;
+5. Output must be in the requested language, translated naturally.
+6. End the explanation by reiterating: "This is AI-assisted analysis. Please verify with official records."`;
 
 /**
  * explainAssetMapInteractive

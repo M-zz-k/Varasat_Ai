@@ -12,6 +12,7 @@ import {
   Panel,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { maskAccountNumber } from '../utils/masking';
 
 // ─── Inline SVG Icons ──────────────────────────────────────────────────────────
 
@@ -138,6 +139,38 @@ function PersonNode({ data, selected }) {
           {data.role || 'Family Member'}
         </div>
 
+        {data.matchData && (
+          <div style={{
+            marginTop: '0.6rem',
+            padding: '0.5rem',
+            background: 'rgba(16, 185, 129, 0.1)',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            borderRadius: '6px',
+            fontSize: '0.65rem',
+            color: '#047857',
+            textAlign: 'left'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 800, justifyContent: 'center' }}>
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+              <span>AI Identity Match</span>
+            </div>
+            <div style={{ textAlign: 'center', fontWeight: 700, marginTop: '0.2rem', marginBottom: '0.3rem' }}>
+              {data.matchData.confidenceScore}% Confidence
+            </div>
+            <div style={{ borderTop: '1px solid rgba(16, 185, 129, 0.2)', paddingTop: '0.3rem' }}>
+              <span style={{ fontSize: '0.55rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 800, color: '#065f46' }}>Reasons:</span>
+              <ul style={{ paddingLeft: '0.8rem', marginTop: '0.1rem', marginBottom: 0, fontSize: '0.6rem', fontWeight: 600 }}>
+                {data.matchData.matchingReasons?.map((r, i) => (
+                  <li key={i} style={{ listStyleType: 'disc' }}>{r}</li>
+                ))}
+              </ul>
+            </div>
+            <div style={{ textAlign: 'center', fontSize: '0.55rem', fontStyle: 'italic', color: '#059669', marginTop: '0.3rem' }}>
+              Requires verification
+            </div>
+          </div>
+        )}
+
         <Handle type="source" position={Position.Bottom} style={{ background: '#3b82f6', width: 8, height: 8 }} />
       </div>
     </>
@@ -165,7 +198,7 @@ function AssetNode({ data, selected }) {
           boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
         }}>
           {assetType}
-          {data.account_number && ` · Acct: ${data.account_number}`}
+          {data.account_number && ` · Acct: ${maskAccountNumber(data.account_number)}`}
         </div>
       </NodeToolbar>
 
@@ -427,7 +460,7 @@ export default function AssetGraph({ graphData }) {
               valueColor="#047857"
             />
             {selectedAsset.account_number && (
-              <DetailCell label="Account" value={selectedAsset.account_number} mono />
+              <DetailCell label="Account" value={maskAccountNumber(selectedAsset.account_number)} mono />
             )}
           </div>
         </div>

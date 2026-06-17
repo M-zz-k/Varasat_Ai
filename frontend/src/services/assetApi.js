@@ -33,3 +33,18 @@ export async function explainAssetMap(graphData, language = 'English') {
   });
   return response.data;
 }
+
+export async function buildComplexGraphFromExtraction(familyId, complexData) {
+  const response = await api.post('/assets/build-complex-from-extraction', {
+    familyId,
+    complexData,
+  });
+  return response.data;
+}
+
+export async function resolveGraphEntities(familyId) {
+  const response = await api.post('/assets/resolve-entities', {
+    familyId
+  });
+  return response.data;
+}

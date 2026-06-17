@@ -1,6 +1,4 @@
-'use strict';
-
-const { getGraph, setGraph, buildGraphFromExtraction } = require('../graph/graphStore');
+const { getGraph, setGraph, buildGraphFromExtraction, buildComplexGraphFromExtraction, resolveGraphEntities } = require('../graph/graphStore');
 const { explainGraph, explainAssetMapInteractive } = require('../ai/graphExplainer');
 
 /**
@@ -127,6 +125,52 @@ async function handleBuildFromExtraction(req, res) {
   }
 }
 
+async function handleBuildComplexFromExtraction(req, res) {
+  try {
+    const { familyId, complexData } = req.body;
+    if (!familyId || !complexData) {
+      return res.status(400).json({ success: false, error: 'familyId and complexData required' });
+    }
+
+    const graph = buildComplexGraphFromExtraction(familyId, complexData);
+    return res.json({ success: true, graph });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+}
+
+async function handleResolveEntities(req, res) {
+  try {
+    const { familyId } = req.body;
+    if (!familyId) {
+      return res.status(400).json({ success: false, error: 'familyId is required' });
+    }
+
+    const graph = await resolveGraphEntities(familyId);
+    return res.json({ success: true, graph });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+}
+
+const { runComputationalReasoning } = require('../wolfram/wolframEngineService');
+const { generateLegalGuidance } = require('../ai/legalGuidance');
+
+async function handleFinalEnhancementData(req, res) {
+  try {
+    const { familyId } = req.params;
+    const graph = getGraph(familyId);
+    if (!graph) return res.status(404).json({ success: false, error: 'Graph not found' });
+    
+    const reasoning = await runComputationalReasoning(graph);
+    const guidance = generateLegalGuidance(graph);
+
+    return res.json({ success: true, reasoning, guidance });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+}
+
 // ─── Utility ──────────────────────────────────────────────────────────────────
 
 function formatINR(amount) {
@@ -160,4 +204,12 @@ async function handleExplainMap(req, res) {
   }
 }
 
-module.exports = { handleGetGraph, handleSaveGraph, handleBuildFromExtraction, handleExplainMap };
+module.exports = {
+  handleGetGraph,
+  handleSaveGraph,
+  handleBuildFromExtraction,
+  handleBuildComplexFromExtraction,
+  handleResolveEntities,
+  handleFinalEnhancementData,
+  handleExplainMap,
+};
