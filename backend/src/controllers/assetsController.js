@@ -139,20 +139,6 @@ async function handleBuildComplexFromExtraction(req, res) {
   }
 }
 
-async function handleResolveEntities(req, res) {
-  try {
-    const { familyId } = req.body;
-    if (!familyId) {
-      return res.status(400).json({ success: false, error: 'familyId is required' });
-    }
-
-    const graph = await resolveGraphEntities(familyId);
-    return res.json({ success: true, graph });
-  } catch (error) {
-    return res.status(500).json({ success: false, error: error.message });
-  }
-}
-
 const { runComputationalReasoning } = require('../wolfram/wolframEngineService');
 const { generateLegalGuidance } = require('../ai/legalGuidance');
 
@@ -209,7 +195,6 @@ module.exports = {
   handleSaveGraph,
   handleBuildFromExtraction,
   handleBuildComplexFromExtraction,
-  handleResolveEntities,
   handleFinalEnhancementData,
   handleExplainMap,
 };

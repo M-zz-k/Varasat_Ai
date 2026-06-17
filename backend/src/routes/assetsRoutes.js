@@ -5,7 +5,6 @@ const {
   handleSaveGraph, 
   handleBuildFromExtraction, 
   handleBuildComplexFromExtraction, 
-  handleResolveEntities,
   handleFinalEnhancementData,
   handleExplainMap 
 } = require('../controllers/assetsController');
@@ -21,9 +20,6 @@ router.post('/build-from-extraction', handleBuildFromExtraction);
 
 // POST /api/assets/build-complex-from-extraction
 router.post('/build-complex-from-extraction', handleBuildComplexFromExtraction);
-
-// POST /api/assets/resolve-entities
-router.post('/resolve-entities', handleResolveEntities);
 
 // GET /api/assets/final-enhancement/:familyId
 router.get('/final-enhancement/:familyId', handleFinalEnhancementData);

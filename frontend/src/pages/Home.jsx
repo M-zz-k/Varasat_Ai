@@ -559,7 +559,7 @@ export default function Home() {
                 { val: '₹32,000 Cr+', label: 'Unclaimed in RBI' },
                 { val: '75+ Mn',       label: 'Dormant accounts' },
                 { val: '5 Min',        label: 'To start claim search' },
-                { val: '15+ Indian Languages', label: 'Supported' },
+                { val: 'Multilingual AI', label: 'Voice-based asset explanations currently available in English and Hindi, built for future Indian language expansion.' },
               ].map(s => (
                 <div key={s.label} className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-6 hover:shadow-2xs transition-all duration-200">
                   <div className="text-2xl font-extrabold text-amber-800">{s.val}</div>

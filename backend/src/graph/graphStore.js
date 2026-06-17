@@ -278,53 +278,6 @@ function buildComplexGraphFromExtraction(familyId, complexData) {
   return graph;
 }
 
-const { resolveEntities } = require('../ai/entityResolver');
-
-async function resolveGraphEntities(familyId) {
-  let graph = graphs[familyId];
-  if (!graph) return null;
-
-  const persons = graph.nodes.filter(n => n.type === 'person');
-  if (persons.length < 2) return graph;
-
-  // For the demo, compare the last person added to the first person
-  const targetPerson = persons[persons.length - 1];
-  const existingPeople = persons.slice(0, persons.length - 1);
-
-  const resolution = await resolveEntities({ id: targetPerson.id, name: targetPerson.data.name, role: targetPerson.data.relation }, existingPeople.map(p => ({ id: p.id, name: p.data.name, role: p.data.relation })));
-
-  if (resolution.matchFound) {
-    // Merge targetPerson into matchedEntityId
-    const targetId = targetPerson.id;
-    const matchId = resolution.matchedEntityId;
-
-    // Update edges: any edge pointing to/from targetId now points to matchId
-    graph.edges.forEach(e => {
-      if (e.from === targetId) e.from = matchId;
-      if (e.to === targetId) e.to = matchId;
-      if (e.source === targetId) e.source = matchId;
-      if (e.target === targetId) e.target = matchId;
-    });
-
-    // Remove targetPerson
-    graph.nodes = graph.nodes.filter(n => n.id !== targetId);
-
-    // Add match data to the matched person node for the UI to display the badge
-    const matchedNode = graph.nodes.find(n => n.id === matchId);
-    if (matchedNode) {
-      matchedNode.data.matchData = {
-        confidenceScore: resolution.confidenceScore,
-        matchingReasons: resolution.matchingReasons,
-        originalName: targetPerson.data.name
-      };
-    }
-
-    graph.meta.lastUpdated = new Date().toISOString();
-    graphs[familyId] = graph;
-  }
-
-  return graph;
-}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -341,6 +294,5 @@ module.exports = {
   addAssetNode,
   buildGraphFromExtraction,
   buildComplexGraphFromExtraction,
-  resolveGraphEntities,
   DEMO_GRAPH,
 };

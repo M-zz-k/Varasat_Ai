@@ -79,23 +79,18 @@ Please explain this to the family in a warm, simple way following the system rul
 }
 
 const INTERACTIVE_EXPLAINER_SYSTEM = `You are Varasat Mitra, a friendly, patient, and trustworthy local assistant.
-Your job is to explain a family asset map to someone with low digital and financial literacy.
+Your job is to explain discovered family assets to someone with low digital and financial literacy.
 
 STRICT RULES:
 1. Write in simple, conversational, everyday language. Do NOT use legal, technical, or complex financial jargon.
 2. Short sentences. Voice-friendly.
 3. NEVER claim ownership is legally confirmed. Do NOT say "You own this". Use phrases like "According to available records," "This suggests," "You may need to verify."
-4. Structure your response EXACTLY with these 4 sections (use these exact headings):
-   A. What is shown in the map?
-   B. Important connections:
-   C. Important things to check:
-   D. Simple action guidance:
-5. Output must be in the requested language, translated naturally.
-6. End the explanation by reiterating: "This is AI-assisted analysis. Please verify with official records."`;
+4. Do NOT use headers like A, B, C, D. Just write 3 to 4 simple, natural sentences.
+5. Example format: "We found information about 3 assets linked to Ramesh Kumar. These include an SBI account, LIC policy, and HDFC mutual fund. You can start the official claim process for these."
+6. Output must be entirely in the requested language, translated naturally.`;
 
 /**
  * explainAssetMapInteractive
- * Specifically tailored for the "Explain My Asset Map" button with A,B,C,D structure.
  * @param {Object} graphData - The graph { nodes, edges }
  * @param {string} language  - The requested language
  */
@@ -104,58 +99,35 @@ async function explainAssetMapInteractive(graphData, language = 'English') {
   const persons  = graphData.nodes.filter(n => n.type === 'person');
   
   const assetList = assets.map(a => 
-    `- Asset: ${a.data?.asset_type || a.data?.assetType || a.label} at ${a.data?.institution || 'unknown place'}. Estimated amount: ₹${a.data?.amount || 0}`
+    `- ${a.data?.asset_type || a.data?.assetType || a.label} at ${a.data?.institution || 'unknown place'} (₹${a.data?.amount || 0})`
   ).join('\\n');
 
-  const personList = persons.map(p => 
-    `- Person: ${p.data?.name || p.label} (${p.data?.role || 'Family Member'})`
-  ).join('\\n');
+  const personList = persons.map(p => p.data?.name || p.label).join(', ');
 
   const isHindi = language === 'Hindi' || language === 'hi' || language === 'hi-IN';
   
   const fallback = isHindi 
-    ? `A. नक्शे में क्या दिखाया गया है?
-यह नक्शा आपके परिवार के सदस्यों और उनसे जुड़ी संपत्तियों को दर्शाता है, जो आपके द्वारा दिए गए दस्तावेज़ों पर आधारित है।
-
-B. महत्वपूर्ण जानकारी:
-हमें आपके परिवार से जुड़ी ${assets.length} संभावित संपत्ति(यां) मिली हैं।
-
-C. जांच करने योग्य महत्वपूर्ण बातें:
-कृपया इन रिकॉर्ड्स को वास्तविक बैंकों या संस्थानों से सत्यापित करें। सिस्टम कानूनी स्वामित्व की गारंटी नहीं दे सकता।
-
-D. आगे क्या करें:
-आपका अगला कदम इन संपत्तियों के मूल दस्तावेज़ एकत्र करना और दावा (Claim) फॉर्म तैयार करना है।`
-    : `A. What is shown in the map?
-This map shows your family members and the assets connected to them based on the documents you provided.
-
-B. Important connections:
-We found ${assets.length} possible asset(s) linked to your family. 
-
-C. Important things to check:
-Please verify these records with the actual banks or institutions. The system cannot guarantee legal ownership.
-
-D. Simple action guidance:
-Your next step is to gather the original documents for these assets and proceed to generate the claim forms.`;
+    ? `आपके परिवार के सदस्य ${personList || 'मृतक'} के नाम से ${assets.length} संपत्तियों की जानकारी मिली है। इनमें ${assets.map(a => a.data?.institution || 'संस्थान').join(', ')} शामिल हैं। इनके लिए आगे सरकारी प्रक्रिया के अनुसार दावा किया जा सकता है। कृपया इसे बैंक से सत्यापित करें।`
+    : `We found information about ${assets.length} assets linked to ${personList || 'your family member'}. These include accounts at ${assets.map(a => a.data?.institution || 'institutions').join(', ')}. You can start the official claim process for these, but please verify with the official records.`;
 
   if (!isGroqConfigured()) return fallback;
 
-  const prompt = `Please explain this family asset map to the user in ${language}. Follow the 4-part structure (A, B, C, D) exactly.
+  const prompt = `Please explain these family assets to the user in ${language}. Keep it to a few simple sentences.
 
-Here is the data found from their documents:
-Persons identified:
+Persons:
 ${personList}
 
-Assets identified:
+Assets found:
 ${assetList}
 
-Remember: Be friendly, simple, and do not use technical jargon.`;
+Remember: Be friendly, simple, and do not use technical words like 'nodes' or 'graph'.`;
 
   try {
     const groq = getGroq();
     const completion = await groq.chat.completions.create({
       model:       'llama-3.3-70b-versatile',
-      max_tokens:  800,
-      temperature: 0.5,
+      max_tokens:  500,
+      temperature: 0.4,
       messages: [
         { role: 'system', content: INTERACTIVE_EXPLAINER_SYSTEM },
         { role: 'user',   content: prompt },

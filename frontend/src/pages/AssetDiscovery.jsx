@@ -5,7 +5,7 @@ import AssetGraph from '../components/AssetGraph';
 import { useTranslation } from '../hooks/useTranslation';
 import Navbar from '../components/Navbar';
 import JourneyHeader from '../components/JourneyHeader';
-import { useGraphQuery, useExplainMapMutation, useResolveEntitiesMutation, useFinalEnhancementQuery } from '../hooks/useClaimQueries';
+import { useGraphQuery, useExplainMapMutation, useFinalEnhancementQuery } from '../hooks/useClaimQueries';
 
 // Fallback demo graph shown when no documents have been uploaded yet
 const DEMO_GRAPH = {
@@ -30,7 +30,6 @@ export default function AssetDiscovery() {
   const { data: graphResponse, isLoading: loading, refetch: refetchGraph } = useGraphQuery(familyId, lang);
   const { data: finalEnhancementData } = useFinalEnhancementQuery(familyId);
   const explainMutation = useExplainMapMutation();
-  const resolveMutation = useResolveEntitiesMutation();
   
   const [interactiveExplanation, setInteractiveExplanation] = useState('');
   const [isExplaining, setIsExplaining] = useState(false);
@@ -44,82 +43,99 @@ export default function AssetDiscovery() {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
     setIsPlayingAudio(false);
 
-    if (!graphResponse?.graph) return;
+    const targetGraph = graphResponse?.graph || DEMO_GRAPH;
+    if (!targetGraph) return;
     setIsExplaining(true);
-    setInteractiveExplanation('');
+    setInteractiveExplanation('VARASAT AI is preparing your explanation...');
     try {
-      const languageText = typeof forceLang === 'string' 
-        ? forceLang 
-        : (lang === 'en' ? 'English' : 'Hindi');
-      const result = await explainAssetMap(graphResponse.graph, languageText);
-      setInteractiveExplanation(result.explanation || 'Sorry, I could not generate an explanation at this time.');
+      const activeLang = typeof forceLang === 'string' ? forceLang : lang;
+      const languageText = activeLang === 'hi' ? 'hi' : 'en';
+      const result = await explainAssetMap(targetGraph, languageText);
+      setInteractiveExplanation(result.explanation || 'Unable to generate explanation. Please try again.');
     } catch (err) {
       console.error(err);
-      setInteractiveExplanation('An error occurred while generating the explanation.');
+      setInteractiveExplanation('Unable to generate explanation. Please try again.');
     } finally {
       setIsExplaining(false);
     }
   };
 
-  const handleResolveClick = async () => {
-    setIsExplaining(true);
-    try {
-      await resolveMutation.mutateAsync(familyId);
-      refetchGraph();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsExplaining(false);
+  const handleLanguageChange = (newLang) => {
+    if (lang === newLang) return;
+    toggleLanguage(newLang);
+    if (interactiveExplanation && !interactiveExplanation.includes('Unable to')) {
+      handleExplainClick(newLang);
     }
   };
 
   const handleToggleVoice = async () => {
     if (isPlayingAudio) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+      window.speechSynthesis.cancel();
       setIsPlayingAudio(false);
       return;
     }
 
-    if (!interactiveExplanation || isFetchingAudio) return;
+    if (!interactiveExplanation) return;
     
-    try {
-      setIsFetchingAudio(true);
-      const res = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          text: interactiveExplanation, 
-          lang: lang === 'en' ? 'en' : 'hi' 
-        })
-      });
-      if (!res.ok) throw new Error('TTS failed');
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      setAudioUrl(url);
-      
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+    if (!('speechSynthesis' in window)) {
+      console.error('Speech synthesis not supported');
+      setInteractiveExplanation(prev => prev + '\n\n[Voice unavailable in this browser. Please try again later.]');
+      return;
+    }
 
-      const audio = new Audio(url);
-      audioRef.current = audio;
+    try {
+      window.speechSynthesis.cancel(); // clear queue
       
-      audio.onended = () => setIsPlayingAudio(false);
-      audio.onerror = () => setIsPlayingAudio(false);
+      const playUtterance = () => {
+        const utterance = new SpeechSynthesisUtterance(interactiveExplanation);
+        const isHindi = lang === 'hi';
+        utterance.lang = isHindi ? 'hi-IN' : 'en-IN';
+        
+        const voices = window.speechSynthesis.getVoices();
+        console.log('Selected language:', isHindi ? 'Hindi' : 'English');
+        console.log('Available voices:', voices.map(v => `${v.lang} (${v.name})`));
+        
+        let targetVoice = null;
+        if (voices.length > 0) {
+          if (isHindi) {
+            targetVoice = voices.find(v => v.lang === "hi-IN" || v.lang.startsWith("hi"));
+          } else {
+            targetVoice = voices.find(v => v.lang.startsWith("en-IN")) || voices.find(v => v.lang.startsWith("en"));
+          }
+          if (targetVoice) {
+            utterance.voice = targetVoice;
+          }
+        }
+        
+        console.log('Selected voice:', targetVoice ? targetVoice.name : 'Fallback browser default');
+        
+        utterance.onstart = () => setIsPlayingAudio(true);
+        utterance.onend = () => setIsPlayingAudio(false);
+        utterance.onerror = (e) => {
+          console.error('SpeechSynthesis error:', e);
+          setIsPlayingAudio(false);
+          setInteractiveExplanation(prev => prev + '\n\nVoice unavailable. Please try again.');
+        };
+        
+        window.speechSynthesis.speak(utterance);
+      };
+
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          playUtterance();
+          window.speechSynthesis.onvoiceschanged = null; // Clean up
+        };
+      } else {
+        playUtterance();
+      }
       
-      setIsFetchingAudio(false);
-      setIsPlayingAudio(true);
-      audio.play();
     } catch (err) {
       console.error(err);
-      setIsFetchingAudio(false);
       setIsPlayingAudio(false);
+      setInteractiveExplanation(prev => prev + '\n\nVoice unavailable. Please try again.');
     }
   };
 
@@ -141,7 +157,18 @@ export default function AssetDiscovery() {
     );
   }
 
-  const { graph, summary, explanation } = graphResponse || { graph: DEMO_GRAPH, summary: { totalAssets: 0, totalValueFormatted: '₹0' }, explanation: '' };
+  const formatINR = (amount) => {
+    if (amount >= 10000000) return `₹${(amount / 10000000).toFixed(2)}Cr`;
+    if (amount >= 100000) return `₹${(amount / 100000).toFixed(2)}L`;
+    return `₹${amount.toLocaleString('en-IN')}`;
+  };
+
+  const graph = graphResponse?.graph || DEMO_GRAPH;
+  const assetNodes = graph?.nodes?.filter(n => n.type === 'asset') || [];
+  const summary = {
+    totalAssets: assetNodes.length,
+    totalValueFormatted: formatINR(assetNodes.reduce((sum, node) => sum + (Number(node.data?.amount) || 0), 0))
+  };
 
   return (
     <div className="min-h-screen bg-[#f3f8fc] font-sans antialiased text-slate-700 flex flex-col pb-16">
@@ -166,13 +193,18 @@ export default function AssetDiscovery() {
 
         <div className="mb-8">
           {!interactiveExplanation && !isExplaining ? (
-            <button 
-              onClick={handleExplainClick}
-              className="w-full flex items-center justify-center gap-2 py-3.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 font-bold rounded-xl transition-all shadow-sm"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-              Explain This Map (Voice & Text)
-            </button>
+            <div className="bg-white/90 border border-indigo-100 rounded-2xl p-6 shadow-sm flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <div className="text-slate-700 font-black text-lg">Understand Your Map</div>
+              </div>
+              <button 
+                onClick={() => handleExplainClick()}
+                className="w-full flex items-center justify-center gap-2 py-3.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 font-bold rounded-xl transition-all shadow-sm"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                Explain This Map (Voice & Text)
+              </button>
+            </div>
           ) : isExplaining ? (
             <div className="w-full flex items-center justify-center gap-3 py-3.5 bg-indigo-50 border border-indigo-200 text-indigo-600 font-bold rounded-xl">
               <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
@@ -182,8 +214,20 @@ export default function AssetDiscovery() {
             <div className="bg-white/90 border border-indigo-200 rounded-2xl p-5 shadow-sm">
               <div className="flex items-center justify-between mb-4 border-b border-indigo-100 pb-3">
                 <div className="flex items-center gap-2 text-indigo-700 font-black">AI Explanation</div>
-                <div className="flex gap-2">
-                  <button onClick={handleToggleVoice} className="px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-sm font-bold">{isPlayingAudio ? 'Stop Voice' : 'Play Voice'}</button>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+                    <button 
+                      onClick={() => handleLanguageChange('en')}
+                      className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${lang === 'en' ? 'bg-white shadow-sm text-indigo-700' : 'text-slate-500 hover:text-slate-700'}`}
+                    >English</button>
+                    <button 
+                      onClick={() => handleLanguageChange('hi')}
+                      className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${lang === 'hi' ? 'bg-white shadow-sm text-indigo-700' : 'text-slate-500 hover:text-slate-700'}`}
+                    >हिंदी</button>
+                  </div>
+                  <button onClick={handleToggleVoice} className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-sm font-bold transition-all shadow-sm">
+                    {isPlayingAudio ? 'Playing...' : 'Play Voice'}
+                  </button>
                 </div>
               </div>
               <div className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">{interactiveExplanation}</div>
@@ -304,7 +348,6 @@ export default function AssetDiscovery() {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Link to="/upload" className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all">Add More Documents</Link>
-          <button onClick={handleResolveClick} disabled={isExplaining} className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold rounded-xl transition-all shadow-sm disabled:opacity-50">Run AI Identity Match</button>
           <Link to="/generate-document" className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all">Start Claim Process</Link>
         </div>
       </main>

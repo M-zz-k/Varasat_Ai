@@ -112,20 +112,6 @@ export function useGeneratePdfMutation() {
   });
 }
 
-// 7. Resolve Entities Mutation
-export function useResolveEntitiesMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (familyId) => {
-      const response = await apiClient.post('/assets/resolve-entities', { familyId });
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assetGraph'] });
-    },
-  });
-}
-
 // 8. Final Enhancement Query (Wolfram Reasoning + Legal Guidance)
 export function useFinalEnhancementQuery(familyId) {
   return useQuery({
