@@ -26,7 +26,7 @@ export default function DemoMode() {
     setLoadingPdf(true);
     try {
       // Use existing API to generate a real PDF using the demo data
-      const response = await axios.post('/api/document/generate-pdf', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || '/api'}/document/generate-pdf`, {
         documentType: 'Affidavit',
         claimData: {
           claimantName: 'Demo User',

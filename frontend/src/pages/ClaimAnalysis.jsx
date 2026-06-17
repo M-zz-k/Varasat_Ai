@@ -27,7 +27,7 @@ export default function ClaimAnalysis() {
 
     async function analyzeClaim() {
       try {
-        const res = await axios.post('/api/claim/analyze', {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL || '/api'}/claim/analyze`, {
           assetData: initialAssetData,
           userDetails: {},
         });

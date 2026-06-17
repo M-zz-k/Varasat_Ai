@@ -97,7 +97,7 @@ export default function VoiceAssistant() {
       setIsSpeaking(true);
       updateState('speaking');
 
-      const res = await fetch('/api/tts', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/tts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, lang: langCode }),
@@ -191,7 +191,7 @@ export default function VoiceAssistant() {
     setError('');
 
     try {
-      const res = await axios.post('/api/chat', {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || '/api'}/chat`, {
         message: text.trim(),
         language,
         sessionId: sessionId.current,

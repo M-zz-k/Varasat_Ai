@@ -269,7 +269,7 @@ export default function Chat() {
     }]);
 
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/chat`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ message: text, language, sessionId: 'default' }),
@@ -356,7 +356,7 @@ export default function Chat() {
   async function handleClear() {
     if (loading) return;
     try {
-      await fetch('/api/chat/clear', {
+      await fetch(`${import.meta.env.VITE_API_URL || '/api'}/chat/clear`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ sessionId: 'default' }),

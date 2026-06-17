@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Axios instance — same base as api.js but isolated for document work
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 60000, // 60 s — Claude Vision can take longer on large images
 });
 

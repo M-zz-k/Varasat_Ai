@@ -85,7 +85,7 @@ export default function DocumentGenerator() {
 
     try {
       const response = await axios.post(
-        '/api/document/generate-pdf',
+        `${import.meta.env.VITE_API_URL || '/api'}/document/generate-pdf`,
         { documentType, claimData: formData },
         { responseType: 'arraybuffer' }
       );
