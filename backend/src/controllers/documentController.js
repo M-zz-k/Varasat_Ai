@@ -11,6 +11,7 @@
 
 const { analyzeDocument, generateDocumentInsight } = require('../ai/documentExtractor');
 const { calculateConfidence, analyzeAssetValue }   = require('../wolfram/assetAnalyzer');
+const { analyzeComplexDocument }                   = require('../ai/complexDocumentExtractor');
 const { generateLegalDocument }                    = require('../ai/legalDocumentGenerator');
 const { createPDF }                                = require('../utils/pdfGenerator');
 const fs = require('fs').promises;
@@ -41,6 +42,42 @@ async function handleUpload(req, res) {
   } catch (error) {
     console.error('[DocumentController] Upload error:', error.message);
     return res.status(500).json({ success: false, error: error.message });
+  }
+}
+
+// ─── POST /api/document/analyze-complex ───────────────────────────────────────
+async function handleAnalyzeComplex(req, res) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No file uploaded.' });
+    }
+
+    const { originalname, filename, size, mimetype, path: filePath } = req.file;
+    console.log(`[AnalyzeComplex] ${originalname} (${mimetype})`);
+
+    const extracted = await analyzeComplexDocument(filePath, mimetype);
+
+    if (extracted.error) {
+      return res.status(422).json({ success: false, error: extracted.error });
+    }
+
+    return res.json({
+      success: true,
+      data: extracted,
+      file: { originalName: originalname, savedAs: filename, size, type: mimetype }
+    });
+  } catch (error) {
+    console.error('[DocumentController] AnalyzeComplex error:', error.message);
+    return res.status(500).json({ success: false, error: error.message });
+  } finally {
+    if (req.file && req.file.path) {
+      try {
+        await fs.unlink(req.file.path);
+        console.log(`[Security] Automatically deleted complex file: ${req.file.path}`);
+      } catch (err) {
+        console.error(`[Security] Failed to delete complex file: ${req.file.path}`, err.message);
+      }
+    }
   }
 }
 
@@ -179,4 +216,4 @@ async function handleGeneratePDF(req, res) {
   }
 }
 
-module.exports = { handleUpload, handleAnalyze, handleGeneratePDF };
+module.exports = { handleUpload, handleAnalyze, handleGeneratePDF, handleAnalyzeComplex };

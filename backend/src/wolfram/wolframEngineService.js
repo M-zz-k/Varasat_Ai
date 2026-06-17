@@ -388,11 +388,6 @@ const fallbacks = {
         };
     },
 
-            },
-            explanation: 'Documentation completeness scored for claim readiness.'
-        };
-    },
-
     'visualization/wolframChartData.wl': (args) => {
         const principal     = parseFloat(args[0]) || 0;
         const growthRate    = parseFloat(args[1]) || 0;

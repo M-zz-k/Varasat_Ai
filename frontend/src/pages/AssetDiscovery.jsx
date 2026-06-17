@@ -305,7 +305,7 @@ export default function AssetDiscovery() {
         <div className="flex flex-col sm:flex-row gap-3">
           <Link to="/upload" className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all">Add More Documents</Link>
           <button onClick={handleResolveClick} disabled={isExplaining} className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold rounded-xl transition-all shadow-sm disabled:opacity-50">Run AI Identity Match</button>
-          <Link to="/claim/generate" className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all">Start Claim Process</Link>
+          <Link to="/generate-document" className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all">Start Claim Process</Link>
         </div>
       </main>
     </div>

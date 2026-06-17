@@ -6,6 +6,7 @@ const {
   handleBuildFromExtraction, 
   handleBuildComplexFromExtraction, 
   handleResolveEntities,
+  handleFinalEnhancementData,
   handleExplainMap 
 } = require('../controllers/assetsController');
 
