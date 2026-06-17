@@ -18,7 +18,7 @@ VARASAT is an open-source inheritance discovery platform. It processes fragmente
 
 Watch the complete end-to-end VARASAT workflow:
 
-👉 [Demo Video](INSERT_VIDEO_LINK_HERE)
+👉 [Demo Video](https://drive.google.com/file/d/12Nmuy86Z__Wu2GOJnOmdUeh2wIWL93IF/view?usp=sharing)
 
 The demo showcases:
 - Document Upload & OCR
