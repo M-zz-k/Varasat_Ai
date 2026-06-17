@@ -76,6 +76,13 @@ export default function AssetDiscovery() {
   }, []);
 
   const handleExplainClick = async (forceLang) => {
+    // Always stop any playing audio when fetching a new explanation
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setIsPlayingAudio(false);
+
     if (!graphResponse?.graph) return;
     setIsExplaining(true);
     setInteractiveExplanation('');
@@ -95,9 +102,11 @@ export default function AssetDiscovery() {
 
   const handleToggleVoice = async () => {
     // If already playing, stop it
-    if (isPlayingAudio && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+    if (isPlayingAudio) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
       setIsPlayingAudio(false);
       return;
     }
@@ -119,6 +128,12 @@ export default function AssetDiscovery() {
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
       
+      // Stop any lingering audio object just to be absolutely safe
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+
       const audio = new Audio(url);
       audioRef.current = audio;
       
