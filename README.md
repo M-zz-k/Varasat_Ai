@@ -1,7 +1,7 @@
 # VARASAT
 
 <div align="center">
-  <img src="docs/screenshots/hero.png" width="100%" alt="VARASAT Hero"/>
+  <img src="docs/screenshots/hero.png" width="80%" alt="VARASAT Hero"/>
   <br/>
   <i>VARASAT helps families discover, analyze, and recover dormant financial assets through a guided inheritance recovery workflow.</i>
 </div>
@@ -79,27 +79,21 @@ VARASAT is a document-processing and graph-mapping pipeline designed to assist i
 ## System Architecture
 
 ```mermaid
-graph TD
+graph LR
     classDef core fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff;
     classDef ai fill:#b91c1c,stroke:#f87171,stroke-width:3px,color:#fff;
     classDef engine fill:#047857,stroke:#34d399,stroke-width:2px,color:#fff;
     classDef ui fill:#374151,stroke:#9ca3af,stroke-width:1px,color:#fff;
     
     A((User Interface)) --> B[User Upload]
-    B --> C[OCR Engine]
-    C --> D[Validation Layer]
-    D --> E[Agent Router]
+    B --> C[OCR Engine] --> D[Validation Layer] --> E[Agent Router]
     
     E --> F[Knowledge Graph]
     E --> G[RAG Knowledge Base]
     E --> H[Wolfram Financial Engine]
     
-    F --> I[PDF Generator]
-    G --> I
-    H --> I
-    
-    I --> J[Voice / TTS Layer]
-    J --> K[Output Layer]
+    F & G & H --> I[PDF Generator]
+    I --> J[Voice / TTS Layer] --> K[Output Layer]
     
     class A,B,K ui;
     class C,E,G ai;
@@ -162,7 +156,7 @@ TODO: Add screenshot showing:
 
 <br/>
 <div align="center">
-  <img src="docs/screenshots/knowledge-graph.png" width="95%" alt="Asset Discovery / Knowledge Graph View"/>
+  <img src="docs/screenshots/knowledge-graph.png" width="75%" alt="Asset Discovery / Knowledge Graph View"/>
   <br/>
   <i>Extracted entities are organized into a relationship graph connecting family members, assets, and institutions.</i>
 </div>
@@ -221,7 +215,7 @@ The user uploads a JPEG of a 15-year-old bank Fixed Deposit certificate.
 
 <br/>
 <div align="center">
-  <img src="docs/screenshots/upload.png" width="80%" alt="Document Upload & Ingestion Screen"/>
+  <img src="docs/screenshots/upload.png" width="65%" alt="Document Upload & Ingestion Screen"/>
   <br/>
   <i>Users upload estate-related documents for automated extraction and analysis.</i>
 </div>
@@ -238,7 +232,7 @@ The router categorizes the document as a "Banking Asset" and forwards the contex
 
 <br/>
 <div align="center">
-  <img src="docs/screenshots/claim-assessment.png" width="80%" alt="Claim Eligibility Assessment"/>
+  <img src="docs/screenshots/claim-assessment.png" width="65%" alt="Claim Eligibility Assessment"/>
   <br/>
   <i>The system evaluates claim complexity, estimated processing time, and required supporting documents.</i>
 </div>
@@ -264,7 +258,7 @@ Financial calculations are strictly separated from the generative text models to
 
 <br/>
 <div align="center">
-  <img src="docs/screenshots/financial-analysis.png" width="95%" alt="Financial Analysis (Wolfram Engine)"/>
+  <img src="docs/screenshots/financial-analysis.png" width="75%" alt="Financial Analysis (Wolfram Engine)"/>
   <br/>
   <i>Deterministic financial calculations estimate inflation-adjusted value, delay impact, and recovery projections.</i>
 </div>
@@ -327,7 +321,7 @@ VARASAT targets systemic barriers in inheritance recovery:
 ### Document Generation
 
 <div align="center">
-  <img src="docs/screenshots/document-generation.png" width="80%" alt="Document Generation Interface"/>
+  <img src="docs/screenshots/document-generation.png" width="65%" alt="Document Generation Interface"/>
   <br/>
   <i>Required legal documents can be generated using extracted claim information.</i>
 </div>
