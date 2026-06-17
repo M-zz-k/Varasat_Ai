@@ -247,8 +247,8 @@ export default function AssetDiscovery() {
                 <div className="absolute top-0 right-0 w-16 h-16 bg-slate-50 rounded-bl-full -mr-8 -mt-8 z-0"></div>
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-2">
-                    <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Asset Discovery Confidence</div>
-                    <div className="text-2xl font-black text-slate-800">{finalEnhancementData.reasoning.assetDiscoveryConfidence}%</div>
+                    <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Ownership Relevance</div>
+                    <div className="text-2xl font-black text-emerald-700">{finalEnhancementData.reasoning.ownershipRelevanceScore || finalEnhancementData.reasoning.assetDiscoveryConfidence}%</div>
                   </div>
                   
                   <div className="space-y-1 mt-3 pt-3 border-t border-slate-100">
@@ -266,8 +266,8 @@ export default function AssetDiscovery() {
                     </div>
                   </div>
                   
-                  <div className="mt-3 text-xs text-slate-600">
-                    {finalEnhancementData.reasoning.factors?.map((f, i) => <div key={i} className="mb-0.5">{f.startsWith('-') ? f : `✓ ${f}`}</div>)}
+                  <div className="mt-3 text-[11px] text-emerald-800 bg-emerald-50 rounded p-2 border border-emerald-100 font-medium">
+                    {finalEnhancementData.reasoning.ownershipReason || "AI-assisted probabilistic match based on family heuristics"}
                   </div>
                 </div>
               </div>
@@ -276,7 +276,7 @@ export default function AssetDiscovery() {
                 <div className="absolute top-0 right-0 w-16 h-16 bg-slate-50 rounded-bl-full -mr-8 -mt-8 z-0"></div>
                 <div className="relative z-10 h-full flex flex-col">
                   <div className="flex justify-between items-start mb-2">
-                    <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Timeline Consistency</div>
+                    <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Timeline Reconstruction</div>
                     <div className="text-2xl font-black text-slate-800">{finalEnhancementData.reasoning.timelineConsistencyScore}%</div>
                   </div>
                   
@@ -292,6 +292,24 @@ export default function AssetDiscovery() {
                 </div>
               </div>
             </div>
+            
+            {finalEnhancementData.reasoning.factors && (
+              <div className="mt-4 bg-[#f8fafc] border border-slate-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                <div className="relative z-10">
+                  <div className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Computational Analysis</div>
+                  {finalEnhancementData.reasoning.graphCentralitySummary && (
+                    <div className="text-sm font-semibold text-slate-800 mb-3 pb-2 border-b border-slate-200">
+                      {finalEnhancementData.reasoning.graphCentralitySummary}
+                    </div>
+                  )}
+                  <div className="text-xs text-slate-700 space-y-1 font-medium">
+                    {finalEnhancementData.reasoning.factors.map((f, i) => (
+                      <div key={i} className="mb-0.5">{f}</div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
             
             <div className="mt-3 text-[10px] text-amber-700/80 italic font-bold">
               {finalEnhancementData.reasoning.safetyDisclaimer || "AI-assisted confidence estimate. Does not establish legal ownership."}
