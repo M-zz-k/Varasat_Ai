@@ -417,6 +417,12 @@ export default function Home() {
                     <span className="mx-1.5 opacity-60">|</span>
                     <span className="font-medium text-[13px] leading-none tracking-normal">दावा शुरू करें</span>
                   </Link>
+                  <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-zinc-500 font-semibold">
+                    <svg className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Best for: first-time users without documents</span>
+                  </p>
                 </div>
               </article>
 
@@ -460,8 +466,14 @@ export default function Home() {
                     to="/analytics" 
                     className="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-sm h-11 tracking-wider transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_16px_rgba(245,158,11,0.25)] cursor-pointer"
                   >
-                    Open Analytics Dashboard
+                    Open My Dashboard
                   </Link>
+                  <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-zinc-500 font-semibold">
+                    <svg className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Best for: users who have already started a claim</span>
+                  </p>
                 </div>
               </article>
 
@@ -485,11 +497,17 @@ export default function Home() {
 
                 <div className="mt-8">
                   <Link 
-                    to="/login" 
+                    to="/login?role=bank" 
                     className="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-sm h-11 tracking-wider transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_16px_rgba(245,158,11,0.25)] cursor-pointer"
                   >
                     Enter Bank Portal
                   </Link>
+                  <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-amber-400/80 font-semibold">
+                    <svg className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                    </svg>
+                    <span>For banks and financial institutions only</span>
+                  </p>
                 </div>
               </article>
 

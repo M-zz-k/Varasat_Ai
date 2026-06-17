@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 
 export default function Login() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const isBank = searchParams.get('role') === 'bank';
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
   const [step, setStep] = useState(1); // 1 = Details, 2 = OTP
   const [otp, setOtp] = useState('');
@@ -46,18 +48,43 @@ export default function Login() {
         {/* Header Branding */}
         <div className="text-center mb-6">
           <div className="flex justify-center mb-3">
-            <img
-              src="/images/varasat-logo.png"
-              alt="VARASAT logo"
-              loading="eager"
-              style={{ width: '64px', height: '64px', objectFit: 'contain', borderRadius: '12px' }}
-            />
+            {isBank ? (
+              <div className="w-12 h-12 rounded-full bg-white border border-amber-400 flex items-center justify-center text-amber-600 shadow-sm">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21V3m0 0L3 9h18L12 3zM3 21h18" />
+                </svg>
+              </div>
+            ) : (
+              <img
+                src="/images/varasat-logo.png"
+                alt="VARASAT logo"
+                loading="eager"
+                style={{ width: '64px', height: '64px', objectFit: 'contain', borderRadius: '12px' }}
+              />
+            )}
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">{t('login.title')}</h1>
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+            {isBank ? 'Bank & Institution Login' : t('login.title')}
+          </h1>
           <p className="text-slate-500 text-xs mt-1.5 leading-relaxed">
             {t('login.subtitle')}
           </p>
         </div>
+
+        {/* Bank-specific info box */}
+        {isBank && (
+          <div className="mb-5 flex items-start gap-3 bg-amber-50 border border-amber-300 rounded-xl px-4 py-3.5 shadow-sm">
+            <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+            <div>
+              <p className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-0.5">Institutional Access</p>
+              <p className="text-xs text-amber-700 leading-relaxed font-semibold">
+                This portal is for verified financial institutions partnering with Varasat.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Accordion Checklist */}
         <div className="mb-6 border border-slate-200 bg-slate-50/50 rounded-xl overflow-hidden shadow-2xs">

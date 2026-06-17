@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LanguageProvider } from './context/LanguageContext';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -28,6 +28,7 @@ export default function App() {
             <Route path="/chat"      element={<ErrorBoundary><Chat           /></ErrorBoundary>} />
             <Route path="/login"     element={<ErrorBoundary><Login          /></ErrorBoundary>} />
             <Route path="/upload"    element={<ErrorBoundary><DocumentUpload /></ErrorBoundary>} />
+            <Route path="/analyze"   element={<Navigate to="/upload" replace />} />
             <Route path="/tracker"   element={<ErrorBoundary><Tracker        /></ErrorBoundary>} />
             <Route path="/analytics" element={<ErrorBoundary><Analytics      /></ErrorBoundary>} />
             <Route path="/claim-analysis" element={<ErrorBoundary><ClaimAnalysis /></ErrorBoundary>} />
