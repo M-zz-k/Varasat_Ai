@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchAssetGraph, explainAssetMap } from '../services/assetApi';
 import AssetGraph from '../components/AssetGraph';
@@ -29,11 +29,12 @@ export default function AssetDiscovery() {
   const [graphResponse, setGraphResponse] = useState(null);
   const [isDemo, setIsDemo] = useState(false);
   
-  // Interactive Explanation States
   const [interactiveExplanation, setInteractiveExplanation] = useState('');
   const [isExplaining, setIsExplaining] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [isFetchingAudio, setIsFetchingAudio] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -92,10 +93,19 @@ export default function AssetDiscovery() {
     }
   };
 
-  const handlePlayVoice = async () => {
-    if (!interactiveExplanation || isPlayingAudio) return;
+  const handleToggleVoice = async () => {
+    // If already playing, stop it
+    if (isPlayingAudio && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    if (!interactiveExplanation || isFetchingAudio) return;
+    
     try {
-      setIsPlayingAudio(true);
+      setIsFetchingAudio(true);
       const res = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -108,12 +118,19 @@ export default function AssetDiscovery() {
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
+      
       const audio = new Audio(url);
+      audioRef.current = audio;
+      
       audio.onended = () => setIsPlayingAudio(false);
       audio.onerror = () => setIsPlayingAudio(false);
+      
+      setIsFetchingAudio(false);
+      setIsPlayingAudio(true);
       audio.play();
     } catch (err) {
       console.error(err);
+      setIsFetchingAudio(false);
       setIsPlayingAudio(false);
     }
   };
@@ -121,6 +138,9 @@ export default function AssetDiscovery() {
   // Cleanup audio
   useEffect(() => {
     return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
       if (audioUrl) URL.revokeObjectURL(audioUrl);
     };
   }, [audioUrl]);
@@ -228,16 +248,18 @@ export default function AssetDiscovery() {
                 </div>
                 <div className="flex gap-2">
                   <button 
-                    onClick={handlePlayVoice}
-                    disabled={isPlayingAudio}
+                    onClick={handleToggleVoice}
+                    disabled={isFetchingAudio}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
                   >
-                    {isPlayingAudio ? (
+                    {isFetchingAudio ? (
                       <div className="w-4 h-4 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+                    ) : isPlayingAudio ? (
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
                     ) : (
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
                     )}
-                    Play Voice
+                    {isFetchingAudio ? 'Loading...' : isPlayingAudio ? 'Stop Voice' : 'Play Voice'}
                   </button>
                   <button
                     onClick={() => {
