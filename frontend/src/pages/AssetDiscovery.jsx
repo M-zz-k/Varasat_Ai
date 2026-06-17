@@ -74,12 +74,14 @@ export default function AssetDiscovery() {
     return () => { cancelled = true; };
   }, []);
 
-  const handleExplainClick = async () => {
+  const handleExplainClick = async (forceLang) => {
     if (!graphResponse?.graph) return;
     setIsExplaining(true);
     setInteractiveExplanation('');
     try {
-      const languageText = lang === 'en' ? 'English' : 'Hindi';
+      const languageText = typeof forceLang === 'string' 
+        ? forceLang 
+        : (lang === 'en' ? 'English' : 'Hindi');
       const result = await explainAssetMap(graphResponse.graph, languageText);
       setInteractiveExplanation(result.explanation || 'Sorry, I could not generate an explanation at this time.');
     } catch (err) {
@@ -239,8 +241,9 @@ export default function AssetDiscovery() {
                   </button>
                   <button
                     onClick={() => {
+                      const newLang = lang === 'en' ? 'Hindi' : 'English';
                       toggleLanguage();
-                      setInteractiveExplanation('');
+                      handleExplainClick(newLang);
                     }}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg text-sm font-bold transition-all"
                   >
