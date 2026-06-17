@@ -25,3 +25,11 @@ export async function buildGraphFromExtraction(familyId, deceasedName, extracted
   });
   return response.data;
 }
+
+export async function explainAssetMap(graphData, language = 'English') {
+  const response = await api.post('/assets/explain-map', {
+    graph: graphData,
+    language,
+  });
+  return response.data;
+}

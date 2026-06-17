@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchAssetGraph } from '../services/assetApi';
+import { fetchAssetGraph, explainAssetMap } from '../services/assetApi';
 import AssetGraph from '../components/AssetGraph';
 import { useTranslation } from '../hooks/useTranslation';
 import Navbar from '../components/Navbar';
@@ -28,6 +28,12 @@ export default function AssetDiscovery() {
   const [error, setError] = useState('');
   const [graphResponse, setGraphResponse] = useState(null);
   const [isDemo, setIsDemo] = useState(false);
+  
+  // Interactive Explanation States
+  const [interactiveExplanation, setInteractiveExplanation] = useState('');
+  const [isExplaining, setIsExplaining] = useState(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [audioUrl, setAudioUrl] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,6 +73,55 @@ export default function AssetDiscovery() {
     loadGraph();
     return () => { cancelled = true; };
   }, []);
+
+  const handleExplainClick = async () => {
+    if (!graphResponse?.graph) return;
+    setIsExplaining(true);
+    setInteractiveExplanation('');
+    try {
+      const languageText = lang === 'en' ? 'English' : 'Hindi';
+      const result = await explainAssetMap(graphResponse.graph, languageText);
+      setInteractiveExplanation(result.explanation || 'Sorry, I could not generate an explanation at this time.');
+    } catch (err) {
+      console.error(err);
+      setInteractiveExplanation('An error occurred while generating the explanation.');
+    } finally {
+      setIsExplaining(false);
+    }
+  };
+
+  const handlePlayVoice = async () => {
+    if (!interactiveExplanation || isPlayingAudio) return;
+    try {
+      setIsPlayingAudio(true);
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          text: interactiveExplanation, 
+          language: lang === 'en' ? 'en-IN' : 'hi-IN' 
+        })
+      });
+      if (!res.ok) throw new Error('TTS failed');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+      const audio = new Audio(url);
+      audio.onended = () => setIsPlayingAudio(false);
+      audio.onerror = () => setIsPlayingAudio(false);
+      audio.play();
+    } catch (err) {
+      console.error(err);
+      setIsPlayingAudio(false);
+    }
+  };
+
+  // Cleanup audio
+  useEffect(() => {
+    return () => {
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+    };
+  }, [audioUrl]);
 
   // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) {
@@ -147,6 +202,57 @@ export default function AssetDiscovery() {
         {/* React Flow Graph */}
         <div className="rounded-2xl overflow-hidden border border-slate-200/80 mb-6 bg-white/90 backdrop-blur-md shadow-3d-gold hover-glow-gold transition-all duration-300 relative z-10">
           <AssetGraph graphData={graph} />
+        </div>
+
+        {/* Explain This Map Section */}
+        <div className="mb-8">
+          {!interactiveExplanation && !isExplaining ? (
+            <button 
+              onClick={handleExplainClick}
+              className="w-full flex items-center justify-center gap-2 py-3.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 font-bold rounded-xl transition-all shadow-sm"
+            >
+              <span className="text-xl">🤖</span> Explain My Asset Map
+            </button>
+          ) : isExplaining ? (
+            <div className="w-full flex items-center justify-center gap-3 py-3.5 bg-indigo-50 border border-indigo-200 text-indigo-600 font-bold rounded-xl">
+              <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+              Analyzing Map...
+            </div>
+          ) : (
+            <div className="bg-white/90 backdrop-blur-md border border-indigo-200 shadow-3d-blue rounded-2xl p-5 relative">
+              <div className="flex items-center justify-between mb-4 border-b border-indigo-100 pb-3">
+                <div className="flex items-center gap-2 text-indigo-700 font-black">
+                  <span className="text-xl">🤖</span> AI Explanation
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={handlePlayVoice}
+                    disabled={isPlayingAudio}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
+                  >
+                    {isPlayingAudio ? (
+                      <div className="w-4 h-4 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
+                    )}
+                    Play Voice
+                  </button>
+                  <button
+                    onClick={() => {
+                      toggleLanguage();
+                      setInteractiveExplanation('');
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg text-sm font-bold transition-all"
+                  >
+                    {lang === 'en' ? 'Translate to Hindi' : 'Translate to English'}
+                  </button>
+                </div>
+              </div>
+              <div className="text-slate-700 text-sm md:text-base leading-relaxed space-y-4 font-medium whitespace-pre-wrap">
+                {interactiveExplanation}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Actions */}

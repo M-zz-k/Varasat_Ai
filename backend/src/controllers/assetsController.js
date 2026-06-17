@@ -1,7 +1,7 @@
 'use strict';
 
 const { getGraph, setGraph, buildGraphFromExtraction } = require('../graph/graphStore');
-const { explainGraph } = require('../ai/graphExplainer');
+const { explainGraph, explainAssetMapInteractive } = require('../ai/graphExplainer');
 
 /**
  * GET /api/assets/graph?familyId=demo
@@ -139,4 +139,25 @@ function formatINR(amount) {
   return `₹${rem},${result}`;
 }
 
-module.exports = { handleGetGraph, handleSaveGraph, handleBuildFromExtraction };
+/**
+ * POST /api/assets/explain-map
+ *
+ * Generates an interactive, structured, rural-friendly explanation of the graph.
+ * Body: { graph, language }
+ */
+async function handleExplainMap(req, res) {
+  try {
+    const { graph, language = 'English' } = req.body;
+    if (!graph || !graph.nodes) {
+      return res.status(400).json({ success: false, error: 'graph is required' });
+    }
+
+    const explanation = await explainAssetMapInteractive(graph, language);
+    return res.json({ success: true, explanation });
+  } catch (error) {
+    console.error('[AssetsController] handleExplainMap error:', error.message);
+    return res.status(500).json({ success: false, error: error.message });
+  }
+}
+
+module.exports = { handleGetGraph, handleSaveGraph, handleBuildFromExtraction, handleExplainMap };
