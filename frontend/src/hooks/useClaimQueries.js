@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { analyzeDocument, analyzeComplexDocument } from '../services/documentApi';
+import { fetchAssetGraph, explainAssetMap } from '../services/assetApi';
 
 // Create isolated axios instance for React Query
 const apiClient = axios.create({
@@ -134,5 +135,28 @@ export function useFinalEnhancementQuery(familyId) {
       return response.data;
     },
     enabled: !!familyId,
+  });
+}
+
+// 9. Graph Query
+export function useGraphQuery(familyId, language = 'English') {
+  return useQuery({
+    queryKey: ['assetGraph', familyId, language],
+    queryFn: async () => {
+      // In the backend, fetchAssetGraph might ignore language, but we pass it anyway just in case
+      const response = await fetchAssetGraph(familyId);
+      return response;
+    },
+    enabled: !!familyId,
+  });
+}
+
+// 10. Explain Map Mutation
+export function useExplainMapMutation() {
+  return useMutation({
+    mutationFn: async ({ graphData, language }) => {
+      const response = await explainAssetMap(graphData, language);
+      return response;
+    }
   });
 }
