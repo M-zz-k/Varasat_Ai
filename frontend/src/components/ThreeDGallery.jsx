@@ -3,9 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 
-// ── 30 Completely Unique Portrait Images ────────────────────────────────────
-// Cards 0-16: Real AI-generated Indian portrait photos
-// Cards 17-29: Unique illustrated avatars (DiceBear, deterministic per seed)
+// ── 30 Completely Unique AI-Generated Indian Portraits ──────────────────────
 const CARDS_DATA = [
   { key: 0,  name: 'Ramesh Kumar',   role: 'Father / Deceased',       img: '/images/portrait_elderly_man.png' },
   { key: 1,  name: 'Priya Sharma',   role: 'Claimant / Wife',          img: '/images/portrait_elderly_woman.png' },
@@ -24,19 +22,19 @@ const CARDS_DATA = [
   { key: 14, name: 'Rahul Roy',      role: 'Brother / Co-owner',       img: '/images/portrait_15.png' },
   { key: 15, name: 'Divya Iyer',     role: 'Niece / Legal Rep.',       img: '/images/portrait_16.png' },
   { key: 16, name: 'Suresh Menon',   role: 'Grandson / Claimant',      img: '/images/portrait_17.png' },
-  { key: 17, name: 'Swati Pillai',   role: 'Daughter-in-law',          img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SwatiPillai&backgroundColor=b6e3f4' },
-  { key: 18, name: 'Deepak Saxena',  role: 'Cousin / Executor',        img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=DeepakSaxena&backgroundColor=c0aede' },
-  { key: 19, name: 'Ritu Kapoor',    role: 'Aunt / Nominee',           img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=RituKapoor&backgroundColor=ffd5dc' },
-  { key: 20, name: 'Manish Pandey',  role: 'Son / Legal Heir',         img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ManishPandey&backgroundColor=d1f4cc' },
-  { key: 21, name: 'Sonia Mehta',    role: 'Wife / Beneficiary',       img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SoniaMehta&backgroundColor=ffdfbf' },
-  { key: 22, name: 'Karan Malhotra', role: 'Brother / Executor',       img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=KaranMalhotra&backgroundColor=b6e3f4' },
-  { key: 23, name: 'Alia Singh',     role: 'Daughter / Claimant',      img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=AliaSingh&backgroundColor=ffd5dc' },
-  { key: 24, name: 'Ranbir Kapoor',  role: 'Husband / Nominee',        img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=RanbirKapoor&backgroundColor=c0aede' },
-  { key: 25, name: 'Deepika Pillai', role: 'Wife / Nominee',           img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=DeepikaPillai&backgroundColor=ffd5dc' },
-  { key: 26, name: 'Saif Khan',      role: 'Father / Deceased',        img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SaifKhan&backgroundColor=d1f4cc' },
-  { key: 27, name: 'Kareena Bose',   role: 'Sister / Co-heir',         img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=KareenaBoselegal&backgroundColor=ffdfbf' },
-  { key: 28, name: 'Hrithik Rao',    role: 'Son / Administrator',      img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HrithikRaoexec&backgroundColor=b6e3f4' },
-  { key: 29, name: 'Katrina Das',    role: 'Wife / Claimant',          img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=KatrinaDasclaim&backgroundColor=ffd5dc' },
+  { key: 17, name: 'Imran Khan',     role: 'Co-applicant',             img: '/images/portrait_18.png' },
+  { key: 18, name: 'Lakshmi Iyer',   role: 'Wife / Beneficiary',       img: '/images/portrait_19.png' },
+  { key: 19, name: 'Gopalan Nair',   role: 'Father / Deceased',        img: '/images/portrait_20.png' },
+  { key: 20, name: 'Preethi Das',    role: 'Daughter / Claimant',      img: '/images/portrait_21.png' },
+  { key: 21, name: 'Rohit Sharma',   role: 'Son / Executor',           img: '/images/portrait_22.png' },
+  { key: 22, name: 'Gurpreet Singh', role: 'Grandfather / Nominee',    img: '/images/portrait_23.png' },
+  { key: 23, name: 'Sushma Tiwari',  role: 'Aunt / Legal Rep.',        img: '/images/portrait_24.png' },
+  { key: 24, name: 'Aditya Kumar',   role: 'Grandson / Claimant',      img: '/images/portrait_25.png' },
+  { key: 25, name: 'Kamala Devi',    role: 'Grandmother / Nominee',    img: '/images/portrait_26.png' },
+  { key: 26, name: 'Ramakant Joshi', role: 'Uncle / Co-heir',          img: '/images/portrait_27.png' },
+  { key: 27, name: 'Dr. Sneha Rao',  role: 'Daughter / Administrator', img: '/images/portrait_28.png' },
+  { key: 28, name: 'Adv. Mohan Das', role: 'Legal Executor',           img: '/images/portrait_29.png' },
+  { key: 29, name: 'Rohan Biswas',   role: 'Son / Nominee',            img: '/images/portrait_30.png' },
 ];
 
 // ── Floating Sphere Card Component ──────────────────────────────────────────
