@@ -4,7 +4,7 @@ import { useTranslation } from '../hooks/useTranslation';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, toggleLanguage, lang } = useTranslation();
   const [searchParams] = useSearchParams();
   const isBank = searchParams.get('role') === 'bank';
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
@@ -53,6 +53,20 @@ export default function Login() {
 
       <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 max-w-md w-full p-8 rounded-2xl shadow-3d-gold hover-glow-gold transition-all duration-300 relative z-10">
         
+        {/* Floating Language Switcher */}
+        <div className="absolute top-4 right-4">
+          <button
+            onClick={toggleLanguage}
+            type="button"
+            className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 rounded-lg text-[10px] font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer shadow-sm"
+          >
+            <svg style={{ width: '0.8rem', height: '0.8rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
+            </svg>
+            <span>{lang === 'en' ? 'हिंदी' : lang === 'hi' ? 'ಕನ್ನಡ' : 'English'}</span>
+          </button>
+        </div>
+
         {/* Header Branding */}
         <div className="text-center mb-6">
           <div className="flex justify-center mb-3">
