@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function BankPortal() {
+  const { toggleLanguage, lang } = useTranslation();
   const [selectedBank, setSelectedBank] = useState('State Bank of India');
   const [activeTab, setActiveTab] = useState('pending');
   const [searchQuery, setSearchQuery] = useState('');
@@ -110,7 +112,22 @@ export default function BankPortal() {
       <div className="absolute w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[140px] -top-32 -left-32 pointer-events-none" />
       <div className="absolute w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] -bottom-32 -right-32 pointer-events-none" />
 
-      <Navbar backTo="/" backLabel="← Home" subtitle="Institutional Dashboard & Claims Settlement" />
+      <Navbar 
+        backTo="/" 
+        backLabel="← Home" 
+        subtitle="Institutional Dashboard & Claims Settlement" 
+        rightSlot={
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer shadow-sm"
+          >
+            <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
+            </svg>
+            <span>{lang === 'en' ? 'हिंदी' : lang === 'hi' ? 'ಕನ್ನಡ' : 'English'}</span>
+          </button>
+        }
+      />
 
       <main className="max-w-7xl mx-auto px-6 py-8 relative z-10">
         

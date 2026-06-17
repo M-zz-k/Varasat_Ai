@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import VoiceAssistant from '../components/VoiceAssistant';
 import HowVarasatWorks from '../components/HowVarasatWorks';
 import ThreeDGallery from '../components/ThreeDGallery';
+import { useTranslation } from '../hooks/useTranslation';
 
 const features = [
   { iconKey: 'bank', title: 'Bank Accounts', desc: 'Find unclaimed savings, FDs, and PPF accounts.' },
@@ -118,6 +119,7 @@ function getHomeSvgIcon(name, classes = "w-5 h-5 text-slate-700") {
 
 export default function Home() {
   const navigate = useNavigate();
+  const { t, lang, toggleLanguage } = useTranslation();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -259,6 +261,15 @@ export default function Home() {
                 Login
               </Link>
             )}
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700 rounded-lg text-xs font-bold text-amber-500 hover:text-amber-400 transition-all cursor-pointer"
+            >
+              <svg style={{ width: '1rem', height: '1rem', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l7.5-7.5L21 21M16.5 15h3.75M3 5.25h16.5M3.75 3v15m9-15v15" />
+              </svg>
+              <span>{lang === 'en' ? 'हिंदी' : lang === 'hi' ? 'ಕನ್ನಡ' : 'English'}</span>
+            </button>
             <Link 
               to="/upload" 
               className="inline-flex items-center justify-center rounded-lg bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-4 py-2 text-sm font-bold shadow-xs hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200"

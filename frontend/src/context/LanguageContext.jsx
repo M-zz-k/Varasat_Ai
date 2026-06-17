@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { en } from '../i18n/en';
 import { hi } from '../i18n/hi';
+import { kn } from '../i18n/kn';
 
 const LanguageContext = createContext(null);
 
 const translations = {
   en,
   hi,
+  kn,
 };
 
 export function LanguageProvider({ children }) {
@@ -19,7 +21,11 @@ export function LanguageProvider({ children }) {
   }, [lang]);
 
   const toggleLanguage = () => {
-    setLang((prev) => (prev === 'en' ? 'hi' : 'en'));
+    setLang((prev) => {
+      if (prev === 'en') return 'hi';
+      if (prev === 'hi') return 'kn';
+      return 'en';
+    });
   };
 
   const t = (key) => {
