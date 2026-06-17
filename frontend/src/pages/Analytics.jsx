@@ -498,26 +498,31 @@ export default function Analytics() {
                     2. Recovery Scenario Simulation
                   </h3>
                   <span className="text-[10px] text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded font-bold">
-                    Simulation based on provided assumptions
+                    5-Scenario Monte Carlo · Probability Weighted
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
-                    <span className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider block mb-1">Fast Recovery</span>
-                    <span className="text-xl font-black text-slate-800">{advancedResult.data.recoverySimulation.result?.fastScenario?.days || 0}</span>
-                    <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
-                  </div>
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
-                    <span className="text-[10px] text-blue-700 font-bold uppercase tracking-wider block mb-1">Normal Recovery</span>
-                    <span className="text-xl font-black text-slate-800">{advancedResult.data.recoverySimulation.result?.normalScenario?.days || 0}</span>
-                    <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
-                  </div>
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
-                    <span className="text-[10px] text-amber-700 font-bold uppercase tracking-wider block mb-1">Delayed Recovery</span>
-                    <span className="text-xl font-black text-slate-800">{advancedResult.data.recoverySimulation.result?.delayedScenario?.days || 0}</span>
-                    <span className="text-[10px] text-slate-500 font-bold ml-1">days</span>
-                  </div>
+                <div className="space-y-3">
+                  {(advancedResult.data.recoverySimulation.result?.scenarios || []).map((s, i) => (
+                    <div key={i} className="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-100">
+                      <div>
+                        <div className="text-xs font-bold text-slate-800">{s.label}</div>
+                        <div className="text-[10px] text-slate-500 font-semibold mt-0.5">
+                          {Math.round(s.probability * 100)}% probability · {s.days} days
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-black text-emerald-700">₹{s.netRecoveryValue?.toLocaleString('en-IN') || 0}</div>
+                        <div className="text-[10px] text-slate-400 font-semibold">net recovery</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+                {advancedResult.data.recoverySimulation.result?.expectedRecoveryValue != null && (
+                  <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex justify-between items-center">
+                    <span className="text-xs font-bold text-amber-800">Expected Recovery Value (Probability-Weighted)</span>
+                    <span className="text-base font-black text-amber-700">₹{advancedResult.data.recoverySimulation.result.expectedRecoveryValue.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
                 <p className="text-xs text-slate-655 mt-4 leading-relaxed font-mono bg-slate-50 p-3 rounded border border-slate-100 font-medium">
                   <span className="text-amber-755 font-bold">Wolfram Method:</span> {advancedResult.data.recoverySimulation.method}
                   <br/><span className="text-slate-550 mt-1 block font-semibold">{advancedResult.data.recoverySimulation.explanation}</span>
@@ -531,10 +536,20 @@ export default function Analytics() {
                 <h3 className="text-[10px] font-bold text-amber-755 uppercase tracking-widest mb-4">
                   3. Asset Portfolio Distribution
                 </h3>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Total Nominal Value</span>
+                    <span className="text-base font-black text-slate-800 mt-1 block">₹{advancedResult.data.portfolioAnalysis.result?.totalNominalValue?.toLocaleString('en-IN') || 0}</span>
+                  </div>
+                  <div className="bg-red-50/60 p-3 rounded-xl border border-red-100">
+                    <span className="text-[10px] text-red-700/70 font-bold uppercase tracking-wider block">Purchasing Power Loss</span>
+                    <span className="text-base font-black text-red-700 mt-1 block">-₹{advancedResult.data.portfolioAnalysis.result?.purchasingPowerLoss?.toLocaleString('en-IN') || 0}</span>
+                  </div>
+                </div>
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <div className="flex justify-between items-end mb-4">
-                    <span className="text-[10px] text-slate-550 font-bold uppercase tracking-wider">Total Value</span>
-                    <span className="text-lg font-black text-slate-800">₹{advancedResult.data.portfolioAnalysis.result?.totalAssets?.toLocaleString('en-IN') || 0}</span>
+                  <div className="flex justify-between items-end mb-3">
+                    <span className="text-[10px] text-slate-550 font-bold uppercase tracking-wider">Asset Distribution</span>
+                    <span className="text-[10px] text-slate-500 font-semibold">{advancedResult.data.portfolioAnalysis.result?.concentrationRisk}</span>
                   </div>
                   {advancedResult.data.portfolioAnalysis.result?.distribution?.map((item, idx) => (
                     <div key={idx} className="mb-3 last:mb-0">
@@ -585,9 +600,9 @@ export default function Analytics() {
                     <div key={i} className="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-100">
                       <div>
                         <div className="text-sm font-bold text-slate-850">{r.type}</div>
-                        <div className="text-[10px] text-slate-555">{r.reason}</div>
+                        <div className="text-[10px] text-slate-555">{r.guidance}</div>
                       </div>
-                      <div className="text-amber-700 font-mono text-sm font-bold">Score: {r.score}</div>
+                      <div className="text-amber-700 font-mono text-sm font-bold">Score: {r.priorityScore}</div>
                     </div>
                   ))}
                 </div>

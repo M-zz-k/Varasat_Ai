@@ -405,8 +405,49 @@ const fallbacks = {
             })),
             explanation: 'Generated Cartesian timeline data for React Recharts visualization.'
         };
-    }
+    },
+
+    'intelligence/documentReadinessModel.wl': (args) => {
+        const requiredDocs     = JSON.parse(args[0] || '[]');
+        const missingDocs      = JSON.parse(args[1] || '[]');
+        const assetInfoAvailable = args[2] !== 'False';
+
+        const totalRequired   = requiredDocs.length || 3;
+        const totalMissing    = missingDocs.length;
+        const totalPresent    = Math.max(0, totalRequired - totalMissing);
+        const completeness    = totalRequired > 0 ? (totalPresent / totalRequired) : 1;
+
+        // Readiness score: 0-100
+        let readinessScore = Math.round(completeness * 80);
+        if (assetInfoAvailable) readinessScore += 15;
+        if (totalMissing === 0) readinessScore += 5;
+        readinessScore = Math.min(100, readinessScore);
+
+        const tier = readinessScore >= 80 ? 'HIGH' : readinessScore >= 50 ? 'MEDIUM' : 'LOW';
+        const recommendations = {
+            HIGH:   'All primary documents are present. Proceed to initiate the claim process.',
+            MEDIUM: 'Some documents are missing. Obtain missing documents before filing the claim.',
+            LOW:    'Critical documents are missing. Prioritize document collection before proceeding.',
+        };
+
+        return {
+            moduleName: 'intelligence/documentReadinessModel', version: '2.0-enhanced',
+            inputs: { requiredDocs, missingDocs, assetInfoAvailable },
+            method: 'Weighted Document Completeness Scoring',
+            calculation: 'ReadinessScore = (Present/Required)*80 + assetBonus + completenessBonus',
+            result: {
+                readinessScore,
+                readinessTier:  tier,
+                recommendation: recommendations[tier],
+                presentDocuments: requiredDocs.filter(d => !missingDocs.includes(d)),
+                missingItems:   missingDocs,
+                completenessPercent: Math.round(completeness * 100),
+            },
+            explanation: 'Document completeness model with weighted readiness scoring for claim filing assessment.'
+        };
+    },
 };
+
 
 async function executeNestedScript(scriptPathRelative, argsList) {
     const scriptPath = path.join(WOLFRAM_DIR, scriptPathRelative);
